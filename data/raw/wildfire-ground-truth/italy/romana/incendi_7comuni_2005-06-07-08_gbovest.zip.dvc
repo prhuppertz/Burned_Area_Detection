@@ -1,0 +1,7 @@
+md5: 7ebed567d17dc63d1aed5ae88d7c42de
+outs:
+- md5: 6961928ca2954f5d9c1a626dea6b700f
+  path: incendi_7comuni_2005-06-07-08_gbovest.zip
+  cache: true
+  metric: false
+  persist: false

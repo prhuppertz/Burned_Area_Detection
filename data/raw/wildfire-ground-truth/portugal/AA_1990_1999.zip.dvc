@@ -1,0 +1,7 @@
+md5: 74dc50e02829bf585d7d996434d09bf6
+outs:
+- md5: 42ea8a564d662021c70cf145df4749bc
+  path: AA_1990_1999.zip
+  cache: true
+  metric: false
+  persist: false

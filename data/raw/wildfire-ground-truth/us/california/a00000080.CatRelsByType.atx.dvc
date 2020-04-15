@@ -1,0 +1,7 @@
+md5: d5652eef0439393782f3e4e1093f58b0
+outs:
+- md5: beeba726683f1211f2387f98fea31313
+  path: fire18_1.gdb/a00000080.CatRelsByType.atx
+  cache: true
+  metric: false
+  persist: false

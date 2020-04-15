@@ -1,0 +1,7 @@
+md5: c6d2e1d785aac8e3c4820782fbfb7460
+outs:
+- md5: b9d0662813f0e5b829fb65c9c693363c
+  path: AArdida2011.zip
+  cache: true
+  metric: false
+  persist: false

@@ -1,0 +1,7 @@
+md5: b50cec10878d52cc085e5f03e8835c3d
+outs:
+- md5: 80a51ee738b5d630481052f5bfdf1c11
+  path: example-2017-burnt-area-extent.png
+  cache: true
+  metric: false
+  persist: false

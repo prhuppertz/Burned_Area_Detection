@@ -1,0 +1,7 @@
+md5: 20d8b4969a6bb9fa93f812f0bdf81233
+outs:
+- md5: ed6d3f1288955afd5895e74aa2d94c74
+  path: N_DFCI_CONTOUR_FEUX_2010_S_083.shp.zip
+  cache: true
+  metric: false
+  persist: false

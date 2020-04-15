@@ -1,0 +1,7 @@
+md5: ff1170a3858d1d27dc9595243d73992a
+outs:
+- md5: b7cfb73a52559416c0f02bbe0c239b8b
+  path: fire18_1.gdb/a0000007b.gdbindexes
+  cache: true
+  metric: false
+  persist: false

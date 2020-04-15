@@ -1,0 +1,7 @@
+md5: bf63b5378cd1483fd7d019d3a461f736
+outs:
+- md5: dbee12de6a37f9540ef5712e3e3dd6a1
+  path: SHP/FEUX_CONT_SIMP_1972_2017.dbf
+  cache: true
+  metric: false
+  persist: false

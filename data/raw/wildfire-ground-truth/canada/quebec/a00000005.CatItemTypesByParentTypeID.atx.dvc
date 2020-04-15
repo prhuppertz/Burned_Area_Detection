@@ -1,0 +1,7 @@
+md5: 094841ea43e3c72115f5083fdc998172
+outs:
+- md5: 34dc04ade54e09f7aa7bce5e59c3fa5c
+  path: GDB/FEUX_CONT_SIMP.gdb/a00000005.CatItemTypesByParentTypeID.atx
+  cache: true
+  metric: false
+  persist: false

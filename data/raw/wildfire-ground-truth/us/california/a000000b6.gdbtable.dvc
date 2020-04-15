@@ -1,0 +1,7 @@
+md5: 24adb0993b0c4981858ac408f921c118
+outs:
+- md5: 16f9ee055a88ac2d54fdfdfa0ab67a4a
+  path: fire18_1.gdb/a000000b6.gdbtable
+  cache: true
+  metric: false
+  persist: false

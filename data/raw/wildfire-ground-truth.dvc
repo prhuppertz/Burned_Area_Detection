@@ -1,7 +1,0 @@
-md5: fcd7e335b21bb745366d3f1ac255c5ef
-outs:
-- md5: 9c50b536a50ab39bbe7bcb28a8ee2ebc.dir
-  path: wildfire-ground-truth
-  cache: true
-  metric: false
-  persist: false
