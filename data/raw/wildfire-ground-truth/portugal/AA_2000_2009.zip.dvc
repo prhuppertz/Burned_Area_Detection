@@ -1,0 +1,7 @@
+md5: 57ccc856af9c3923c55a35263cb6d0ef
+outs:
+- md5: e3cf7c39cf03482bb00676570b1b1128
+  path: AA_2000_2009.zip
+  cache: true
+  metric: false
+  persist: false

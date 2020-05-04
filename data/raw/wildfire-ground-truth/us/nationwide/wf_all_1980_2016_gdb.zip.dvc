@@ -1,0 +1,7 @@
+md5: 145aa5c09894c8120f107a58ddddd409
+outs:
+- md5: b509d1ac0ffc317b696534be99916e9e
+  path: wf_all_1980_2016_gdb.zip
+  cache: true
+  metric: false
+  persist: false

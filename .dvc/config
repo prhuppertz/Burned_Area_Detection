@@ -1,0 +1,8 @@
+[core]
+    remote = upstream
+[cache]
+    dir = /data/dvc_cache/ds-wildfire
+    type = symlink
+    protected = true
+['remote "upstream"']
+    url = s3://cervest-data-version-control/ds-wildfire

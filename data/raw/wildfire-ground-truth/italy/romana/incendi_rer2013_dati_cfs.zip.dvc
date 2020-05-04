@@ -1,0 +1,7 @@
+md5: f6bd1d8002967a555ddff1ae3c25c14d
+outs:
+- md5: 15bca7544f91295d76974aa70e62f26e
+  path: incendi_rer2013_dati_cfs.zip
+  cache: true
+  metric: false
+  persist: false

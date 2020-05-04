@@ -1,0 +1,7 @@
+md5: 0fcbba5bc94b693118394ea43d35d8df
+outs:
+- md5: 7e9414a17c5b16735f02f0a6c2366273
+  path: AArdida2013.zip
+  cache: true
+  metric: false
+  persist: false

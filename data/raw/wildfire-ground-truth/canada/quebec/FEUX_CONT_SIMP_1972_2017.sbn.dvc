@@ -1,0 +1,7 @@
+md5: ddef42f5293f58d3b2da6a96d33867aa
+outs:
+- md5: 8dd7b9744179c6470641e9e7a5478f1c
+  path: SHP/FEUX_CONT_SIMP_1972_2017.sbn
+  cache: true
+  metric: false
+  persist: false

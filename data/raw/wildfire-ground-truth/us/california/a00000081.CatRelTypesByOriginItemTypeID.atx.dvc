@@ -1,0 +1,7 @@
+md5: c1f407f57f46b35dc1370fcaee62d976
+outs:
+- md5: ec2a213bae3455c9b1b44a1e37d0a0c7
+  path: fire18_1.gdb/a00000081.CatRelTypesByOriginItemTypeID.atx
+  cache: true
+  metric: false
+  persist: false

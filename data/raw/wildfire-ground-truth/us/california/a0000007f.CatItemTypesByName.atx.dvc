@@ -1,0 +1,7 @@
+md5: 14a7b527d64160da52a80f972d0fd2ea
+outs:
+- md5: fc648595ef6bcd73925f7b7a3e3e11be
+  path: fire18_1.gdb/a0000007f.CatItemTypesByName.atx
+  cache: true
+  metric: false
+  persist: false

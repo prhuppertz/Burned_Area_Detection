@@ -1,0 +1,7 @@
+md5: 1bed296e0abbf4c7b7628989d93df18d
+outs:
+- md5: e5c88c4fde93b555acced9f5c566900b
+  path: GDB/FEUX_CONT_SIMP.gdb/a00000004.spx
+  cache: true
+  metric: false
+  persist: false

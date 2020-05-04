@@ -1,0 +1,7 @@
+md5: 0845e6fa4fe443c96d7ced4bb27aed90
+outs:
+- md5: b453f60061464f190ac1476b42e3daed
+  path: N_DFCI_CONTOUR_FEUX_2005_S_083.shp.zip
+  cache: true
+  metric: false
+  persist: false
