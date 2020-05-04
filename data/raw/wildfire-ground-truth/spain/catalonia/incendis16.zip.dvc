@@ -1,0 +1,7 @@
+md5: a316cadcee634e2a4a2a15f659f73c4b
+outs:
+- md5: 66de8f5d5bd4dde7404ca5e8054e466f
+  path: incendis16.zip
+  cache: true
+  metric: false
+  persist: false

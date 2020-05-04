@@ -1,0 +1,7 @@
+md5: 99c2ba16d6dbf16578d3c60744adb7fb
+outs:
+- md5: 2f1c2cc13b20d152fdd3298bbfe2d9d6
+  path: Piacenza2003.zip
+  cache: true
+  metric: false
+  persist: false

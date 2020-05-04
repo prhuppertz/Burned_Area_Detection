@@ -1,0 +1,7 @@
+md5: bbcf79ac9ad6ae32590cdc9113e3a3d0
+outs:
+- md5: dcdbb18c0da4c4e32e5f639ae03fe633
+  path: N_DFCI_CONTOUR_FEUX_2017_S_083.dbf
+  cache: true
+  metric: false
+  persist: false

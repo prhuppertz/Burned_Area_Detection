@@ -1,0 +1,7 @@
+md5: f65fe20ae200e6c4669653eb0022b27d
+outs:
+- md5: 8f6b3ede53eb45962b896c8924eacf5c
+  path: rapf2006.zip
+  cache: true
+  metric: false
+  persist: false

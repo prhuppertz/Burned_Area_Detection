@@ -1,0 +1,7 @@
+md5: be439fe83d6ee36a7a24c0536acb6aa3
+outs:
+- md5: dbff9dabc3f93b45a1f8f30deb1e7aa6
+  path: rapf2007.zip
+  cache: true
+  metric: false
+  persist: false

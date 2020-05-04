@@ -1,0 +1,7 @@
+md5: 1ded2ba7979ad141b97354ad0d2ddcef
+outs:
+- md5: 4e881898b27db5c95120d7603b1e8b8a
+  path: incendis18.zip
+  cache: true
+  metric: false
+  persist: false
