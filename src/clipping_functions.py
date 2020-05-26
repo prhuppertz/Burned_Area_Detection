@@ -22,6 +22,9 @@ def get_consistent_crs_shp_file(file, crs):
 
 
 def open_RH_file_for_date(date, base_path_to_weather_data):
+    """
+    opens relative humidity (RH) data for given date and path to weather data
+    """
     RH_path_for_date = base_path_to_weather_data + date +"*.nc"
     RH_file_for_date = glob.glob(RH_path_for_date)
     open_RH_data = xr.open_dataset(RH_file_for_date[0])
@@ -58,18 +61,10 @@ def get_nuts_shp_for_nuts_code(all_nuts_regions,nuts_code, crs):
     return nuts_code_region
 
 
-def open_relative_humidity_file(date, base_path_to_RH_data):
-    RH_path_for_date = base_path_to_RH_data + date  +"*.nc"
-    RH_file_for_date = glob.glob(RH_date_for_date)
-    return RH_file_for_date
 
 def create_mask_from_geom(geom, xrArray):
     return regionmask.Regions([geom]).mask(xrArray.longitude, xrArray.latitude, lon_name = 'longitude', lat_name='latitude', wrap_lon=True)
 
-def extract_noon_array(xrArray):
-    noon = xrArray.time[12]
-    noon_xrArray = xrArray.where(xrArray.time == noon, drop=True)
-    return noon_xrArray
 
 def shift_longitude_to_negative_coords(xrArray):
     return xrArray.assign_coords({'longitude': (((xrArray.longitude + 180) %360)-180)})
@@ -87,6 +82,4 @@ def nearest_latlong(long, lat, xrArray):
     nearest_long = xrArray.sel(longitude = long, method='nearest')
     return nearest_long.longitude, nearest_lat.latitude
 
-def get_WF_mask(RH_data ):
-    RH_copy = RH_data.copy()
     
