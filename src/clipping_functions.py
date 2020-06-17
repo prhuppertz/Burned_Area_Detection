@@ -25,18 +25,24 @@ def open_shp_file_with_consistent_crs(shp_file, country, consistent_crs):
     return wildfire_shp_file_changed_crs
 
 def return_closest_datebin(date, date_bins):
+
+    '''
+    Inputs: dates of the form DD/MM/YY, DD/MM/YYYY or YYYY/MM/DD are accepted with any separator between them
+    returns the closest date from the date_bins
+    '''
+
     seperator = re.findall("[^0-9]", date)[0]
     dates_sep = re.findall("(\d+)", date)
     date_format = None
     if len(date) == 8:
         year = '20' + dates_sep[2] 
         date = dates_sep[0] + seperator + dates_sep[1] + seperator + year
-        date_format = '%d{}%m{}%Y'.format(seperator, seperator)
+        date_format = seperator.join(['%d','%m', '%Y'])
     else:
         if len(dates_sep[0]) == 4:
-            date_format = '%Y{}%m{}%d'.format(seperator, seperator)
+            date_format = seperator.join(['%Y', '%m', '%d'])
         elif len(dates_sep[0]) == 2:
-            date_format = '%d{}%m{}%Y'.format(seperator, seperator)
+            date_format = seperator.join(['%d', '%m', '%Y'])
     
     
     date = datetime.datetime.strptime(date, date_format)
@@ -79,7 +85,7 @@ def mask_RH_data_to_region(all_nuts_regions, nuts_code, crs, RH_data):
     RH_data['mask'] = region_mask
     return RH_data
 
-def get_wf_mask(noon_RH_boun, nearest_coord):
+def get_wf_mask(noon_RH_bound, nearest_coord):
     noon_RH_copy = noon_RH_bound.copy()
     noon_RH_clipped = noon_RH_copy.where(noon_RH_copy.longitude == nearest_coord[0].values, 1).where(noon_RH_copy.latitude == nearest_coord[1].values, 1)
     return noon_RH_clipped.mask
@@ -118,6 +124,11 @@ def nearest_latlong(long, lat, xrArray):
     return nearest_long.longitude, nearest_lat.latitude
 
 def get_bounded_landcover_map(landcover_chunked, bounds):
+    '''
+    Inputs: landcover map chunked using xarray. Bounds of latitude and longitude
+    returns landcover map bounded by the coordinates
+
+    '''
     lat_bounded = landcover_chunked.where(landcover_chunked.latitude >= bounds.miny.iloc[0], drop = True).where(landcover_chunked.latitude <= bounds.maxy.iloc[0], drop = True)
     landcover_map_bounded = lat_bounded.where(lat_bounded.longitude >= bounds.minx.iloc[0], drop=True).where(lat_bounded.longitude <= bounds.maxx.iloc[0], drop=True)
     return landcover_map_bounded
