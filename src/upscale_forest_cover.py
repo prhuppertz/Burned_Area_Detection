@@ -23,24 +23,34 @@ def main(landcover_data_path, weather_data_path, output_path):
     logging.info('Openining, clipping, and binarising required data')
     landcover_data, weather_data = open_required_data(landcover_data_path, weather_data_path)
     landcover_clipped = clip_landcover_to_weather_data(landcover_data, weather_data)
+    del landcover_data
+
     forest_cover_binary = get_forest_cover_from_landcover(landcover_clipped)
+    del landcover_clipped
 
     logging.info('Extracting coordinates and matching closest pixels')
     coordinate_grids = get_coordinate_grids(forest_cover_binary, weather_data)
     coordinate_lists = get_coordinate_lists_from_grids(**coordinate_grids)
-
     fc_group_ids, fc_group_coords = match_forest_pixels_to_closest_weather_pixel(coordinate_lists)
+    del coordinate_lists, weather_data
 
     logging.info('Compiling and sorting datacube')
     forest_cover_datacube = get_forest_cover_datacube(fc_group_ids, fc_group_coords, coordinate_grids['forest_cover'])
+    del fc_group_ids, fc_group_coords, coordinate_grids
+
     forest_cover_datacube_sorted = sort_forest_cover_datacube(forest_cover_datacube)
+    del forest_cover_datacube
 
     logging.info('Converting datacube to xarray.DataSet')
     forest_cover_dataarrays = get_forest_cover_dataarrays_from_cube(forest_cover_datacube_sorted)
+    del forest_cover_datacube_sorted
+
     forest_cover_grouped_dataset = merge_forest_cover_data(forest_cover_dataarrays, forest_cover_binary)
+    del forest_cover_dataarrays, forest_cover_binary
 
     logging.info(f'Aggregating DataSet and saving output at {output_path}')
     forest_cover_aggregated_df = aggregate_grouped_forest_cover_data(forest_cover_grouped_dataset)
+    del forest_cover_grouped_dataset
     convert_to_raster_and_write_to_output(forest_cover_aggregated_df, output_path)
 
 
@@ -63,10 +73,11 @@ def clip_landcover_to_weather_data(landcover_data, weather_data):
     lat_max, lat_min = weather_data.R.latitude.max(), weather_data.R.latitude.min()
     lon_max, lon_min = weather_data.R.longitude.max(), weather_data.R.longitude.min()
 
-    landcover_data_clipped = landcover_data.sortby('lon').sel(lon=slice(lon_min, lon_max))
-    landcover_data_clipped = landcover_data_clipped.sortby('lat').sel(lat=slice(lat_min, lat_max))
+    # We sort by latitude here, because it appears that the latitude sorting of the input data is not
+    # monotically increasing, which appears to be required for the .sel(lat=slice(a,b)) call
+    landcover_clipped = landcover_data.sel(lon=slice(lon_min, lon_max)).sortby('lat').sel(lat=slice(lat_min, lat_max))
 
-    return landcover_data_clipped
+    return landcover_clipped
 
 
 def get_forest_cover_from_landcover(landcover_data):
@@ -74,12 +85,11 @@ def get_forest_cover_from_landcover(landcover_data):
     Binarise the lccs_class variable in the landcover data (30-130, exclusive, corresponds to forest cover), and
     save in a new DataArray with the same coords as the original landcover data
     """
-    forest_cover_binarised_pixels = (
-            (landcover_data.lccs_class.values > 30) & (landcover_data.lccs_class.values < 130)
-    ).astype(int)
+    landcover_class = landcover_data.lccs_class
+    forest_cover_binarised_pixels = ((landcover_class.values > 30) & (landcover_class.values < 130)).astype(int)
 
     forest_cover_array = xr.DataArray(
-        data=forest_cover_binarised_pixels, coords=dict(landcover_data.coords), dims=landcover_data.dims
+        data=forest_cover_binarised_pixels, coords=dict(landcover_class.coords), dims=landcover_class.dims
     ).rename('forest_cover')
 
     return forest_cover_array
