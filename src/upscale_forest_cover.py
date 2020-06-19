@@ -85,11 +85,12 @@ def get_forest_cover_from_landcover(landcover_data):
     Binarise the lccs_class variable in the landcover data (30-130, exclusive, corresponds to forest cover), and
     save in a new DataArray with the same coords as the original landcover data
     """
-    landcover_class = landcover_data.lccs_class
+    landcover_class = landcover_data.lccs_class[0]
     forest_cover_binarised_pixels = ((landcover_class.values > 30) & (landcover_class.values < 130)).astype(int)
 
     forest_cover_array = xr.DataArray(
-        data=forest_cover_binarised_pixels, coords=dict(landcover_class.coords), dims=landcover_class.dims
+        data=forest_cover_binarised_pixels, dims=['lat', 'lon'],
+        coords={'lat': landcover_class.lat, 'lon': landcover_class.lon}
     ).rename('forest_cover')
 
     return forest_cover_array
@@ -215,14 +216,14 @@ def aggregate_grouped_forest_cover_data(forest_cover_grouped_dataset):
     forest_cover_merged_stacked = forest_cover_grouped_dataset.stack({'space': ['lat', 'lon']})
 
     forest_cover_df = pd.DataFrame({
-        'forest_cover_binary': forest_cover_merged_stacked.forest_cover_binary.values[0],
-        'group_id': forest_cover_merged_stacked.group_id.values[0],
-        'group_lat': forest_cover_merged_stacked.group_lat.values[0],
-        'group_lon': forest_cover_merged_stacked.group_lon.values[0],
+        'forest_cover': forest_cover_merged_stacked.forest_cover.values,
+        'group_id': forest_cover_merged_stacked.group_id.values,
+        'group_lat': forest_cover_merged_stacked.group_lat.values,
+        'group_lon': forest_cover_merged_stacked.group_lon.values,
     }, index=pd.MultiIndex.from_tuples(list(forest_cover_merged_stacked.space.values)))
 
     forest_cover_df_grouped = forest_cover_df.groupby('group_id').aggregate(
-        {'forest_cover_binary': pd.Series.mean, 'group_lat': lambda x: x.iloc[0], 'group_lon': lambda x: x.iloc[0]}
+        {'forest_cover': pd.Series.mean, 'group_lat': lambda x: x.iloc[0], 'group_lon': lambda x: x.iloc[0]}
     )
 
     return forest_cover_df_grouped
