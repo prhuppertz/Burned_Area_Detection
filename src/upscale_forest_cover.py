@@ -124,7 +124,7 @@ def match_forest_pixels_to_closest_weather_pixel(coordinate_lists):
     given in coorindate_lists['weather'].
     """
     ckd_tree = cKDTree(coordinate_lists['weather'])
-    _, forest_cover_coord_group_ids = ckd_tree.query(coordinate_lists['forest'])
+    _, forest_cover_coord_group_ids = ckd_tree.query(coordinate_lists['forest_cover'])
     forest_cover_group_coords = coordinate_lists['weather'][forest_cover_coord_group_ids]
     return forest_cover_coord_group_ids, forest_cover_group_coords
 
