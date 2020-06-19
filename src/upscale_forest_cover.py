@@ -3,6 +3,7 @@
 """
 
 from docopt import docopt
+import logging
 import numpy as np
 import pandas as pd
 from scipy.spatial import cKDTree
@@ -19,21 +20,26 @@ def main(landcover_data_path, weather_data_path, output_path):
 
     This gives us an estimate of the percentage of land that is covered by forest for each pixel in the weather raster.
     """
+    logging.info('Openining, clipping, and binarising required data')
     landcover_data, weather_data = open_required_data(landcover_data_path, weather_data_path)
     landcover_clipped = clip_landcover_to_weather_data(landcover_data, weather_data)
     forest_cover_binary = get_forest_cover_from_landcover(landcover_clipped)
 
+    logging.info('Extracting coordinates and matching closest pixels')
     coordinate_grids = get_coordinate_grids(forest_cover_binary, weather_data)
     coordinate_lists = get_coordinate_lists_from_grids(**coordinate_grids)
 
     fc_group_ids, fc_group_coords = match_forest_pixels_to_closest_weather_pixel(coordinate_lists)
 
+    logging.info('Compiling and sorting datacube')
     forest_cover_datacube = get_forest_cover_datacube(fc_group_ids, fc_group_coords, coordinate_grids['forest_cover'])
     forest_cover_datacube_sorted = sort_forest_cover_datacube(forest_cover_datacube)
 
+    logging.info('Converting datacube to xarray.DataSet')
     forest_cover_dataarrays = get_forest_cover_dataarrays_from_cube(forest_cover_datacube_sorted)
     forest_cover_grouped_dataset = merge_forest_cover_data(forest_cover_dataarrays, forest_cover_binary)
 
+    logging.info(f'Aggregating DataSet and saving output at {output_path}')
     forest_cover_aggregated_df = aggregate_grouped_forest_cover_data(forest_cover_grouped_dataset)
     convert_to_raster_and_write_to_output(forest_cover_aggregated_df, output_path)
 
@@ -234,6 +240,7 @@ def parse_args(arguments):
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
     args = docopt(__doc__)
     parsed_args = parse_args(args)
     main(**parsed_args)
