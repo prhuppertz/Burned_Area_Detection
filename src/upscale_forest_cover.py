@@ -2,7 +2,7 @@
     Usage: upscale_forest_cover.py <landcover_data_path> <weather_data_path> <output_path>
 """
 
-from typing import Tuple, Dict, TypedDict
+from typing import Tuple, Dict
 
 from docopt import docopt
 import logging
