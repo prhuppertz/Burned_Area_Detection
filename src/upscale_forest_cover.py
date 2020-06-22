@@ -70,14 +70,15 @@ def open_required_data(landcover_data_path: str, weather_data_path: str) -> Tupl
 
 def clip_landcover_to_weather_data(landcover_data: xr.Dataset, weather_data: xr.Dataset) -> xr.Dataset:
     """
-    Clip the extent of the landcover data to match the extent of the weather data.
+    Clip the extent of the landcover data to match the extent of the weather data. Assumes that the landcover
+    data provided is sorting in ascending order by longitude and descending order by latitude.
     """
     lat_max, lat_min = weather_data.R.latitude.max(), weather_data.R.latitude.min()
     lon_max, lon_min = weather_data.R.longitude.max(), weather_data.R.longitude.min()
 
-    # We sort by latitude here, because it appears that the latitude sorting of the input data is not
-    # monotically increasing, which appears to be required for the .sel(lat=slice(a,b)) call
-    landcover_clipped = landcover_data.sel(lon=slice(lon_min, lon_max)).sortby('lat').sel(lat=slice(lat_min, lat_max))
+    assert np.all(np.diff(landcover_data.lon) >= 0), 'Landcover most be sorted in ascending order by longitude'
+    assert np.all(np.diff(landcover_data.lat) <= 0), 'Landcover most be sorted in descending order by latitude'
+    landcover_clipped = landcover_data.sel(lon=slice(lon_min, lon_max)).sel(lat=slice(lat_max, lat_min))
 
     return landcover_clipped
 
