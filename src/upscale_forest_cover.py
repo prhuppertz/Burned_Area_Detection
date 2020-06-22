@@ -11,6 +11,8 @@ import pandas as pd
 from scipy.spatial import cKDTree
 import xarray as xr
 
+from src.clipping_functions import shift_longitude_to_negative_coords
+
 
 def main(landcover_data_path: str, weather_data_path: str, output_path: str) -> None:
     """
@@ -61,9 +63,7 @@ def open_required_data(landcover_data_path: str, weather_data_path: str) -> Tupl
     Open the landcover dataset to be upscaled and a reference weather data raster, which we wish to upscale to.
     """
     weather_data = xr.open_dataset(weather_data_path)
-    weather_data = weather_data.assign_coords(
-        longitude=(((weather_data.longitude + 180) % 360) - 180)
-    )
+    weather_data = shift_longitude_to_negative_coords(weather_data)
     landcover_data = xr.open_dataset(landcover_data_path)
     return landcover_data, weather_data
 
