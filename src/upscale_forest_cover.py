@@ -2,6 +2,8 @@
     Usage: upscale_forest_cover.py <landcover_data_path> <weather_data_path> <output_path>
 """
 
+from typing import Tuple, Dict, TypedDict
+
 from docopt import docopt
 import logging
 import numpy as np
@@ -10,7 +12,7 @@ from scipy.spatial import cKDTree
 import xarray as xr
 
 
-def main(landcover_data_path, weather_data_path, output_path):
+def main(landcover_data_path: str, weather_data_path: str, output_path: str) -> None:
     """
     Takes a high-resolution landcover dataset, and a lower-resolution weather dataset. Binarises the landcover dataset,
     by whether a pixel corresponds to forest cover or not, and then matches each pixel in the landcover dataset to a
@@ -54,7 +56,7 @@ def main(landcover_data_path, weather_data_path, output_path):
     convert_to_raster_and_write_to_output(forest_cover_aggregated_df, output_path)
 
 
-def open_required_data(landcover_data_path, weather_data_path):
+def open_required_data(landcover_data_path: str, weather_data_path: str) -> Tuple[xr.Dataset, xr.Dataset]:
     """
     Open the landcover dataset to be upscaled and a reference weather data raster, which we wish to upscale to.
     """
@@ -66,7 +68,7 @@ def open_required_data(landcover_data_path, weather_data_path):
     return landcover_data, weather_data
 
 
-def clip_landcover_to_weather_data(landcover_data, weather_data):
+def clip_landcover_to_weather_data(landcover_data: xr.Dataset, weather_data: xr.Dataset) -> xr.Dataset:
     """
     Clip the extent of the landcover data to match the extent of the weather data.
     """
@@ -80,7 +82,7 @@ def clip_landcover_to_weather_data(landcover_data, weather_data):
     return landcover_clipped
 
 
-def get_forest_cover_from_landcover(landcover_data):
+def get_forest_cover_from_landcover(landcover_data: xr.Dataset) -> xr.DataArray:
     """
     Binarise the lccs_class variable in the landcover data (30-130, exclusive, corresponds to forest cover), and
     save in a new DataArray with the same coords as the original landcover data
@@ -96,18 +98,24 @@ def get_forest_cover_from_landcover(landcover_data):
     return forest_cover_array
 
 
-def get_coordinate_grids(forest_cover_data, weather_data):
+def get_coordinate_grids(
+        forest_cover_data: xr.DataArray, weather_data: xr.Dataset
+) -> Dict[str, Tuple[np.ndarray, np.ndarray]]:
     """
-    Returns a two tuples of arrays, each containing a 2d array of latitude values at each grid point and longitude
+    Returns two tuples of arrays, each containing a 2d array of latitude values at each grid point and longitude
     values at each grid point, one for the forest cover data and one for the weather data.
     """
+    forest_cover_lat_mesh, forest_cover_lon_mesh = np.meshgrid(forest_cover_data.lon, forest_cover_data.lat)
+    weather_lat_mesh, weather_lon_mesh = np.meshgrid(weather_data.longitude, weather_data.latitude)
     return {
-        'forest_cover': np.meshgrid(forest_cover_data.lon, forest_cover_data.lat),
-        'weather': np.meshgrid(weather_data.longitude, weather_data.latitude)
+        'forest_cover': (forest_cover_lat_mesh, forest_cover_lon_mesh),
+        'weather': (weather_lat_mesh, weather_lon_mesh)
     }
 
 
-def get_coordinate_lists_from_grids(forest_cover, weather):
+def get_coordinate_lists_from_grids(
+        forest_cover: xr.DataArray, weather: xr.Dataset
+) -> Dict[str, np.ndarray]:
     """
     Similar to get_coordinate_grids, but returns a flattened list of all lat/lon values instead of a 2d array.
     """
@@ -117,7 +125,9 @@ def get_coordinate_lists_from_grids(forest_cover, weather):
     }
 
 
-def match_forest_pixels_to_closest_weather_pixel(coordinate_lists):
+def match_forest_pixels_to_closest_weather_pixel(
+        coordinate_lists: Dict[str, np.ndarray]
+) -> Tuple[np.ndarray, np.ndarray]:
     """
     Uses a binary search tree (scipy.spatial.cKDTree) to match each point in the weather array to the nearest point in
     landcover data. Thus, each point in the landcover data is matched to the (lat,lon) coordinate of a point in the
@@ -130,15 +140,19 @@ def match_forest_pixels_to_closest_weather_pixel(coordinate_lists):
     return forest_cover_coord_group_ids, forest_cover_group_coords
 
 
-def get_forest_cover_datacube(forest_cover_group_ids, fores_cover_group_coords, forest_cover_grid):
+def get_forest_cover_datacube(
+        forest_cover_group_ids: np.ndarray,
+        forest_cover_group_coords: np.ndarray,
+        forest_cover_grid: Tuple[np.ndarray, np.ndarray]
+) -> np.ndarray:
     """
     Compile the group_id, group_latitude, group_longitude, and forest_cover_pixel_latitude and
     forest_cover_pixel_longitude into a 3d datacube (array). This will allows us to easily sort everything by the
     latitude and longitude of the forest_cover pixels.
     """
     forest_cover_group_id_array = np.reshape(forest_cover_group_ids, forest_cover_grid[0].shape)
-    forest_cover_group_lon_array = np.reshape(fores_cover_group_coords[:, 0], forest_cover_grid[0].shape)
-    forest_cover_group_lat_array = np.reshape(fores_cover_group_coords[:, 1], forest_cover_grid[0].shape)
+    forest_cover_group_lon_array = np.reshape(forest_cover_group_coords[:, 0], forest_cover_grid[0].shape)
+    forest_cover_group_lat_array = np.reshape(forest_cover_group_coords[:, 1], forest_cover_grid[0].shape)
 
     forest_cover_datacube = np.stack([
         forest_cover_group_id_array,  # Group ID
@@ -151,7 +165,7 @@ def get_forest_cover_datacube(forest_cover_group_ids, fores_cover_group_coords, 
     return forest_cover_datacube
 
 
-def sort_forest_cover_datacube(forest_cover_datacube):
+def sort_forest_cover_datacube(forest_cover_datacube: np.ndarray) -> np.ndarray:
     """
     Sort the datacube from get_forest_cover_datacube by latitude and longitude of the forest_cover pixels.
     """
@@ -160,7 +174,7 @@ def sort_forest_cover_datacube(forest_cover_datacube):
     return forest_cover_datacube_sorted
 
 
-def get_forest_cover_dataarrays_from_cube(forest_cover_datacube):
+def get_forest_cover_dataarrays_from_cube(forest_cover_datacube: np.ndarray) -> Dict[str, xr.DataArray]:
     """
     Create a dictionary of DataArrays from the given datacube, one containing group_id, one containing weather_lat (i.e.
     the group latitude value), and one containig weather_lon (i.e. the group longitude value). The coordinates of the
@@ -184,7 +198,10 @@ def get_forest_cover_dataarrays_from_cube(forest_cover_datacube):
     }
 
 
-def merge_forest_cover_data(forest_cover_dataarrays, forest_cover_binary):
+def merge_forest_cover_data(
+        forest_cover_dataarrays: Dict[str, xr.DataArray],
+        forest_cover_binary: xr.DataArray
+) -> xr.Dataset:
     """
     Merge together the DataArrays from get_forest_cover_dataarrays_from_cube to get a DataSet that represents the group
     (i.e. the weather data pixel) that each forest cover pixel has been assigned to. Then merge that DataSet with the
@@ -205,7 +222,7 @@ def merge_forest_cover_data(forest_cover_dataarrays, forest_cover_binary):
     return forest_cover_merged_dataset
 
 
-def aggregate_grouped_forest_cover_data(forest_cover_grouped_dataset):
+def aggregate_grouped_forest_cover_data(forest_cover_grouped_dataset: xr.Dataset) -> pd.DataFrame:
     """
     Takes a DataSet containing pixelwise binarised forest cover, a group_id, and group_lat and group_lon values,
     converts it to a pandas DataFrame, and groups it by group_id, returning a DataFrame containing the groupwise
@@ -229,7 +246,7 @@ def aggregate_grouped_forest_cover_data(forest_cover_grouped_dataset):
     return forest_cover_df_grouped
 
 
-def convert_to_raster_and_write_to_output(forest_cover_aggregated_df: pd.DataFrame, output_path: str):
+def convert_to_raster_and_write_to_output(forest_cover_aggregated_df: pd.DataFrame, output_path: str) -> None:
     """
     Takes the DataFrame output by aggregate_grouped_forest_cover_data, containing groupwise mean binarised forest cover,
     group latitude and group longitude, for each group, converts it to an xarray DataArray, and writes the output
@@ -242,7 +259,7 @@ def convert_to_raster_and_write_to_output(forest_cover_aggregated_df: pd.DataFra
     forest_cover_lowres_xarray.to_netcdf(output_path)
 
 
-def parse_args(arguments):
+def parse_args(arguments: dict) -> Dict[str, str]:
     return {
         'landcover_data_path': arguments['<landcover_data_path>'],
         'weather_data_path': arguments['<weather_data_path>'],
