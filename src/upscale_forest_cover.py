@@ -170,6 +170,17 @@ def get_forest_cover_datacube(
     Compile the group_id, group_latitude, group_longitude, and forest_cover_pixel_latitude and
     forest_cover_pixel_longitude into a 3d datacube (array). This will allows us to easily sort everything by the
     latitude and longitude of the forest_cover pixels.
+
+    Parameters
+    ----------
+    forest_cover_group_ids : np.ndarray
+        Array of integers denoting the ID of the group (i.e. weather data pixel) that each forest cover pixel
+        has been assigned to, e.g. array([1, 2, 2, 5])
+    forest_cover_group_coords : np.ndarray
+        A list containing the lat/lon coordinates of the group that each forest cover pixel has been assigned to,
+        e.g. array([[0,0], [1,0], [1,0], [0,1]]). Each group should have a unique coordinate associated with it.
+    forest_cover_grid : Tuple[np.ndarray, np.ndarray]
+        Tuple of grids containing the latitude and longitude of each pixel in the forest cover raster.
     """
     forest_cover_group_id_array = np.reshape(forest_cover_group_ids, forest_cover_grid[0].shape)
     forest_cover_group_lon_array = np.reshape(forest_cover_group_coords[:, 0], forest_cover_grid[0].shape)
