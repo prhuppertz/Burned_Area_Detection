@@ -132,7 +132,28 @@ def match_forest_pixels_to_closest_weather_pixel(
     Uses a binary search tree (scipy.spatial.cKDTree) to match each point in the weather array to the nearest point in
     landcover data. Thus, each point in the landcover data is matched to the (lat,lon) coordinate of a point in the
     weather data, as well as a 'group_id' which corresponds to the index location of the (lat,lon) coordinate list
-    given in coorindate_lists['weather'].
+    given in coordinate_lists['weather'].
+
+    Example
+    --------
+    >>> weather_grid = np.meshgrid([1,2,3], [1,2,3])  # 3x3 grid
+    >>> forest_cover_grid = np.meshgrid([1, 1.1, 4], [2.1, 2.9])  # 3x2 grid
+    >>> weather_coordinates = np.array([g.flatten() for g in weather_grid]).T
+    >>> forest_cover_coordinates = np.array([g.flatten() for g in forest_cover_grid]).T
+    >>> weather_coordinates
+    array([[1, 1], [2, 1], [3, 1],
+           [1, 2], [2, 2],  [3, 2],
+           [1, 3], [2, 3], [3, 3]])
+    >>> forest_cover_coordinates
+    array([[1. , 2.1], [1.1, 2.1], [4. , 2.1],
+           [1. , 2.9], [1.1, 2.9], [4. , 2.9]])
+    >>> coordinate_lists = {'weather': weather_coordinates, 'forest_cover': forest_cover_coordinates}
+    >>> fc_group_ids, fc_group_coords = match_forest_pixels_to_closest_weather_pixel(coordinate_lists)
+    >>> fc_group_coords
+    array([[1, 2], [1, 2], [3, 2],
+           [1, 3], [1, 3], [3, 3]])  # Coords in forest_cover_coordinates are matched to coords in weather_coordinates
+    >>> fc_group_ids
+    array([3, 3, 5, 6, 6, 8])  # The array index of the weather coordinate that each forest cover coord is matched to
     """
     ckd_tree = cKDTree(coordinate_lists['weather'])
     _, forest_cover_coord_group_ids = ckd_tree.query(coordinate_lists['forest_cover'])
