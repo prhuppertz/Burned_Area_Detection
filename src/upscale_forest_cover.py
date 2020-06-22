@@ -3,9 +3,9 @@
 """
 
 from typing import Tuple, Dict
+import logging
 
 from docopt import docopt
-import logging
 import numpy as np
 import pandas as pd
 from scipy.spatial import cKDTree
@@ -135,7 +135,7 @@ def match_forest_pixels_to_closest_weather_pixel(
     given in coordinate_lists['weather'].
 
     Example
-    --------
+    -------
     >>> weather_grid = np.meshgrid([1,2,3], [1,2,3])  # 3x3 grid
     >>> forest_cover_grid = np.meshgrid([1, 1.1, 4], [2.1, 2.9])  # 3x2 grid
     >>> weather_coordinates = np.array([g.flatten() for g in weather_grid]).T
