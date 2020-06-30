@@ -1,0 +1,15 @@
+upscale_forest_cover_map:
+  cmd: python -m src.upscale_forest_cover data/raw/landcover/UN_FAO_LCCS_2018.nc data/raw/landcover/era5_0.25deg_ref_raster.nc
+    data/processed/forest_cover_upscaled.nc
+  deps:
+  - path: data/raw/landcover/UN_FAO_LCCS_2018.nc
+    md5: 9a41a4deb729af37715dc11dd09f102d
+  - path: data/raw/landcover/era5_0.25deg_ref_raster.nc
+    md5: c2b40a486c8af7f1b1a781b6468d7d2e
+  - path: src/clipping_functions.py
+    md5: 8b022b334250c6900c3f5aeb2e59ed8d
+  - path: src/upscale_forest_cover.py
+    md5: f4f09177a8f203cfdcf78dec1e77bf62
+  outs:
+  - path: data/processed/forest_cover_upscaled.nc
+    md5: dd1c48de88a3feafbb470485d11aa37d
