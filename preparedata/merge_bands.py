@@ -31,10 +31,10 @@ def stack_bands(aws_composites_path, mgrs_coordinate, date, save_path):
     with rasterio.open(os.path.join(path_source, SELECTED_BANDS[0]+'_sur'+'.tif')) as src0:
         meta_source = src0.meta
 
-    meta_source.update(count=len(ALL_BANDS))
+    meta_source.update(count=len(SELECTED_BANDS))
 
-    os.makedirs(os.path.join(save_path, mgrs_coordinate), exist_ok=True)
-    path_target = os.path.join(save_path, mgrs_coordinate, mgrs_coordinate+'.jp2')
+    os.makedirs(os.path.join(save_path, mgrs_coordinate, date), exist_ok=True)
+    path_target = os.path.join(save_path, mgrs_coordinate, date, mgrs_coordinate+'.jp2')
 
     with rasterio.open(path_target, 'w', **meta_source) as dst:
         for id, layer in enumerate(tqdm(ALL_BANDS), start=1):
@@ -42,19 +42,33 @@ def stack_bands(aws_composites_path, mgrs_coordinate, date, save_path):
             with rasterio.open(channel_source_path) as src1:
                 dst.write_band(id, src1.read(1))
 
-def process_scenes(aws_composites_path, mgrs_coordinates, save_path):
+
+def process_dates (aws_composites_path, mgrs_coordinate, dates, save_path):
     """
+    Applies above function to multiple dates
+    :param aws_composites_path: Path to composites on aws bucket
+    :param mgrs_coordinate: MGRS coordinates, for example ['31UFQ', '31UFO']
+    :param dates: List of dates, for example ['2017/12/13', '2018/6/9']
+    :param save_path: Directory where a stacked raster would be saved
+    """
+    for date in dates:
+        stack_bands(aws_composites_path, mgrs_coordinate, date, save_path)
+
+ 
+"""   
+def process_scenes(aws_composites_path, mgrs_coordinates, save_path):
+    
     Applies above function to multiple scenes
     :param aws_composites_path: Path to composites on aws bucket
     :param mgrs_coordinates: List of MGRS coordinates, for example ['31UFQ', '31UFO']
     :param save_path: Directory where a stacked raster would be saved
-    """
+    
     for mgrs in mgrs_coordinates:
         stack_bands(aws_composites_path, mgrs, save_path)
-
+"""
 if __name__ == "__main__":
     arguments = docopt(__doc__)
     aws_composites_path = arguments['<aws_composites_path>']
     save_path = arguments['<save_path>']
     coordinates = arguments['<mgrs>']
-    process_scenes(aws_composites_path, coordinates, save_path)
+    process_dates(aws_composites_path, mgrs_oordinates, dates, save_path)
