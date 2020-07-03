@@ -47,7 +47,7 @@ def process_dates (aws_composites_path, mgrs_coordinate, dates, save_path):
     """
     Applies above function to multiple dates
     :param aws_composites_path: Path to composites on aws bucket
-    :param mgrs_coordinate: MGRS coordinates, for example ['31UFQ', '31UFO']
+    :param mgrs_coordinate: MGRS coordinates, for example '31/T/CF'
     :param dates: List of dates, for example ['2017/12/13', '2018/6/9']
     :param save_path: Directory where a stacked raster would be saved
     """
