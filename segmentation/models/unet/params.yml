@@ -1,0 +1,14 @@
+root: "data/training_patches/"
+n_channels: 3
+decoders:
+    classification: 1
+multiple: 1
+num_layers: 2
+residual: null
+batch_size: 16
+lr: 0.0003
+weight_decay: 0
+optimizer_type: "ADAM"
+w: 10
+sigma: 5
+scheduler_type: null
