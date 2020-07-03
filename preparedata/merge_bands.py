@@ -1,9 +1,12 @@
 """Usage:
-          merge_bans.py <aws_composites_path>  <save_path> (-s <mgrs>)...
+          merge_bands.py <aws_composites_path>  <save_path> (-s <mgrs>)...
 
 @ Jevgenij Gamper 2020, Cervest
 Loads calculated composites from AWS, and produces a merged stack.
 """
+
+#adapted for use with S2 data on the NAS drive
+
 import os
 import rasterio
 from tqdm import tqdm
@@ -12,18 +15,20 @@ from docopt import docopt
 
 ALL_BANDS = ['B01', 'B02', 'B03', 'B04', 'B05',
               'B06', 'B07', 'B08', 'B8A', 'B09', 'B11', 'B12']
-
-def stack_bands(aws_composites_path, mgrs_coordinate, save_path):
+# selecting bands that are necessary for the task at hand 
+SELECTED_BANDS = ['B8A', 'B11', 'B12']
+def stack_bands(aws_composites_path, mgrs_coordinate, date, save_path):
     """
     Reads from AWS and stacks image bands into a single raster file
     :param aws_composites_path: Path to composites on aws bucket
-    :param mgrs_coordinate: MGRS coordinate, for example 31UFQ
+    :param mgrs_coordinate: MGRS coordinate in path format, for example 31/U/FQ
     :param save_path: Directory where a stacked raster would be saved
+    :param date: Date for the specific data in path format, for example 2017/10/15
     :return:
     """
-    path_source = os.path.join(aws_composites_path, mgrs_coordinate)
+    path_source = os.path.join(aws_composites_path, mgrs_coordinate, date, "0")
 
-    with rasterio.open(os.path.join(path_source, ALL_BANDS[0]+'.tif')) as src0:
+    with rasterio.open(os.path.join(path_source, SELECTED_BANDS[0]+'_sur'+'.tif')) as src0:
         meta_source = src0.meta
 
     meta_source.update(count=len(ALL_BANDS))
