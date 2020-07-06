@@ -55,17 +55,7 @@ def process_dates (aws_composites_path, mgrs_coordinate, dates, save_path):
         stack_bands(aws_composites_path, mgrs_coordinate, date, save_path)
 
  
-"""   
-def process_scenes(aws_composites_path, mgrs_coordinates, save_path):
-    
-    Applies above function to multiple scenes
-    :param aws_composites_path: Path to composites on aws bucket
-    :param mgrs_coordinates: List of MGRS coordinates, for example ['31UFQ', '31UFO']
-    :param save_path: Directory where a stacked raster would be saved
-    
-    for mgrs in mgrs_coordinates:
-        stack_bands(aws_composites_path, mgrs, save_path)
-"""
+
 if __name__ == "__main__":
     arguments = docopt(__doc__)
     aws_composites_path = arguments['<aws_composites_path>']
