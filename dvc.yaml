@@ -1,11 +1,1 @@
-stages:
-  upscale_forest_cover_map:
-    cmd: python -m src.upscale_forest_cover data/raw/landcover/UN_FAO_LCCS_2018.nc
-      data/raw/landcover/era5_0.25deg_ref_raster.nc data/processed/forest_cover_upscaled.nc
-    deps:
-    - data/raw/landcover/UN_FAO_LCCS_2018.nc
-    - data/raw/landcover/era5_0.25deg_ref_raster.nc
-    - src/clipping_functions.py
-    - src/upscale_forest_cover.py
-    outs:
-    - data/processed/forest_cover_upscaled.nc
+

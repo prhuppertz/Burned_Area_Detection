@@ -21,6 +21,7 @@ def main(shapefile, save_path, class_name, scenes_path, scenes, patch_size=128, 
     os.makedirs(path_to_store_patches, exist_ok=True)
     path_to_store_anno = os.path.join(save_path, 'anno')
     os.makedirs(path_to_store_anno, exist_ok=True)
+    #What is field_vis?
     path_to_store_field_vis = os.path.join(save_path, 'field_vis')
     os.makedirs(path_to_store_field_vis, exist_ok=True)
 
@@ -38,6 +39,7 @@ def main(shapefile, save_path, class_name, scenes_path, scenes, patch_size=128, 
                                                                 num_patches, scene_mgrs)
 
         # Patch the shapefile, and store image patches
+        #What are the bands for?
         do_the_patching(raster, path_to_store_patches, patch_windows.keys(), patch_windows.values(), bands=[4, 3, 2])
 
         # Save annotations
