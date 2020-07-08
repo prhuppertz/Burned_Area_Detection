@@ -1,7 +1,7 @@
 
 """
 Usage:
-          merge_bands.py <source_path> <mgrs> <save_path>
+          merge_bands.py <source_path> (-s <mgrs>)... <save_path>
 
 @ Robert Huppertz 2020, Cervest
 Loads Selected Bands from image source and produces a merged stack 
@@ -38,15 +38,16 @@ def stack_bands(source_path, mgrs_coordinate, save_path):
     #create a directory for the target file 
     os.makedirs(os.path.join(save_path, mgrs_coordinate), exist_ok=True)
 
-    #store the metadata of one BAND and adapt the length to the SELECTED_BANDS
-
-    with rasterio.open(list_of_paths[0]) as src0:
-        meta_source = src0.meta
-        meta_source.update(count=len(SELECTED_BANDS))
+    
     #create lists of paths to the processed images for all existing dates for each SELECTED_BAND 
     for n in range (0,len(SELECTED_BANDS)):
         list_of_paths[n] = glob.glob(path_to_scene+'/*/*/*/*/'+SELECTED_BANDS[n]+'_sur.tif')
+    
+    #store the metadata of one BAND and adapt the length to the SELECTED_BANDS
 
+    with rasterio.open(list_of_paths[0][0]) as src0:
+        meta_source = src0.meta
+        meta_source.update(count=len(SELECTED_BANDS))
     #create date list for the selected scene, create target files for stacking images
     for i in range (0,len(list_of_paths[0])):
         date_index=list_of_paths[0][i].index('201')
@@ -69,7 +70,7 @@ def process_scenes(source_path, mgrs_coordinates, save_path):
     """
     Applies above function to multiple scenes
     :param source_path: Path to source images
-    :param mgrs_coordinates: List of MGRS coordinates, for example ['31UFQ', '31UFO']
+    :param mgrs_coordinates: List of MGRS coordinates, for example ['31/U/FQ', '31/U/FO']
     :param save_path: Directory where a stacked raster would be saved
     """
     for mgrs in mgrs_coordinates:
@@ -80,8 +81,8 @@ if __name__ == "__main__":
     arguments = docopt(__doc__)
     source_path = arguments['<source_path>']
     save_path = arguments['<save_path>']
-    mgrs_coordinates = arguments['<mgrs>']
-    process_scenes(source_path, mgrs_coordinates, save_path)
+    coordinates = arguments['<mgrs>']
+    process_scenes(source_path, coordinates, save_path)
 
 
 
