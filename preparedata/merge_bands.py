@@ -34,20 +34,24 @@ def stack_bands(source_path, mgrs_coordinate, save_path):
     date_datetime={}
     date_string={}
     path_target={}
+    meta_source={}
     
     #create a directory for the target file 
     os.makedirs(os.path.join(save_path, mgrs_coordinate), exist_ok=True)
 
     
     #create lists of paths to the processed images for all existing dates for each SELECTED_BAND 
-    for n in range (0,len(SELECTED_BANDS)):
+    for n in range (0,(len(SELECTED_BANDS)-1)):
         list_of_paths[n] = glob.glob(path_to_scene+'/*/*/*/*/'+SELECTED_BANDS[n]+'_sur.tif')
-    
+        with rasterio.open(list_of_paths[n][0]) as src0:
+            meta_source[n] = src0.meta
+            meta_source[n].update(count=len(SELECTED_BANDS))
     #store the metadata of one BAND and adapt the length to the SELECTED_BANDS
-
-    with rasterio.open(list_of_paths[0][0]) as src0:
-        meta_source = src0.meta
-        meta_source.update(count=len(SELECTED_BANDS))
+    #WRONG! The metadata changes for the BANDS, depending on the resolution! -> width & height 
+        
+        with rasterio.open(list_of_paths[0][0]) as src0:
+            meta_source = src0.meta
+            meta_source.update(count=len(SELECTED_BANDS))
     #create date list for the selected scene, create target files for stacking images
     for i in range (0,len(list_of_paths[0])):
         date_index=list_of_paths[0][i].index('201')
@@ -58,7 +62,7 @@ def stack_bands(source_path, mgrs_coordinate, save_path):
         #create target files for every date
         path_target[i] = os.path.join(save_path, mgrs_coordinate, date_string[i] +'.jp2')
         
-    for x in range (0,len(SELECTED_BANDS)):
+    for x in range (0,(len(SELECTED_BANDS)-1)):
         for y in range (0,len(list_of_paths[0])):
             #write SELECTED_BANDS into the target files
             with rasterio.open(path_target[y], 'w', **meta_source) as dst:
