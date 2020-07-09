@@ -11,11 +11,11 @@ def new_pickle(outpath: Path, data):
     outpath.parent.mkdir(parents=True, exist_ok=True)
     with open(outpath, "wb") as f:
         pickle.dump(data, f)
-    print(f'Writing new pickle file... {outpath.name}')
+    print(f"Writing new pickle file... {outpath.name}")
 
 
 def load_pickle(inpath: Path):
-    print(f'Loading from existing pickle file... {inpath.name}')
+    print(f"Loading from existing pickle file... {inpath.name}")
     with open(inpath, "rb") as f:
         return pickle.load(f)
 
@@ -27,7 +27,7 @@ def new_json(outpath: Path, data):
     # outpath.parent.mkdir(parents=True, exist_ok=True)
     with open(outpath, "w") as f:
         json.dump(data, f, indent=4)
-    print(f'Writing new json file... {outpath}')
+    print(f"Writing new json file... {outpath}")
 
 
 def load_json(inpath: Path):

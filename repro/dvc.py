@@ -15,6 +15,7 @@ import os
 import subprocess
 from docopt import docopt
 
+
 def set_cache(cache_dir):
     """
     Sets dvc cache given config file
@@ -24,11 +25,13 @@ def set_cache(cache_dir):
     p = subprocess.Popen("dvc cache dir {} --local".format(cache_dir), shell=True)
     p.communicate()
 
+
 def set_symlink():
     p = subprocess.Popen("dvc config cache.type symlink --local", shell=True)
     p.communicate()
     p = subprocess.Popen("dvc config cache.protected true --local", shell=True)
     p.communicate()
+
 
 def main(cache_path, link_path, link2_path):
     """
@@ -48,7 +51,7 @@ def main(cache_path, link_path, link2_path):
         os.makedirs(from_folder, exist_ok=True)
         # Create a symlink
         os.symlink(from_folder, to_folder)
-    # Make a path where raw_data is stored, if data is stored externally from the other directory 
+    # Make a path where raw_data is stored, if data is stored externally from the other directory
     if link2_path:
         to_folder = os.path.join(cur_project_dir, "raw_data")
         from_folder = link2_path
@@ -59,6 +62,7 @@ def main(cache_path, link_path, link2_path):
     else:
         to_folder = os.path.join(cur_project_dir, "data")
         os.makedirs(to_folder, exist_ok=True)
+
 
 if __name__ == "__main__":
     arguments = docopt(__doc__)

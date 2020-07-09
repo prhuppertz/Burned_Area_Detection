@@ -16,14 +16,16 @@ from docopt import docopt
 from sklearn.model_selection import train_test_split
 import sys
 from os import path
-sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
+
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from segmentation.data.dataset import get_segmentation_dataset
+
 
 def split(root, frac):
 
-    dataset = get_segmentation_dataset(root,
-                                       augmentation_func=None,
-                                       preprocessing_func=None)
+    dataset = get_segmentation_dataset(
+        root, augmentation_func=None, preprocessing_func=None
+    )
 
     dataset_len = len(dataset)
 
@@ -33,21 +35,23 @@ def split(root, frac):
 
     valid_ids, test_ids = train_test_split(test_ids, train_size=0.1)
 
-    splits = {'train': train_ids, 'valid': valid_ids, 'test': test_ids}
+    splits = {"train": train_ids, "valid": valid_ids, "test": test_ids}
 
-    with open('data/training_patches/training_indices.json', 'w') as fp:
+    with open("data/training_patches/training_indices.json", "w") as fp:
         json.dump(splits, fp)
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     arguments = docopt(__doc__)
 
     # Set seeds
-    seed = int(arguments['--seed'])
-    frac = float(arguments['--frac'])
-    root = arguments['--root']
+    seed = int(arguments["--seed"])
+    frac = float(arguments["--frac"])
+    root = arguments["--root"]
     import torch
     import random
     import numpy as np
+
     np.random.seed(seed)
     torch.manual_seed(seed)
     random.seed(seed)

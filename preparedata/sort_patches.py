@@ -35,10 +35,13 @@ def dump_polygons(annotation_dir_source, save_path, included):
 
     included_annotations = {}
     for in_test_img in included:
-        included_annotations[in_test_img+'.jpg'] = all_annotations[in_test_img+'.jpg']
+        included_annotations[in_test_img + ".jpg"] = all_annotations[
+            in_test_img + ".jpg"
+        ]
 
-    with open(save_path, 'wb') as f:
+    with open(save_path, "wb") as f:
         pickle.dump(included_annotations, f, pickle.HIGHEST_PROTOCOL)
+
 
 def read_excluded(path):
     """
@@ -46,10 +49,11 @@ def read_excluded(path):
     :param path:
     :return:
     """
-    with open(path, 'r') as f:
+    with open(path, "r") as f:
         lines = f.read().splitlines()
-    lines = [line.split('\n')[0] for line in lines]
+    lines = [line.split("\n")[0] for line in lines]
     return lines
+
 
 def get_all(path):
     """
@@ -57,10 +61,13 @@ def get_all(path):
     :param path:
     :return:
     """
-    files = [f.split('.')[0] for f in os.listdir(path)]
+    files = [f.split(".")[0] for f in os.listdir(path)]
     return files
 
-def main(save_path, excluded_path, all_extracted_path, path_to_anno_source, delete=False):
+
+def main(
+    save_path, excluded_path, all_extracted_path, path_to_anno_source, delete=False
+):
     """
     :param save_path: path where newly sorted patches and their annotations will be stored
     :param excluded_path: path to where image names that will be excluded are stored
@@ -77,22 +84,22 @@ def main(save_path, excluded_path, all_extracted_path, path_to_anno_source, dele
     all_patches = get_all(all_extracted_path)
 
     # Make directories to store filtered patches and ground truth
-    path_to_store_patches = os.path.join(save_path, 'patches')
+    path_to_store_patches = os.path.join(save_path, "patches")
     os.makedirs(path_to_store_patches, exist_ok=True)
-    path_to_store_anno = os.path.join(save_path, 'anno')
+    path_to_store_anno = os.path.join(save_path, "anno")
     os.makedirs(path_to_store_anno, exist_ok=True)
 
     # Move image patches
-    included = [] # To pass into dump_polygons
+    included = []  # To pass into dump_polygons
     for patch in all_patches:
         if patch not in excluded_patches:
             included.append(patch)
-            source_patch_path = os.path.join(all_extracted_path, patch+'.jpg')
-            target_patch_path = os.path.join(path_to_store_patches, patch+'.jpg')
+            source_patch_path = os.path.join(all_extracted_path, patch + ".jpg")
+            target_patch_path = os.path.join(path_to_store_patches, patch + ".jpg")
             shutil.move(source_patch_path, target_patch_path)
     print("Number of included patches {}".format(len(included)))
     # Combine and move annotations to new directory
-    save_annotations_file = os.path.join(path_to_store_anno, 'polygons.pkl')
+    save_annotations_file = os.path.join(path_to_store_anno, "polygons.pkl")
     dump_polygons(path_to_anno_source, save_annotations_file, included)
 
     # Remove patches and their directory if not to be used for pipelines
@@ -102,8 +109,8 @@ def main(save_path, excluded_path, all_extracted_path, path_to_anno_source, dele
 
 if __name__ == "__main__":
     arguments = docopt(__doc__)
-    save_path = arguments['<save_path>']
-    excluded_path = arguments['<excluded_path>']
-    all_extracted_path = arguments['<all_extracted_path>']
-    path_to_anno_source = arguments['<path_to_anno_source>']
+    save_path = arguments["<save_path>"]
+    excluded_path = arguments["<excluded_path>"]
+    all_extracted_path = arguments["<all_extracted_path>"]
+    path_to_anno_source = arguments["<path_to_anno_source>"]
     main(save_path, excluded_path, all_extracted_path, path_to_anno_source)
