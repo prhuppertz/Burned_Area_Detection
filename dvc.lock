@@ -1,1 +1,6 @@
-
+merge_bands:
+  cmd: python preparedata/merge_bands.py /data/raw_data/s2_aws/tiles -s 31/T/GJ -s
+    31/T/GH data/scenes
+  outs:
+  - path: data/scenes
+    md5: 841b12c9a832a7770f78f040a1338a3d.dir

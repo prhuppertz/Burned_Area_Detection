@@ -166,3 +166,4 @@ __pycache__/
 /models
 /segmentation
 /evaluation
+/data

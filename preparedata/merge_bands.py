@@ -35,11 +35,7 @@ def stack_bands(source_path, mgrs_coordinate, save_path):
     #date_string={}
     path_target={}
     meta_source={}
-    
-    #create a directory for the target file 
-    os.makedirs(os.path.join(save_path, mgrs_coordinate), exist_ok=True)
-
-    
+    BANDS=''
      
     for n in range (0,len(SELECTED_BANDS)):
         #create lists of paths to the processed images for all existing dates for each SELECTED_BAND
@@ -60,7 +56,9 @@ def stack_bands(source_path, mgrs_coordinate, save_path):
         #date_datetime[i] = datetime.strptime(date[i], '%Y/%m/%d')
         #date_string[i]=date_datetime[i].strftime('%Y_%m_%d')
         #create target files for every date
-        path_target[i] = os.path.join(save_path, mgrs_coordinate, date[i],  BANDS, '.jp2')
+        #create a directory for the target file 
+        os.makedirs(os.path.join(save_path, mgrs_coordinate, date[i]), exist_ok=True)
+        path_target[i] = os.path.join(save_path, mgrs_coordinate, date[i], BANDS+'.jp2')
         
     for x in range (0,len(SELECTED_BANDS)):
         for y in range (0,len(list_of_paths[0])):
