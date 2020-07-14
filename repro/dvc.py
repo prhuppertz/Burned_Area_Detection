@@ -1,8 +1,8 @@
 """Usage:
-          run_training.py [--cache=<cache_path>]  [--link=None] [--link2=None]
+          dvc.py [--cache=<cache_path>]  [--link=None] [--link2=None]
 
 @ Jevgenij Gamper 2020, Cervest
-Trains a selected type of neural network on field boundary data
+Creates symlinks/DVC structure
 
 Options:
   -h --help             Show help.

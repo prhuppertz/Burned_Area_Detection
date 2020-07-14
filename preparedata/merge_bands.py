@@ -60,7 +60,7 @@ def stack_bands(source_path, mgrs_coordinate, save_path):
         # create a directory for the target file
         os.makedirs(os.path.join(save_path, mgrs_coordinate, date[i]), exist_ok=True)
         path_target[i] = os.path.join(
-            save_path, mgrs_coordinate, date[i], BANDS + ".jp2"
+            save_path, mgrs_coordinate, date[i], BANDS + ".tif"
         )
 
     for x in range(0, len(SELECTED_BANDS)):

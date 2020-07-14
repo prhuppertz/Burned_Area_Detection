@@ -23,7 +23,7 @@ def format_coco(chip_dfs: Dict, patch_size: int, row_name: str):
         "licenses": [],
         "categories": [
             {
-                "supercategory": "AgriculturalFields",
+                "supercategory": "Burned Areas",
                 "id": 1,  # id needs to match category_id.
                 "name": "agfields_singleclass",
             }
