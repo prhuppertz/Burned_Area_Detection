@@ -27,7 +27,8 @@ def import_shapefile_for_patches(
     sh_df = sh_df.to_crs(raster_meta["crs"])
     sh_df = geo.explode_mp(sh_df)
     sh_df = geo.buffer_zero(sh_df)
-    sh_df = geo.close_holes(sh_df)
+    #SKIP FOR BURNED AREA 
+    #sh_df = geo.close_holes(sh_df)
 
     # Clip shapefile to raster geometry
     sh_df = geo.clip(
