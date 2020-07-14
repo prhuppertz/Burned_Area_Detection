@@ -19,6 +19,7 @@ from docopt import docopt
 import os
 import glob
 from datetime import datetime
+import geopandas as gpd
 
 date = {}
 date_datetime={}
@@ -48,7 +49,7 @@ def main(
             scenes_path, scene_mgrs)
         
         list_of_paths = glob.glob(
-            path_to_scene + "/*/*/*/" + "*.jp2".format(scene_mgrs)
+            path_to_scene + "/*/*/*" + "/*.jp2".format(scene_mgrs)
         )
 
         for date_var in range (0, len(list_of_paths)):
@@ -59,15 +60,19 @@ def main(
             date_end_index = list_of_paths[date_var].index("/B8A")
             date[date_var] = list_of_paths[date_var][date_index:date_end_index]
             date_datetime[date_var] = datetime.strptime(date[date_var], '%Y/%m/%d')
-            date_string[date_var]=date_datetime[date_var].strftime('%Y_%m_%d')
+            date_string[date_var]=date_datetime[date_var].strftime('%Y-%m-%d')
             
             # Read composite and import its metadata
             raster = import_image(list_of_paths[date_var])
             raster_meta = raster.meta
 
+            #filter the shapefile for the data that exists on and before the date
+            gdf = gpd.read_file(shapefile)
+            shapefile_date=gdf.loc[(gdf['DATE_ECLOS']<=date_string[date_var])]
+
             # Load the shapefile
             patch_dfs, patch_windows = import_shapefile_for_patches(
-                shapefile, raster, raster_meta, patch_size, num_patches, scene_mgrs + date_string[date_var]
+                shapefile_date, raster, raster_meta, patch_size, num_patches, scene_mgrs + date_string[date_var]
             )
 
             # Patch the shapefile, and store image patches

@@ -13,7 +13,7 @@ from typeguard import typechecked
 
 @typechecked
 def import_shapefile_for_patches(
-    shapefile_filepath: str, raster, raster_meta, patch_size, first_n_patches, mgrs_tile
+    shapefile, raster, raster_meta, patch_size, first_n_patches, mgrs_tile
 ):
     """
     Import shapefile from file
@@ -21,7 +21,8 @@ def import_shapefile_for_patches(
     # Read shapefile
     #!TODO: Maxime's comments - be explicit below, have individual line for every operation
     #!TODO: Maxime's comments - allows for easier errors, as it will point only to one line
-    sh_df = gpd.read_file(shapefile_filepath)
+    #ROBERT: chamged so a shapefile is passed, not the path
+    sh_df = shapefile
     # Convert to raster crs
     sh_df = sh_df.to_crs(raster_meta["crs"])
     sh_df = geo.explode_mp(sh_df)
