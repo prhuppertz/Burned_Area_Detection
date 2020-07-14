@@ -40,9 +40,8 @@ def main(
     os.makedirs(path_to_store_patches, exist_ok=True)
     path_to_store_anno = os.path.join(save_path, "anno")
     os.makedirs(path_to_store_anno, exist_ok=True)
-    # What is field_vis?
-    #path_to_store_field_vis = os.path.join(save_path, "field_vis")
-    #os.makedirs(path_to_store_field_vis, exist_ok=True)
+    path_to_store_burn_vis = os.path.join(save_path, "burn_vis")
+    os.makedirs(path_to_store_burn_vis, exist_ok=True)
 
     for scene_mgrs in scenes:
         path_to_scene = os.path.join(
@@ -76,7 +75,7 @@ def main(
             )
 
             # Patch the shapefile, and store image patches
-            # What are the bands for?
+          
             do_the_patching(
                 raster,
                 path_to_store_patches,
@@ -86,17 +85,17 @@ def main(
             )
 
             # Save annotations
-            #give a date in the file 
+           
             store_coco_ground_truth(
                 path_to_store_anno, patch_dfs, patch_size, class_name, scene_mgrs
             )
 
-        try:
-            save_gt_overlaid(
-                os.path.join(path_to_store_anno, "anno{}.json".format(scene_mgrs)),
-                path_to_store_patches,
-                path_to_store_field_vis,
-            )
+            try:
+                save_gt_overlaid(
+                    os.path.join(path_to_store_anno, "anno{}.json".format(scenes_string + date_string[date_var])),
+                    path_to_store_patches,
+                    path_to_store_burn_vis,
+                )
         except Exception as e:
             print(e)
             print("MGRS tile without annotations: {}".format(scene_mgrs))

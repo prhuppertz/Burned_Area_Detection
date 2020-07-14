@@ -75,7 +75,6 @@ def cut_chip_images(
     """
     Cuts image raster to patches via the given windows and exports them to jpg.
     """
-
     src = raster
 
     all_chip_stats = {}
