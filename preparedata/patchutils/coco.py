@@ -150,7 +150,7 @@ def plot_coco(inpath_json, inpath_image_folder, start=0, end=2):
 
 def save_gt_overlaid(inpath_json, inpath_image_folder, save_path):
     """
-    Takes all the data and its ground truth and stores the
+    Takes all the data and its ground truth and stores the overlaid image
     :param inpath_json:
     :param inpath_image_folder:
     :param raster_name:
@@ -165,10 +165,13 @@ def save_gt_overlaid(inpath_json, inpath_image_folder, save_path):
         img = np.asarray(pilimage.open(os.path.join(inpath_image_folder, key)))
         plt.imshow(img, interpolation="none")
 
-        mp = extracted[key]
-        patches = [
-            PolygonPatch(p, ec="r", fill=False, alpha=1, lw=0.7, zorder=1) for p in mp
-        ]
-        plt.gca().add_collection(PatchCollection(patches, match_original=True))
-        plt.savefig(os.path.join(save_path, key), dpi=800)
+        #ADDED by Robert for skipping empty patches
+        if np.unique(img).size > 2:
+            mp = extracted[key]
+            patches = [
+              PolygonPatch(p, ec="r", fill=False, alpha=1, lw=0.7, zorder=1) for p in mp
+            ]
+            plt.gca().add_collection(PatchCollection(patches, match_original=True))
+            plt.savefig(os.path.join(save_path, key), dpi=800)
+        
         plt.close("all")

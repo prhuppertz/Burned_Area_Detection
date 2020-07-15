@@ -1,7 +1,7 @@
 """Usage:
           extract_patches.py <shapefile>  <save_path> <class_name> <scenes_path> (-s <mgrs>)...
 
-@ Jevgenij Gamper & Robert Huppertz 2020, Cervest
+@ Jev Gamper & Robert Huppertz 2020, Cervest
 Extract image patches from selected scences and stored the produced images along with their ground truth.
 
 Options:
@@ -94,7 +94,9 @@ def main(
             store_coco_ground_truth(
                 path_to_store_anno, patch_dfs, patch_size, class_name, scene_string + date_string[date_var]
             )
+            
 
+            #create overlaid patches with ground truth
             try:
                 save_gt_overlaid(
                     os.path.join(path_to_store_anno, "anno{}.json".format(scene_string + date_string[date_var])),
