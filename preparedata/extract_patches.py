@@ -6,7 +6,7 @@ Extract image patches from selected scences and stored the produced images along
 
 Options:
     --patch_size=<ps>  Size of patches, stands for both width and height [default: 128].
-    --num_patches=<ns> Maximum number of patches to extract from a scene[default: 1000].
+    --num_patches=<ns> Maximum number of patches to extract from a scene[default: 2000].
 """
 from patching import (
     import_shapefile_for_patches,
@@ -50,6 +50,13 @@ def main(
         list_of_paths = glob.glob(
             path_to_scene + "/*/*/*" + "/*.jp2".format(scene_mgrs)
         )
+        scene_list=list(scene_mgrs)
+        scene_list[2]="_"
+        scene_list[4]="_"
+        scene_list.insert(0,"_")
+        scene_list.insert(8, "_")
+        scene_string=""
+        scene_string=scene_string.join(scene_list)
 
         for date_var in range (0, len(list_of_paths)):
             
@@ -67,15 +74,14 @@ def main(
 
             #filter the shapefile for the data that exists on and before the date
             gdf = gpd.read_file(shapefile)
-            shapefile_date=gdf.loc[(gdf['DATE_ECLOS']<=date_string[date_var])]
+            shapefile_date=gdf.loc[(gdf['DATE_ECLOS']<date_string[date_var])]
 
-            # Load the shapefile
+            # Load the shapefiles
             patch_dfs, patch_windows = import_shapefile_for_patches(
-                shapefile_date, raster, raster_meta, patch_size, num_patches, scene_mgrs + date_string[date_var]
+                shapefile_date, raster, raster_meta, patch_size, num_patches, scene_string + date_string[date_var]
             )
 
             # Patch the shapefile, and store image patches
-          
             do_the_patching(
                 raster,
                 path_to_store_patches,
@@ -85,22 +91,21 @@ def main(
             )
 
             # Save annotations
-           
             store_coco_ground_truth(
-                path_to_store_anno, patch_dfs, patch_size, class_name, scene_mgrs
+                path_to_store_anno, patch_dfs, patch_size, class_name, scene_string + date_string[date_var]
             )
 
             try:
                 save_gt_overlaid(
-                    os.path.join(path_to_store_anno, "anno{}.json".format(scenes_string + date_string[date_var])),
+                    os.path.join(path_to_store_anno, "anno{}.json".format(scene_string + date_string[date_var])),
                     path_to_store_patches,
                     path_to_store_burn_vis,
                 )
-        except Exception as e:
-            print(e)
-            print("MGRS tile without annotations: {}".format(scene_mgrs))
+            except Exception as e:
+                print(e)
+                print("MGRS tile without annotations: {}".format(scene_mgrs))
 
-        raster.close()
+            raster.close()
 
 
 if __name__ == "__main__":
@@ -119,5 +124,5 @@ if __name__ == "__main__":
         scenes_path,
         scenes,
         patch_size=128,
-        num_patches=1000,
+        num_patches=2000,
     )
