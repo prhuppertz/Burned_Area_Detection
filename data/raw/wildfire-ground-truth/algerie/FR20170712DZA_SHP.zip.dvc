@@ -1,7 +1,0 @@
-md5: 047b60a6af0cc2e4a4c9ea17b5d2ad34
-outs:
-- md5: e3f5d325736c3d5791b371ad6b00a899
-  path: FR20170712DZA_SHP.zip
-  cache: true
-  metric: false
-  persist: false

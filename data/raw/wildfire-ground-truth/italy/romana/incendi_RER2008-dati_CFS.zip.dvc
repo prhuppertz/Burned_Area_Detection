@@ -1,7 +1,0 @@
-md5: f7b10303baf51b7808f3701e2b9ffbb2
-outs:
-- md5: bc0eb1d1f510019f55a0c828538996cd
-  path: incendi_RER2008-dati_CFS.zip
-  cache: true
-  metric: false
-  persist: false

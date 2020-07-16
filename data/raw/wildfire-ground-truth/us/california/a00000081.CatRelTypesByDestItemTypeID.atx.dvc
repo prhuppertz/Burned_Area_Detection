@@ -1,7 +1,0 @@
-md5: 87855410fa9216a2096adc35c82f4db1
-outs:
-- md5: 19b09ffd5a66ed39a60c832194f05688
-  path: fire18_1.gdb/a00000081.CatRelTypesByDestItemTypeID.atx
-  cache: true
-  metric: false
-  persist: false

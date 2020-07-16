@@ -161,9 +161,12 @@ __pycache__/
 .pytest_cache/
 *.pyc
 
-#Jevs folders
+
 /networks
 /models
 /segmentation
 /evaluation
+/data2
 /data
+/raw_data
+

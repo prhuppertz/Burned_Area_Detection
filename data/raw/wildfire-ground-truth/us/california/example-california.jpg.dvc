@@ -1,7 +1,0 @@
-md5: 36ea0ffd66ee045afac614397df497e1
-outs:
-- md5: e716b36645170a01951a940ac02cd1f1
-  path: example-california.jpg
-  cache: true
-  metric: false
-  persist: false

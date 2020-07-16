@@ -1,7 +1,0 @@
-md5: 8c9153af7415dcaad831b30ddfaa0469
-outs:
-- md5: 1bbf2813ef217b5718f1ade76530042e
-  path: incendis03.zip
-  cache: true
-  metric: false
-  persist: false

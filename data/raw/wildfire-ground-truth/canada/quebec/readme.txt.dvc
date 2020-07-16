@@ -1,7 +1,0 @@
-md5: 8d475e3572668b8c67092f538530ee7b
-outs:
-- md5: e8a6f97f0e306c7ba27c2179b6cbbc43
-  path: readme.txt
-  cache: true
-  metric: false
-  persist: false

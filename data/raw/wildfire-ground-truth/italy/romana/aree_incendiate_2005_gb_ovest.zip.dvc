@@ -1,7 +1,0 @@
-md5: d3ea80c9ea7b0af166a04941f7b66a52
-outs:
-- md5: 9424bd4afa1ea4ed4274e6734f510975
-  path: aree_incendiate_2005_gb_ovest.zip
-  cache: true
-  metric: false
-  persist: false

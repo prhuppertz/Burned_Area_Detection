@@ -1,7 +1,0 @@
-md5: c2b972ababe2da1bbe9ad37188b2e4c2
-outs:
-- md5: ddafb186d67b37659cc2af6f9343c7cf
-  path: N_DFCI_CONTOUR_FEUX_2015_S_083.shp.zip
-  cache: true
-  metric: false
-  persist: false

@@ -1,7 +1,0 @@
-md5: 97ac8452a7e63ef43cfd7f16d2096ecb
-outs:
-- md5: 7d0c173fb8cf0d1f870207ad919ab760
-  path: example-points.png
-  cache: true
-  metric: false
-  persist: false

@@ -1,7 +1,0 @@
-md5: c3125e97e307d47646d9a75c3271da32
-outs:
-- md5: 330ddd60fc34d142a28b1b0464403c4e
-  path: AArdida2012.zip
-  cache: true
-  metric: false
-  persist: false

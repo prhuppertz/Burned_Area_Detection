@@ -1,7 +1,0 @@
-md5: 4732699db73922b1fa19a19c2c05af9d
-outs:
-- md5: ea0c03c8803b13d5abb440233b43df2f
-  path: incendi_rer2009-dati_cfs.zip
-  cache: true
-  metric: false
-  persist: false

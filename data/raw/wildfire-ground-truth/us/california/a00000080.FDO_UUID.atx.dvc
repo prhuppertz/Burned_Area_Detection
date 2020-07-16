@@ -1,7 +1,0 @@
-md5: aacc40c2e86533ae83a8efe251ce5fb1
-outs:
-- md5: 78bcbd0367e973c24d6f8240e6864b11
-  path: fire18_1.gdb/a00000080.FDO_UUID.atx
-  cache: true
-  metric: false
-  persist: false

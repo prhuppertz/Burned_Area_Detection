@@ -1,7 +1,0 @@
-md5: bccb3e969fcf888fa65cbc2483759a15
-outs:
-- md5: 315bb3f2448c13a5e86216d379ddf3d2
-  path: example-quebec.jpg
-  cache: true
-  metric: false
-  persist: false

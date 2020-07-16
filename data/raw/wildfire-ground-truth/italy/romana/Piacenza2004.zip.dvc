@@ -1,7 +1,0 @@
-md5: 4786990f7e13239399cc6f41f448d1ca
-outs:
-- md5: c7d4b3263bc43bddee61d62eb40448cc
-  path: Piacenza2004.zip
-  cache: true
-  metric: false
-  persist: false

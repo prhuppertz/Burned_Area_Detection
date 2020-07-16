@@ -1,7 +1,0 @@
-md5: 90926bcd8d526646a063a20643db44e8
-outs:
-- md5: b86c1e111706120f2d08e2c47a48ee78
-  path: incendi_rer2017_dati_cc_for.zip
-  cache: true
-  metric: false
-  persist: false

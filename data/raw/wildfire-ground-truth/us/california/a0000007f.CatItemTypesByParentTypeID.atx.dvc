@@ -1,7 +1,0 @@
-md5: 65e8f039431b4f5795d61c1ba05b15f0
-outs:
-- md5: b034b6a35a5dea57e5b37292e92ef54b
-  path: fire18_1.gdb/a0000007f.CatItemTypesByParentTypeID.atx
-  cache: true
-  metric: false
-  persist: false

@@ -1,7 +1,0 @@
-md5: ebd0f0e98b1d857a01b8afb95a6612fe
-outs:
-- md5: 827a156548a7aec1952cefe0811d5237
-  path: GDB/FEUX_CONT_SIMP.gdb/a00000005.CatItemTypesByUUID.atx
-  cache: true
-  metric: false
-  persist: false

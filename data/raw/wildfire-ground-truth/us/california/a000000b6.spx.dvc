@@ -1,7 +1,0 @@
-md5: aad656e3be88f21a64389be22cc6407d
-outs:
-- md5: 3b27d7ae218e4672af28b23ec29a2d94
-  path: fire18_1.gdb/a000000b6.spx
-  cache: true
-  metric: false
-  persist: false

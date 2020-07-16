@@ -1,7 +1,0 @@
-md5: d733775d90725f6f7911036174c2fab3
-outs:
-- md5: 41f7f97b90c12b7d44206ca35220145f
-  path: fire18_1.gdb/timestamps
-  cache: true
-  metric: false
-  persist: false

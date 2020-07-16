@@ -1,7 +1,0 @@
-md5: e4e6e9977c99dc8a83bd3ed4f1252986
-outs:
-- md5: 39aff1e0c010af5fdb9454fd2f742aa1
-  path: rapf2004.zip
-  cache: true
-  metric: false
-  persist: false

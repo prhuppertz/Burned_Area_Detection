@@ -1,7 +1,0 @@
-md5: b3b83871b96eb8692b25cf660d331a9b
-outs:
-- md5: 0ce792db09cf0b48d842314957bcd675
-  path: Bologna_2004.zip
-  cache: true
-  metric: false
-  persist: false

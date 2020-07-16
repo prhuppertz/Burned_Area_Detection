@@ -1,7 +1,7 @@
 """Usage:
-          dvc.py [--cache=<cache_path>]  [--link=None] [--link2=None]
+        dvc.py [--cache=<cache_path>] [--link=None] [--link2=None] 
 
-@ Jevgenij Gamper 2020, Cervest
+@ Jevgenij Gamper & Robert Huppertz 2020, Cervest
 Creates symlinks/DVC structure
 
 Options:
@@ -11,6 +11,7 @@ Options:
   --link=<link>         Path to for symlink to points towards, if using remote storage
   --link2=<link>        2nd Path for raw_data for symlink to points towards, if using remote storage
 """
+
 import os
 import subprocess
 from docopt import docopt
@@ -44,24 +45,29 @@ def main(cache_path, link_path, link2_path):
         set_cache(cache_path)
     # Get directory of current project
     cur_project_dir = os.getcwd()
-    # Make path to store data
+    # Make path to store data files
+    
     if link_path:
         to_folder = os.path.join(cur_project_dir, "data")
         from_folder = link_path
         os.makedirs(from_folder, exist_ok=True)
+        os.makedirs(to_folder, exist_ok=True)
         # Create a symlink
-        os.symlink(from_folder, to_folder)
-    # Make a path where raw_data is stored, if data is stored externally from the other directory
+        #os.symlink(from_folder, to_folder)
+        
+    # Make a path where raw_data is stored, if data is stored externally
+    
     if link2_path:
         to_folder = os.path.join(cur_project_dir, "raw_data")
         from_folder = link2_path
         os.makedirs(from_folder, exist_ok=True)
+        os.makedirs(to_folder, exist_ok=True)
         # Create a symlink
         os.symlink(from_folder, to_folder)
-    # If does not want to specify symlinks then just create data dir
-    else:
-        to_folder = os.path.join(cur_project_dir, "data")
-        os.makedirs(to_folder, exist_ok=True)
+   
+    #replacement links if code doesn't work
+    #os.symlink("/data/raw_data/s2_aws", "/home/robert/ds-wildfire/raw_data/s2_aws")
+    #os.symlink("//data/raw_data/wildfires-ground-truth", "/home/robert/ds-wildfire/raw_data/wildfires-ground-truth")
 
 
 if __name__ == "__main__":

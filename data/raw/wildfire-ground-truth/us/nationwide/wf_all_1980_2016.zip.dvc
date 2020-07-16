@@ -1,7 +1,0 @@
-md5: bf9f51dcbbc3c2e03773de532f0b54f3
-outs:
-- md5: 17f9cbedc8079422a3a2c48114f406b6
-  path: wf_all_1980_2016.zip
-  cache: true
-  metric: false
-  persist: false

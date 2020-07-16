@@ -1,7 +1,0 @@
-md5: 926900077ee1973adf0911f6daec9427
-outs:
-- md5: 1d9a62502931056952e3d6c482652317
-  path: N_DFCI_CONTOUR_FEUX_2008_S_083.shp.zip
-  cache: true
-  metric: false
-  persist: false

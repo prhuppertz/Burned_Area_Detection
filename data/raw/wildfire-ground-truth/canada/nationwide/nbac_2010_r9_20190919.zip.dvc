@@ -1,7 +1,0 @@
-md5: 85604a8c7786b1029e51ec64bf0ab692
-outs:
-- md5: 9da22726f1212cb589455ac1028d23a4
-  path: nbac_2010_r9_20190919.zip
-  cache: true
-  metric: false
-  persist: false

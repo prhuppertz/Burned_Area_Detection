@@ -1,7 +1,0 @@
-md5: af502405c2b857480efeca4c1b2ac125
-outs:
-- md5: c566f2c416fffadc3408a91880dce556
-  path: field-information.jpg
-  cache: true
-  metric: false
-  persist: false

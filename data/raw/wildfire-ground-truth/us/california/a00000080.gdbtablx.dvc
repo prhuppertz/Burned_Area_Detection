@@ -1,7 +1,0 @@
-md5: 95afda95cdee47150f0cfb66cf9eccd7
-outs:
-- md5: 7177cf2f18a1b4c5c53cf3e334fe8e86
-  path: fire18_1.gdb/a00000080.gdbtablx
-  cache: true
-  metric: false
-  persist: false
