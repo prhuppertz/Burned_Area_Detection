@@ -171,3 +171,5 @@ __pycache__/
 /raw_data
 /data_exp
 /data2
+/prepare_data/.ipynb_checkpoints
+/prepare_data/*.ipynb

@@ -1,8 +1,8 @@
 """Usage:
           sort_patches.py <save_path> <excluded_path> <all_extracted_path>  <path_to_anno_source>
 
-@ Jevgenij Gamper 2020, Cervest
-Loads calculated composites from AWS, and produces a merged stack.
+@ Jevgenij Gamper & Robert Huppertz 2020, Cervest
+Sort patches and annotations to training folders if they are not excluded nor empty
 
 Options:
   -h --help             Show help.
@@ -16,12 +16,15 @@ import shutil
 from pathlib import Path
 from docopt import docopt
 from patchutils.coco import coco_to_shapely
+from PIL import Image as pilimage
+import numpy as np
+from patchutils import other
 
 
 def dump_polygons(annotation_dir_source, save_path, included):
     """
 
-    :param annotation_dir:
+    :param annotation_dir_source: 
     :param save_path: Path to file to save the annotations used for pipelines and testing eg polygons.pkl
     :param included:
     :return:
@@ -30,8 +33,10 @@ def dump_polygons(annotation_dir_source, save_path, included):
     all_annotations = {}
     mgrs_anno_files = os.listdir(annotation_dir_source)
     for anno_file in mgrs_anno_files:
-        anno_file = coco_to_shapely(os.path.join(annotation_dir_source, anno_file))
-        all_annotations = {**all_annotations, **anno_file}
+        path = os.path.join(annotation_dir_source, anno_file)
+        if "annotations" in other.load_json(os.path.join(annotation_dir_source, anno_file)):
+            anno_file = coco_to_shapely(os.path.join(annotation_dir_source, anno_file))
+            all_annotations = {**all_annotations, **anno_file}
 
     included_annotations = {}
     for in_test_img in included:
@@ -73,7 +78,7 @@ def main(
     :param excluded_path: path to where image names that will be excluded are stored
     :param all_extracted_path: path to where all images that have been extracted from MGRS files are stored
     :param path_to_anno_source: path to where extracted source annotation files are stored
-    :param delete: if all extracted (non-filtered) patches should be deleted
+    :param delete: if all extracted (non-filtered) patches should be deleted [default=False]
     :return:
     """
 
@@ -82,6 +87,7 @@ def main(
     excluded_patches = read_excluded(excluded_path) if excluded_path else []
     print(len(excluded_patches))
     all_patches = get_all(all_extracted_path)
+    all_patches = [i for i in all_patches if i]
 
     # Make directories to store filtered patches and ground truth
     path_to_store_patches = os.path.join(save_path, "patches")
@@ -92,11 +98,17 @@ def main(
     # Move image patches
     included = []  # To pass into dump_polygons
     for patch in all_patches:
+        
         if patch not in excluded_patches:
-            included.append(patch)
             source_patch_path = os.path.join(all_extracted_path, patch + ".jpg")
             target_patch_path = os.path.join(path_to_store_patches, patch + ".jpg")
-            shutil.move(source_patch_path, target_patch_path)
+            #ROBERT:test if patch is empty
+            img = np.asarray(pilimage.open(source_patch_path))
+            if np.unique(img).size > 2:
+                included.append(patch)
+                shutil.move(source_patch_path, target_patch_path)
+                
+        
     print("Number of included patches {}".format(len(included)))
     # Combine and move annotations to new directory
     save_annotations_file = os.path.join(path_to_store_anno, "polygons.pkl")
