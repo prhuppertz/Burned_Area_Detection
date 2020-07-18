@@ -34,3 +34,12 @@ stages:
         cache: false
     - data/training_patches/patches/:
         cache: false
+  split_data:
+    cmd: python preparedata/split.py --root=data/training_patches/
+    deps:
+    - data/training_patches/anno/
+    - data/training_patches/patches/
+    - preparedata/split.py
+    outs:
+    - data/training_patches/training_indices.json:
+        cache: false

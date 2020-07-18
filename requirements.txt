@@ -56,6 +56,7 @@ isort==4.3.21
 jedi==0.17.1
 Jinja2==2.11.2
 jmespath==0.9.5
+joblib==0.16.0
 jsonpath-ng==1.5.1
 jsonschema==3.2.0
 jupyter==1.0.0
@@ -77,6 +78,7 @@ notebook==6.0.3
 numexpr==2.7.1
 numpy==1.19.0
 nvidia-ml-py3==7.352.0
+opencv-python==4.3.0.36
 packaging==20.3
 pandas==1.0.5
 pandocfilters==1.4.2
@@ -114,6 +116,7 @@ ruamel.yaml==0.16.10
 ruamel.yaml.clib==0.2.0
 s3transfer==0.3.3
 scikit-image==0.17.2
+scikit-learn==0.23.1
 scipy==1.5.0
 Send2Trash==1.5.0
 sentry-sdk==0.15.1
@@ -121,6 +124,7 @@ Shapely==1.7.0
 shortuuid==1.0.1
 shtab==1.1.0
 six==1.14.0
+sklearn==0.0
 smmap==3.0.2
 snuggs==1.4.7
 soupsieve==2.0.1
@@ -129,6 +133,7 @@ tabulate==0.8.7
 terminado==0.8.3
 testpath==0.4.4
 texttable==1.6.2
+threadpoolctl==2.1.0
 tifffile==2020.6.3
 toml==0.10.1
 torch==1.5.1

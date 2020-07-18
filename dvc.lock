@@ -43,3 +43,15 @@ sort_patches:
     md5: 46fabb8a70c1cb746a94a342d2068662.dir
   - path: data/training_patches/patches/
     md5: d8491355760998d5ffbef6ef6a56380c.dir
+split_data:
+  cmd: python preparedata/split.py --root=data/training_patches/
+  deps:
+  - path: data/training_patches/anno/
+    md5: 46fabb8a70c1cb746a94a342d2068662.dir
+  - path: data/training_patches/patches/
+    md5: d8491355760998d5ffbef6ef6a56380c.dir
+  - path: preparedata/split.py
+    md5: 8a8e628d36b8d2ff6f2b2e184fbc1439
+  outs:
+  - path: data/training_patches/training_indices.json
+    md5: b87aad788dbd84a0934cef7aa667fb90

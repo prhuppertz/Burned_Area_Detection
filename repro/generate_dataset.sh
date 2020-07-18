@@ -21,10 +21,10 @@ dvc run -n sort_patches \
 -O data/training_patches/patches/ \
 "python preparedata/sort_patches.py /home/robert/ds-wildfire/data/training_patches /home/robert/ds-wildfire/excluded.txt /home/robert/ds-wildfire/data/extracted/patches /home/robert/ds-wildfire/data/extracted/anno"
 
-"""
+
 dvc run -n split_data \
--d preparedata/ \
+-d preparedata/split.py \
 -d data/training_patches/patches/ \
+-d data/training_patches/anno/ \
 -O data/training_patches/training_indices.json \
-python preparedata/split.py --root=data/training_patches/"
-"""
+"python preparedata/split.py --root=data/training_patches/"
