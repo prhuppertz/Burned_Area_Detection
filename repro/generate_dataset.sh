@@ -2,7 +2,7 @@ dvc run -n merge_bands \
 -d preparedata/merge_bands.py \
 -d raw_data/s2_aws/tiles/31 \
 -d raw_data/s2_aws/tiles/30 \
--O data/mgrs_scenes \
+-O data/scenes \
 "python preparedata/merge_bands.py /home/robert/ds-wildfire/raw_data/s2_aws/tiles -s 31/T/GH -s 31/T/GJ /home/robert/ds-wildfire/data/scenes"
 
 dvc run -n patch_scenes \

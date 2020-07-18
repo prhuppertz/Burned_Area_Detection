@@ -93,7 +93,7 @@ def cut_chip_images(
         # Export chip images
         Path(output_patch_path).mkdir(parents=True, exist_ok=True)
         with open(Path(rf"{output_patch_path}/{chip_name}.jpg"), "w") as dst:
-            
+
             img_pil.save(dst, format="JPEG", subsampling=0, quality=100)
 
         all_chip_stats[chip_name] = {

@@ -46,17 +46,17 @@ def main(cache_path, link_path, link2_path):
     # Get directory of current project
     cur_project_dir = os.getcwd()
     # Make path to store data files
-    
+
     if link_path:
         to_folder = os.path.join(cur_project_dir, "data")
         from_folder = link_path
         os.makedirs(from_folder, exist_ok=True)
         os.makedirs(to_folder, exist_ok=True)
         # Create a symlink
-        #os.symlink(from_folder, to_folder)
-        
+        # os.symlink(from_folder, to_folder)
+
     # Make a path where raw_data is stored, if data is stored externally
-    
+
     if link2_path:
         to_folder = os.path.join(cur_project_dir, "raw_data")
         from_folder = link2_path
@@ -64,10 +64,10 @@ def main(cache_path, link_path, link2_path):
         os.makedirs(to_folder, exist_ok=True)
         # Create a symlink
         os.symlink(from_folder, to_folder)
-   
-    #replacement links if code doesn't work
-    #os.symlink("/data/raw_data/s2_aws", "/home/robert/ds-wildfire/raw_data/s2_aws")
-    #os.symlink("/data/raw_data/wildfires-ground-truth", "/home/robert/ds-wildfire/raw_data/wildfires-ground-truth")
+
+    # replacement links if code doesn't work
+    # os.symlink("/data/raw_data/s2_aws", "/home/robert/ds-wildfire/raw_data/s2_aws")
+    # os.symlink("/data/raw_data/wildfires-ground-truth", "/home/robert/ds-wildfire/raw_data/wildfires-ground-truth")
 
 
 if __name__ == "__main__":

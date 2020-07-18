@@ -14,11 +14,11 @@ stages:
         cache: false
   merge_bands:
     cmd: python preparedata/merge_bands.py /home/robert/ds-wildfire/raw_data/s2_aws/tiles
-      -s 31/T/GH -s 31/T/GJ /home/robert/ds-wildfire/data/mgrs_scenes
+      -s 31/T/GH -s 31/T/GJ /home/robert/ds-wildfire/data/scenes
     deps:
     - preparedata/merge_bands.py
     - raw_data/s2_aws/tiles/30
     - raw_data/s2_aws/tiles/31
     outs:
-    - data/mgrs_scenes:
+    - data/scenes:
         cache: false

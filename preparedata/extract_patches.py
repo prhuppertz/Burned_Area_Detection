@@ -26,6 +26,7 @@ date_datetime = []
 date_string = []
 date = []
 
+
 def main(
     shapefile,
     save_path,
@@ -43,8 +44,8 @@ def main(
     os.makedirs(path_to_store_anno, exist_ok=True)
     path_to_store_burn_vis = os.path.join(save_path, "burn_vis")
     os.makedirs(path_to_store_burn_vis, exist_ok=True)
-    
-    #folders for temporal sequence
+
+    # folders for temporal sequence
     """
     path_to_store_patches_prev = os.path.join(save_path, "patches_prev")
     os.makedirs(path_to_store_patches_prev, exist_ok=True)
@@ -55,79 +56,94 @@ def main(
     """
 
     for scene_mgrs in scenes:
-        path_to_scene = os.path.join(
-            scenes_path, scene_mgrs)
-        
+        path_to_scene = os.path.join(scenes_path, scene_mgrs)
+
         list_of_paths = glob.glob(
             path_to_scene + "/*/*/*/" + "*.tif".format(scene_mgrs)
         )
 
-        #create scene string
-        scene_list=list(scene_mgrs)
-        scene_list[2]="_"
-        scene_list[4]="_"
-        scene_list.insert(0,"_")
+        # create scene string
+        scene_list = list(scene_mgrs)
+        scene_list[2] = "_"
+        scene_list[4] = "_"
+        scene_list.insert(0, "_")
         scene_list.insert(8, "_")
-        scene_string=""
-        scene_string=scene_string.join(scene_list)
+        scene_string = ""
+        scene_string = scene_string.join(scene_list)
 
-        for date_var1 in range (0, len(list_of_paths)):
+        for date_var1 in range(0, len(list_of_paths)):
             date_index = list_of_paths[date_var1].index("201")
             date_end_index = list_of_paths[date_var1].index("/B8A")
             date.append(list_of_paths[date_var1][date_index:date_end_index])
-            date_datetime.append(datetime.strptime(date[date_var1], '%Y/%m/%d'))
+            date_datetime.append(datetime.strptime(date[date_var1], "%Y/%m/%d"))
 
         # create sorted Pandas series for dates and paths
-        date_file_mapping = {dt: filename for dt, filename in zip(date_datetime, list_of_paths)}
-        map_of_paths=pd.Series(date_file_mapping).sort_index()
+        date_file_mapping = {
+            dt: filename for dt, filename in zip(date_datetime, list_of_paths)
+        }
+        map_of_paths = pd.Series(date_file_mapping).sort_index()
 
         # create sorted date list with strings
-        for date_var2 in range (0, len(map_of_paths)):  
-            date_string.append(map_of_paths.index[date_var2].strftime('%Y-%m-%d'))
- 
-        for date_var3 in range (0, len(map_of_paths)): 
-            #import image
+        for date_var2 in range(0, len(map_of_paths)):
+            date_string.append(map_of_paths.index[date_var2].strftime("%Y-%m-%d"))
+
+        for date_var3 in range(0, len(map_of_paths)):
+            # import image
             raster1 = import_image(map_of_paths[date_var3])
             raster_meta1 = raster1.meta
-    
-            #load the shapefiles
+
+            # load the shapefiles
             gdf = gpd.read_file(shapefile)
             # load the shapefile data of the days prior to the date of the mgrs scene
-            shapefile_date1=gdf[(gdf["DATE_ECLOS"]<map_of_paths.index[date_var3].strftime('%Y-%m-%d'))]#&(gdf['DATE_ECLOS']>(map_of_paths.index[date_var3]-timedelta(days=45)).strftime('%Y-%m-%d'))]
-    
-            #create windows from where shapefile and scenes overlap
+            shapefile_date1 = gdf[
+                (gdf["DATE_ECLOS"] < map_of_paths.index[date_var3].strftime("%Y-%m-%d"))
+            ]  # &(gdf['DATE_ECLOS']>(map_of_paths.index[date_var3]-timedelta(days=45)).strftime('%Y-%m-%d'))]
+
+            # create windows from where shapefile and scenes overlap
             patch_dfs1, patch_windows1 = import_shapefile_for_patches(
-                shapefile_date1, raster1, raster_meta1, patch_size, num_patches, scene_string + date_string[date_var3]
+                shapefile_date1,
+                raster1,
+                raster_meta1,
+                patch_size,
+                num_patches,
+                scene_string + date_string[date_var3],
             )
-    
-            #patch from the given scenes
+
+            # patch from the given scenes
             do_the_patching(
                 raster1,
                 path_to_store_patches,
                 patch_windows1.keys(),
                 patch_windows1.values(),
-                bands=[3,2,1],
+                bands=[3, 2, 1],
             )
 
             # Save annotations
             store_coco_ground_truth(
-                path_to_store_anno, patch_dfs1, patch_size, class_name, scene_string + date_string[date_var3]
+                path_to_store_anno,
+                patch_dfs1,
+                patch_size,
+                class_name,
+                scene_string + date_string[date_var3],
             )
-            
-            #create overlaid patches with ground truth
+
+            # create overlaid patches with ground truth
             try:
                 save_gt_overlaid(
-                    os.path.join(path_to_store_anno, "anno{}.json".format(scene_string + date_string[date_var3])),
+                    os.path.join(
+                        path_to_store_anno,
+                        "anno{}.json".format(scene_string + date_string[date_var3]),
+                    ),
                     path_to_store_patches,
                     path_to_store_burn_vis,
-                    )
+                )
             except Exception as e:
                 print(e)
                 print("MGRS tile without annotations: {}".format(scene_string))
 
             raster1.close()
-    
-            #patch image from previous satelite image
+
+            # patch image from previous satelite image
             """
             if date_var3>1:
                 for date_var4 in range (date_var3-2,date_var3):
@@ -168,6 +184,7 @@ def main(
 
                     raster_prev.close()
             """
+
 
 if __name__ == "__main__":
     arguments = docopt(__doc__)

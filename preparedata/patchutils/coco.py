@@ -165,13 +165,14 @@ def save_gt_overlaid(inpath_json, inpath_image_folder, save_path):
         img = np.asarray(pilimage.open(os.path.join(inpath_image_folder, key)))
         plt.imshow(img, interpolation="none")
 
-        #ADDED by Robert for skipping empty patches
+        # ADDED by Robert for skipping empty patches
         if np.unique(img).size > 2:
             mp = extracted[key]
             patches = [
-              PolygonPatch(p, ec="r", fill=False, alpha=1, lw=0.7, zorder=1) for p in mp
+                PolygonPatch(p, ec="r", fill=False, alpha=1, lw=0.7, zorder=1)
+                for p in mp
             ]
             plt.gca().add_collection(PatchCollection(patches, match_original=True))
             plt.savefig(os.path.join(save_path, key), dpi=800)
-        
+
         plt.close("all")
