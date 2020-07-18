@@ -4,18 +4,18 @@ patch_scenes:
     -s 31/T/GJ -s 31/T/GH
   deps:
   - path: data/scenes/
-    md5: 5525739aefce6e1fb4e94d8c6b6f8879.dir
+    md5: 46708514a1adfe0a1ce902ba5707f5dc.dir
   - path: preparedata/extract_patches.py
-    md5: 503c7927d3b1dc3f808eab1b8f1b658f
+    md5: 0a152ee6790a1cd2c107e73e4aeedd5b
   - path: preparedata/patching.py
     md5: c22fa39f30cb442992d9d0fc3b2dfd67
   - path: preparedata/patchutils
-    md5: 1f5c642d8487793081103e5094f6e518.dir
+    md5: d659993a1a299ce96f1d7337a9b4c638.dir
   - path: raw_data/wildfires-ground-truth/france/vars/N_DFCI_CONTOUR_FEUX_2017_S_083.shp
     md5: 5f2aedfcbb0e3d3270acfb3546cff065
   outs:
   - path: data/extracted/
-    md5: d751713988987e9331980363e24189ce.dir
+    md5: 48e63628c00c455132c0493810689b11.dir
 merge_bands:
   cmd: python preparedata/merge_bands.py /home/robert/ds-wildfire/raw_data/s2_aws/tiles
     -s 31/T/GH -s 31/T/GJ /home/robert/ds-wildfire/data/mgrs_scenes

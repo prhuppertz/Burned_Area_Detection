@@ -20,6 +20,7 @@ import os
 import glob
 from datetime import datetime
 import geopandas as gpd
+import pandas as pd
 
 date_datetime = []
 date_string = []
@@ -36,7 +37,7 @@ def main(
 ):
 
     # Make paths
-    spath_to_store_patches = os.path.join(save_path, "patches")
+    path_to_store_patches = os.path.join(save_path, "patches")
     os.makedirs(path_to_store_patches, exist_ok=True)
     path_to_store_anno = os.path.join(save_path, "anno")
     os.makedirs(path_to_store_anno, exist_ok=True)
