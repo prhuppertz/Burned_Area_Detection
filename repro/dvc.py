@@ -67,7 +67,7 @@ def main(cache_path, link_path, link2_path):
    
     #replacement links if code doesn't work
     #os.symlink("/data/raw_data/s2_aws", "/home/robert/ds-wildfire/raw_data/s2_aws")
-    #os.symlink("//data/raw_data/wildfires-ground-truth", "/home/robert/ds-wildfire/raw_data/wildfires-ground-truth")
+    #os.symlink("/data/raw_data/wildfires-ground-truth", "/home/robert/ds-wildfire/raw_data/wildfires-ground-truth")
 
 
 if __name__ == "__main__":

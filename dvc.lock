@@ -6,7 +6,7 @@ patch_scenes:
   - path: data/scenes/
     md5: 5525739aefce6e1fb4e94d8c6b6f8879.dir
   - path: preparedata/extract_patches.py
-    md5: 6388ada7a3aa75a7e404ed34fb11e579
+    md5: 503c7927d3b1dc3f808eab1b8f1b658f
   - path: preparedata/patching.py
     md5: c22fa39f30cb442992d9d0fc3b2dfd67
   - path: preparedata/patchutils
@@ -16,3 +16,16 @@ patch_scenes:
   outs:
   - path: data/extracted/
     md5: d751713988987e9331980363e24189ce.dir
+merge_bands:
+  cmd: python preparedata/merge_bands.py /home/robert/ds-wildfire/raw_data/s2_aws/tiles
+    -s 31/T/GH -s 31/T/GJ /home/robert/ds-wildfire/data/mgrs_scenes
+  deps:
+  - path: preparedata/merge_bands.py
+    md5: 1d8e43ed3bd73b746b8c3e046ac5b7f1
+  - path: raw_data/s2_aws/tiles/30
+    md5: c49aa8c852768d952d06f806350e986f.dir
+  - path: raw_data/s2_aws/tiles/31
+    md5: 7c237114bbe071468a9ebfa22039c7c6.dir
+  outs:
+  - path: data/mgrs_scenes
+    md5: c5be093d715db33eac1201f68a34a4f7.dir
