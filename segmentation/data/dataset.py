@@ -31,7 +31,7 @@ class SegmentationData(Dataset):
         self.image_names = glob.glob(os.path.join(root, 'patches', '*.jpg'))
 
         # Prepare instance based GT
-        path = os.path.join(root, 'anno', 'polygons.pkl')
+        path = os.path.join(root, 'annotations', 'polygons.pkl')
         with open(path, 'rb') as f:
             self.instance_dict = pickle.load(f)
 

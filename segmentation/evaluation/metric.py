@@ -1,4 +1,4 @@
-from segmentation.evaluation.pq_bf.panoptic_quality import PanopticQuality
+from segmentation.evaluation.pq_bf.dice import dice_with_tensors
 
 class SegmentationMetric():
 
@@ -6,7 +6,7 @@ class SegmentationMetric():
 
 
         self.num_classes = 1
-        self.metric = PanopticQuality(self.num_classes)
+        #self.metric = PanopticQuality(self.num_classes)
         self.scores = []
 
 
@@ -21,7 +21,7 @@ class SegmentationMetric():
         for idx in range(len(ground_truth)):
             gt = ground_truth[idx]
             instance_mask = prediction[idx]
-            score = self.metric.compute(gt, instance_mask)
+            score = dice_with_tensors(instance_mask, gt)
 
             scores.append(score)
 

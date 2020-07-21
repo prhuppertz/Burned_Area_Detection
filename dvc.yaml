@@ -23,17 +23,17 @@ stages:
   sort_patches:
     cmd: python preparedata/sort_patches.py /home/robert/ds-wildfire/data/training_patches
       /home/robert/ds-wildfire/excluded.txt /home/robert/ds-wildfire/data/extracted/patches
-      /home/robert/ds-wildfire/data/extracted/anno
+      /home/robert/ds-wildfire/data/extracted/annotations
     deps:
     - data/extracted/
     - preparedata/sort_patches.py
     outs:
-    - data/training_patches/anno/
+    - data/training_patches/annotations/
     - data/training_patches/patches/
   split_data:
     cmd: python preparedata/split.py --root=data/training_patches/
     deps:
-    - data/training_patches/anno/
+    - data/training_patches/annotations/
     - data/training_patches/patches/
     - preparedata/split.py
     outs:

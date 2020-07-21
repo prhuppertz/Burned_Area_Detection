@@ -8,8 +8,8 @@ Options:
   -h --help                                         Show help.
   --seed=<seed>                                     Seed selection for pipelines [default: 87]
   --gpu=<id>                                        GPU list. [default: 0]
-  --model-name=<model-name>                         Name of the model to train on
-  --group=<group                                    Group to tag experiment
+  --model-name=<model-name>                         Name of the model to train on, as in segmentation/models/ 
+  --group=<group                                    Group to tag experiment for wandb
   --save-path=<save-path>                           Path to save results, logs and checkpoints
   --save-images=<images>                            If validation images should be saved [default: 0]
 """
@@ -21,67 +21,7 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 import shutil
 
-PROJECT='burned_area'
-
-def main(model_name, seed, group, save_path, save_images):
-    """
-
-    :return:
-    """
-    save_path = os.path.join(save_path, "experiments", group)
-    os.makedirs(save_path, exist_ok=True)
-
-    hparams = get_params(model_name)
-
-    configuration_dict = get_configuration(model_name, hparams)
-
-    wandb_logger = WandbLogger(name='{}-{}-{}'.format(group, model_name, seed),
-                               save_dir=save_path,
-                               project=PROJECT,
-                               group=group,
-                               tags=group)
-
-    train, valid, test = get_loaders(hparams, configuration_dict)
-
-    model_module = importlib.import_module("segmentation.models.{}.model".format(model_name))
-
-    model = model_module.Model(hparams)
-    model.configuration = configuration_dict
-
-    early_stop_callback = EarlyStopping(
-        monitor='val_loss',
-        min_delta=0.00,
-        patience=30,
-        verbose=False,
-        mode='min'
-    )
-
-    # Pytorch lightning trainer
-    trainer = Trainer(gpus=1,
-                      weights_summary='top',
-                      max_epochs=60,
-                      logger=wandb_logger,
-                      early_stop_callback=early_stop_callback,
-                      num_sanity_val_steps=0,
-                      callbacks=[LearningRateLogger()] if hparams['scheduler_type'] != None else None,
-                      )
-
-    trainer.fit(model,
-                train_dataloader=train,
-                val_dataloaders=valid)
-
-    del model
-    torch.cuda.empty_cache()
-
-    save_path = os.path.join(save_path, PROJECT, wandb_logger.__getstate__()['_id'])
-
-    model = load_best(model_module, configuration_dict, save_path)
-
-    scores = get_results(model, valid, wandb_logger, save_path, save_images)
-
-    save_metrics(scores, save_path)
-
-    move_best(save_path)
+PROJECT='burned_area_detection'
 
 def load_best(model_module, configuration, save_path):
     checkpoint_path = os.path.join(save_path, "checkpoints")
@@ -114,14 +54,14 @@ def get_results(model, loader, logger, path_to_save, save_images):
             if save_images:
                 for i in range(len(images)):
                     fig = plot_results(images[i].transpose(1, 2, 0), targets[i], predictions[i], scoring_dict['metrics'][i])
-                    image_path = os.path.join(path_to_save, 'res_{}_{}_pq{:.2f}bf{:.2f}.png'.format(batch_idx, i,
+                    image_path = os.path.join(path_to_save, 'res_{}_{}_pq{:.2f}dice{:.2f}.png'.format(batch_idx, i,
                                                                                           scoring_dict['metrics'][i][0],
                                                                                           scoring_dict['metrics'][i][1]
                                                                                           ))
                     fig.savefig(image_path, dpi=800, bbox_inches = "tight")
                     plt.close()
 
-    logger.experiment.log({"sample_scores": wandb.Table(data=scores, columns=["PQ", "BF-1"])})
+    logger.experiment.log({"sample_scores": wandb.Table(data=scores, columns=["PQ", "dice"])})
     return scores
 
 def save_metrics(metrics, metrics_save_path):
@@ -129,6 +69,69 @@ def save_metrics(metrics, metrics_save_path):
     metrics_dict = {"PQ": [s[0] for s in metrics], "BF-1": [s[1] for s in metrics]}
     with open(metrics_save_path, 'w') as f:
         json.dump(metrics_dict, f)
+
+
+def main(model_name, seed, group, save_path, save_images):
+    """
+
+    :return:
+    """
+    save_path = os.path.join(save_path, "experiments", group)
+    os.makedirs(save_path, exist_ok=True)
+
+    hparams = get_params(model_name)
+
+    configuration_dict = get_configuration(model_name, hparams)
+    
+    #setup wandb pipeline
+    wandb_logger = WandbLogger(name='{}-{}-{}'.format(group, model_name, seed),
+                               save_dir=save_path,
+                               project=PROJECT,
+                               group=group,
+                               tags=group)
+
+    train, valid, test = get_loaders(hparams, configuration_dict)
+
+    model_module = importlib.import_module("segmentation.models.{}.model".format(model_name))
+
+    model = model_module.Model(hparams)
+    model.configuration = configuration_dict
+
+    early_stop_callback = EarlyStopping(
+        monitor='val_loss',
+        min_delta=0.00,
+        patience=30,
+        verbose=False,
+        mode='min'
+    )
+
+    # Pytorch lightning trainer
+    trainer = Trainer(gpus=1,
+                      weights_summary='top',
+                      max_epochs=60,
+                      logger=wandb_logger,
+                      early_stop_callback=early_stop_callback,
+                      num_sanity_val_steps=0,
+                      callbacks=[LearningRateLogger()] if hparams['scheduler_type'] != None else None,
+                      default_root_dir=save_path
+                      )
+
+    trainer.fit(model,
+                train_dataloader=train,
+                val_dataloaders=valid)
+
+    del model
+    torch.cuda.empty_cache()
+
+    save_path = os.path.join(save_path, PROJECT, wandb_logger.__getstate__()['_id'])
+
+    model = load_best(model_module, configuration_dict, save_path)
+
+    scores = get_results(model, valid, wandb_logger, save_path, save_images)
+
+    save_metrics(scores, save_path)
+
+    move_best(save_path, group)
 
 
 if __name__=="__main__":

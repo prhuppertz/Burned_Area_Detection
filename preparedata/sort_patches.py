@@ -1,5 +1,5 @@
 """Usage:
-          sort_patches.py <save_path> <excluded_path> <all_extracted_path>  <path_to_anno_source>
+          sort_patches.py <save_path> <excluded_path> <all_extracted_path>  <path_to_annotations _source>
 
 @ Jevgenij Gamper & Robert Huppertz 2020, Cervest
 Sort patches and annotations to training folders if they are not excluded nor empty
@@ -31,12 +31,12 @@ def dump_polygons(annotation_dir_source, save_path, included):
     """
     # Merge multiple mgrs annotation files
     all_annotations = {}
-    mgrs_anno_files = os.listdir(annotation_dir_source)
-    for anno_file in mgrs_anno_files:
-        path = os.path.join(annotation_dir_source, anno_file)
-        if "annotations" in other.load_json(os.path.join(annotation_dir_source, anno_file)):
-            anno_file = coco_to_shapely(os.path.join(annotation_dir_source, anno_file))
-            all_annotations = {**all_annotations, **anno_file}
+    mgrs_annotations_files = os.listdir(annotation_dir_source)
+    for annotations_file in mgrs_annotations_files:
+        path = os.path.join(annotation_dir_source, annotations_file)
+        if "annotations" in other.load_json(os.path.join(annotation_dir_source, annotations_file)):
+            annotations_file = coco_to_shapely(os.path.join(annotation_dir_source, annotations_file))
+            all_annotations = {**all_annotations, **annotations_file}
 
     included_annotations = {}
     for in_test_img in included:
@@ -71,13 +71,13 @@ def get_all(path):
 
 
 def main(
-    save_path, excluded_path, all_extracted_path, path_to_anno_source, delete=False
+    save_path, excluded_path, all_extracted_path, path_to_annotations_source, delete=False
 ):
     """
     :param save_path: path where newly sorted patches and their annotations will be stored
     :param excluded_path: path to where image names that will be excluded are stored
     :param all_extracted_path: path to where all images that have been extracted from MGRS files are stored
-    :param path_to_anno_source: path to where extracted source annotation files are stored
+    :param path_to_annotations_source: path to where extracted source annotation files are stored
     :param delete: if all extracted (non-filtered) patches should be deleted [default=False]
     :return:
     """
@@ -92,8 +92,8 @@ def main(
     # Make directories to store filtered patches and ground truth
     path_to_store_patches = os.path.join(save_path, "patches")
     os.makedirs(path_to_store_patches, exist_ok=True)
-    path_to_store_anno = os.path.join(save_path, "anno")
-    os.makedirs(path_to_store_anno, exist_ok=True)
+    path_to_store_annotations = os.path.join(save_path, "annotations")
+    os.makedirs(path_to_store_annotations , exist_ok=True)
 
     # Move image patches
     included = []  # To pass into dump_polygons
@@ -111,8 +111,8 @@ def main(
         
     print("Number of included patches {}".format(len(included)))
     # Combine and move annotations to new directory
-    save_annotations_file = os.path.join(path_to_store_anno, "polygons.pkl")
-    dump_polygons(path_to_anno_source, save_annotations_file, included)
+    save_annotations_file = os.path.join(path_to_store_annotations, "polygons.pkl")
+    dump_polygons(path_to_annotations_source, save_annotations_file, included)
 
     # Remove patches and their directory if not to be used for pipelines
     if delete:
@@ -124,5 +124,5 @@ if __name__ == "__main__":
     save_path = arguments["<save_path>"]
     excluded_path = arguments["<excluded_path>"]
     all_extracted_path = arguments["<all_extracted_path>"]
-    path_to_anno_source = arguments["<path_to_anno_source>"]
-    main(save_path, excluded_path, all_extracted_path, path_to_anno_source)
+    path_to_annotations_source = arguments["<path_to_annotations_source>"]
+    main(save_path, excluded_path, all_extracted_path, path_to_annotations_source)

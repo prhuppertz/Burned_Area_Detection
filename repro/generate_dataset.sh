@@ -17,13 +17,13 @@ dvc run -n patch_scenes \
 dvc run -n sort_patches \
 -d preparedata/sort_patches.py \
 -d data/extracted/ \
--o data/training_patches/anno/ \
+-o data/training_patches/annotations/ \
 -o data/training_patches/patches/ \
-"python preparedata/sort_patches.py /home/robert/ds-wildfire/data/training_patches /home/robert/ds-wildfire/excluded.txt /home/robert/ds-wildfire/data/extracted/patches /home/robert/ds-wildfire/data/extracted/anno"
+"python preparedata/sort_patches.py /home/robert/ds-wildfire/data/training_patches /home/robert/ds-wildfire/excluded.txt /home/robert/ds-wildfire/data/extracted/patches /home/robert/ds-wildfire/data/extracted/annotations"
 
 dvc run -n split_data \
 -d preparedata/split.py \
 -d data/training_patches/patches/ \
--d data/training_patches/anno/ \
+-d data/training_patches/annotations/ \
 -o data/training_patches/training_indices.json \
 "python preparedata/split.py --root=data/training_patches/"
