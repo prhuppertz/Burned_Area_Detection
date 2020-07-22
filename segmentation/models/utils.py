@@ -71,5 +71,5 @@ def plot_results(image: np.ndarray, target_mask: np.ndarray, prediction: np.ndar
         ax.set_yticks([])
         ax.set_xticks([])
         ax.set_title(titles[i], fontdict={'fontsize': 16})
-    fig.suptitle('PQ: {:.2f}; BF-1: {:.2f}'.format(scores[0], scores[1]), fontsize=16)
+    fig.suptitle('IoU: {:.2f}; dice: {:.2f}'.format(scores[0], scores[1]), fontsize=16)
     return fig

@@ -31,7 +31,7 @@ date = []
 def main(
     shapefile,
     save_path,
-    class_name,s
+    class_name,
     scenes_path,
     scenes,
     patch_size=128,

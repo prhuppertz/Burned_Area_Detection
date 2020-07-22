@@ -1,5 +1,5 @@
 """Usage:
-          sort_patches.py <save_path> <excluded_path> <all_extracted_path>  <path_to_annotations _source>
+          sort_patches.py <save_path> <excluded_path> <all_extracted_path>  <path_to_annotations_source>
 
 @ Jevgenij Gamper & Robert Huppertz 2020, Cervest
 Sort patches and annotations to training folders if they are not excluded nor empty
@@ -107,7 +107,8 @@ def main(
             if np.unique(img).size > 2:
                 included.append(patch)
                 shutil.move(source_patch_path, target_patch_path)
-                
+            else:
+                os.remove(source_patch_path)
         
     print("Number of included patches {}".format(len(included)))
     # Combine and move annotations to new directory
