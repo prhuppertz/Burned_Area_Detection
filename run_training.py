@@ -36,7 +36,7 @@ def move_best(save_path, group):
     ckpt = [i for i in os.listdir(checkpoint_path) if ".ckpt" in i][0]
     checkpoint_path = os.path.join(checkpoint_path, ckpt)
     move_to = "checkpoint"
-    os.makedirs(move_to, exist_ok=True)
+    os.makedirs(os.path.join(move_to, group), exist_ok=True)
     shutil.copy(checkpoint_path, os.path.join(move_to, group, os.path.basename(checkpoint_path)))
 
 def get_results(model, loader, logger, path_to_save, save_images):
@@ -108,7 +108,7 @@ def main(model_name, seed, group, save_path, save_images):
     # Pytorch lightning trainer
     trainer = Trainer(gpus=1,
                       weights_summary='top',
-                      max_epochs=60,
+                      max_epochs=40,
                       logger=wandb_logger,
                       early_stop_callback=early_stop_callback,
                       num_sanity_val_steps=0,
