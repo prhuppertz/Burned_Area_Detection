@@ -38,3 +38,13 @@ stages:
     - preparedata/split.py
     outs:
     - data/training_patches/training_indices.json
+  resnetunet:
+    cmd: python run_training.py --seed=11 --gpu=1 --save-images=1 --model-name=resnetunet
+      --group=resnetunet --save-path=data/
+    deps:
+    - data/training_patches/annotations/
+    - data/training_patches/patches/
+    - data/training_patches/training_indices.json
+    outs:
+    - checkpoint/
+    - data/experiments/resnetunet/

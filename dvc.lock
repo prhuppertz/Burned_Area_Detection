@@ -55,3 +55,18 @@ split_data:
   outs:
   - path: data/training_patches/training_indices.json
     md5: b87aad788dbd84a0934cef7aa667fb90
+resnetunet:
+  cmd: python run_training.py --seed=11 --gpu=1 --save-images=1 --model-name=resnetunet
+    --group=resnetunet --save-path=data/
+  deps:
+  - path: data/training_patches/annotations/
+    md5: fcf64a72f57b18da87e1ceb5bedad4d3.dir
+  - path: data/training_patches/patches/
+    md5: d8491355760998d5ffbef6ef6a56380c.dir
+  - path: data/training_patches/training_indices.json
+    md5: b87aad788dbd84a0934cef7aa667fb90
+  outs:
+  - path: checkpoint/
+    md5: e1e9ba5add3e6ba7ed91719345a7a231.dir
+  - path: data/experiments/resnetunet/
+    md5: 7634f3a8c7bb21d916d7e2aa54d9b0e0.dir
