@@ -1,4 +1,4 @@
-from segmentation.evaluation.pq_bf.dice import dice_with_tensors
+from segmentation.evaluation.metrics.dice_and_iou import dice_and_iou
 
 class SegmentationMetric():
 
@@ -21,7 +21,7 @@ class SegmentationMetric():
         for idx in range(len(ground_truth)):
             gt = ground_truth[idx]
             instance_mask = prediction[idx]
-            score = dice_with_tensors(instance_mask, gt)
+            score = dice_and_iou(instance_mask, gt)
 
             scores.append(score)
 

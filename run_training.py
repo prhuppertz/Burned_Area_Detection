@@ -54,19 +54,19 @@ def get_results(model, loader, logger, path_to_save, save_images):
             if save_images:
                 for i in range(len(images)):
                     fig = plot_results(images[i].transpose(1, 2, 0), targets[i], predictions[i], scoring_dict['metrics'][i])
-                    image_path = os.path.join(path_to_save, 'res_{}_{}_pq{:.2f}dice{:.2f}.png'.format(batch_idx, i,
+                    image_path = os.path.join(path_to_save, 'res_{}_{}_IoU{:.2f}dice{:.2f}.png'.format(batch_idx, i,
                                                                                           scoring_dict['metrics'][i][0],
                                                                                           scoring_dict['metrics'][i][1]
                                                                                           ))
                     fig.savefig(image_path, dpi=800, bbox_inches = "tight")
                     plt.close()
 
-    logger.experiment.log({"sample_scores": wandb.Table(data=scores, columns=["PQ", "dice"])})
+    logger.experiment.log({"sample_scores": wandb.Table(data=scores, columns=["IoU", "dice"])})
     return scores
 
 def save_metrics(metrics, metrics_save_path):
     metrics_save_path = os.path.join(metrics_save_path, "metrics.json")
-    metrics_dict = {"PQ": [s[0] for s in metrics], "BF-1": [s[1] for s in metrics]}
+    metrics_dict = {"IoU": [s[0] for s in metrics], "dice": [s[1] for s in metrics]}
     with open(metrics_save_path, 'w') as f:
         json.dump(metrics_dict, f)
 
