@@ -1,5 +1,5 @@
 from segmentation.data.postprocessing.classification import sigmoid, batched_bg_to_segmentation, bg_to_segmentation
-from segmentation.data.postprocessing.watershed import batched_watershed, unet_watershed
+#from segmentation.data.postprocessing.watershed import batched_watershed, unet_watershed
 
 
 import numpy as np
@@ -23,9 +23,9 @@ class Postprocessor():
         segmentation_masks = batched_bg_to_segmentation(sigmoid(pred))
 
         # First apply instance segmentation post-processing
-        instance_masks = batched_watershed(segmentation_masks, dilatation_kernel=self.dilation_kernel)
+        #instance_masks = batched_watershed(segmentation_masks, dilatation_kernel=self.dilation_kernel)
 
-        return instance_masks
+        return segmentation_masks
 
     def postprocessing_func_single(self, pred: np.ndarray) -> np.ndarray:
         """
@@ -37,6 +37,6 @@ class Postprocessor():
         segmentation_masks = bg_to_segmentation(sigmoid(pred))
 
         # First apply instance segmentation post-processing
-        instance_mask = unet_watershed(segmentation_masks, dilation_kernel=self.dilation_kernel)
+        #instance_mask = unet_watershed(segmentation_masks, dilation_kernel=self.dilation_kernel)
 
-        return instance_mask
+        return segmentation_masks

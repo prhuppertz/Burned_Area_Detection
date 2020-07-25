@@ -44,6 +44,10 @@ stages:
     - data/post_fire_model/training_patches/annotations/
     - data/post_fire_model/training_patches/patches/
     - data/post_fire_model/training_patches/training_indices.json
+    - run_training.py
+    - segmentation/evaluation/
+    - segmentation/models/resnetunet/
+    - segmentation/networks/resnetunet/
     outs:
     - checkpoint/
     - data/post_fire_model/experiments/resnetunet_post_fire_model/

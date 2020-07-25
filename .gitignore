@@ -162,6 +162,8 @@ __pycache__/
 *.pyc
 
 /data
+/data_exp
+/notebooks/Untitled*.ipynb
 /networks
 /models
 /evaluation

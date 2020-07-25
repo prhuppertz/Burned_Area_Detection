@@ -65,8 +65,16 @@ resnetunet:
     md5: 70f9820efaf42877892d82174d4f855c.dir
   - path: data/post_fire_model/training_patches/training_indices.json
     md5: 8e448d11adb3a73afe0f690445bd6d0f
+  - path: run_training.py
+    md5: ecb0698cb8d10a53a58b7bb34120daff
+  - path: segmentation/evaluation/
+    md5: f40f3c6d1ff89a517bebdc7091b7b209.dir
+  - path: segmentation/models/resnetunet/
+    md5: e0f5d11854bffbb98f13946c7533de6b.dir
+  - path: segmentation/networks/resnetunet/
+    md5: 34aace89bb6eb4df000f4ac190a9d728.dir
   outs:
   - path: checkpoint/
-    md5: e8ad9ab284d515e7c293ef2c354aa75b.dir
+    md5: 7a877b62fb29ab62c132a8f87ff81e10.dir
   - path: data/post_fire_model/experiments/resnetunet_post_fire_model/
-    md5: 9a332017fbf6844fd9ef35f04da84f5f.dir
+    md5: 83b4f9038d14e18671c39877db2316b5.dir
