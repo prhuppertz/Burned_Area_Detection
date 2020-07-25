@@ -106,9 +106,9 @@ def main(
             img = np.asarray(pilimage.open(source_patch_path))
             if np.unique(img).size > 2:
                 included.append(patch)
-                shutil.move(source_patch_path, target_patch_path)
-            else:
-                os.remove(source_patch_path)
+                shutil.copy(source_patch_path, target_patch_path)
+            #else:
+            #    os.remove(source_patch_path)
         
     print("Number of included patches {}".format(len(included)))
     # Combine and move annotations to new directory
