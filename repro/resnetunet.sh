@@ -8,5 +8,5 @@ dvc run -n resnetunet \
 -d segmentation/networks/resnetunet/ \
 -o checkpoint/ \
 -o data/experiments/resnetunet/ \
-"python run_training.py --seed=11 --gpu=1 --save-images=1 --model-name=resnetunet --group=resnetunet_post_fire_model --save-path=data/post_fire_model/"
+"python run_training.py --seed=11 --gpu=1 --save-images=1 --baseline=1 --model-name=resnetunet --group=resnetunet_post_fire_model --save-path=data/post_fire_model/"
 

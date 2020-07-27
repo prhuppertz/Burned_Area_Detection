@@ -33,7 +33,7 @@ def dump_polygons(annotation_dir_source, save_path, included):
     all_annotations = {}
     mgrs_annotations_files = os.listdir(annotation_dir_source)
     for annotations_file in mgrs_annotations_files:
-        path = os.path.join(annotation_dir_source, annotations_file)
+        #path = os.path.join(annotation_dir_source, annotations_file)
         if "annotations" in other.load_json(os.path.join(annotation_dir_source, annotations_file)):
             annotations_file = coco_to_shapely(os.path.join(annotation_dir_source, annotations_file))
             all_annotations = {**all_annotations, **annotations_file}

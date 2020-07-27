@@ -80,7 +80,7 @@ def store_coco_ground_truth(output_path, patch_dfs, patch_size, row_name, mgrs_t
     Will save extract polygon ground truth in a json file
     """
     coco_dst = coco.format_coco(patch_dfs, patch_size, row_name)
-    other.new_json(output_path + "/anno{}.json".format(mgrs_tile), coco_dst)
+    other.new_json(output_path + "/annotations{}.json".format(mgrs_tile), coco_dst)
 
 
 def import_image(path_to_tile):

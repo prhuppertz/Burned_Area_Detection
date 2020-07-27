@@ -19,7 +19,7 @@ from patchutils.coco import save_gt_overlaid
 from docopt import docopt
 import os
 import glob
-from datetime import datetime
+from datetime import datetime, timedelta
 import geopandas as gpd
 import pandas as pd
 
@@ -60,7 +60,7 @@ def main(
         path_to_scene = os.path.join(scenes_path, scene)
 
         list_of_paths = glob.glob(
-            path_to_scene + "/*/*/*/" + "*.tif".format(scene)
+            path_to_scene + "/*/*/*/" + "*.tif"#.format(scene)
         )
 
         # create scene string with "_" instead of "/"
@@ -98,10 +98,10 @@ def main(
 
             # load the shapefiles
             gdf = gpd.read_file(shapefile)
+
             # load the shapefile data of the days prior to the date of the mgrs scene
             shapefile_date = gdf[
-                (gdf["DATE_ECLOS"] < series_of_paths_sorted_by_date.index[path].strftime("%Y-%m-%d"))
-            ]  # &(gdf['DATE_ECLOS']>(series_of_paths_sorted_by_date.index[path]-timedelta(days=45)).strftime('%Y-%m-%d'))]
+                (gdf["DATE_ECLOS"] < series_of_paths_sorted_by_date.index[path].strftime("%Y-%m-%d")) & (gdf['DATE_ECLOS']>(series_of_paths_sorted_by_date.index[path]-timedelta(days=90)).strftime('%Y-%m-%d'))]
 
             # create windows from where shapefile and scenes overlap
             patch_dfs, patch_windows = import_shapefile_for_patches(
@@ -148,47 +148,7 @@ def main(
             raster.close()
 
             # patch image from previous satelite image
-            """
-            if path>1:
-                for date_var4 in range (path-2,path):
-                    raster_prev = import_image(series_of_paths_sorted_by_date[date_var4])
-                    raster_meta_prev = raster_prev.meta
-        
-                    # load the shapefile data of the days prior to the date of the mgrs scene
-                    shapefile_date_prev=gdf[(gdf["DATE_ECLOS"]<series_of_paths_sorted_by_date.index[date_var4].strftime('%Y-%m-%d'))]#&(gdf['DATE_ECLOS']>(series_of_paths_sorted_by_date.index[date_var4]-timedelta(days=45)).strftime('%Y-%m-%d'))]
-        
-                    patch_dfs_prev, patch_windows_prev = import_shapefile_for_patches(
-                        shapefile_date_prev, raster_prev, raster_meta_prev, patch_size, num_patches, scene_string + list_of_dates_as_strings[date_var4]
-                    )
-    
-                    do_the_patching(
-                        raster_prev,
-                        path_to_store_patches_prev,
-                        patch_windows_prev.keys(),
-                        patch_windows.values(),
-                        bands=[3,2,1],
-                    )
-    
-                    # Save annotations
-                    store_coco_ground_truth(
-                        path_to_store_annotations_prev, patch_dfs_prev, patch_size, class_name, scene_string + list_of_dates_as_strings[date_var4]
-                    )
             
-
-                    #create overlaid patches with ground truth
-                    try:
-                        save_gt_overlaid(
-                            os.path.join(path_to_store_annotations_prev, "annotations{}.json".format(scene_string + list_of_dates_as_strings[date_var4])),
-                            path_to_store_patches_prev,
-                            path_to_store_burn_vis_prev,
-                            )
-                    except Exception as e:
-                        print(e)
-                        print("MGRS tile without annotations: {}".format(scene_string))
-
-                    raster_prev.close()
-            """
-
 
 if __name__ == "__main__":
     arguments = docopt(__doc__)

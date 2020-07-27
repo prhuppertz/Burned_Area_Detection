@@ -1,5 +1,5 @@
 """Usage:
-          train.py [--seed=<seed>] [--gpu=<id>] [--save-images=<images>] (--model-name=<model-name>) (--group=<group) (--save-path=<save-path>)
+          train.py [--seed=<seed>] [--gpu=<id>] [--save-images=<images>] [--baseline=<boolean>] (--model-name=<model-name>) (--group=<group) (--save-path=<save-path>)
 
 @ Jevgenij Gamper 2020
 Trains either selected model, and saves model checkpoints under `data/models/task-name/..
@@ -12,6 +12,7 @@ Options:
   --group=<group                                    Group to tag experiment for wandb
   --save-path=<save-path>                           Path to save results, logs and checkpoints
   --save-images=<images>                            If validation images should be saved [default: 0]
+  --baseline=<boolean>                              If baseline should be stored on test images aswell [default:0]
 """
 from docopt import docopt
 import importlib
@@ -20,6 +21,7 @@ import json
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import shutil
+from segmentation.evaluation.metrics.various_metrics import dice_and_iou_arrays
 
 PROJECT='burned_area_detection'
 
@@ -39,7 +41,7 @@ def move_best(save_path, group):
     os.makedirs(os.path.join(move_to, group), exist_ok=True)
     shutil.copy(checkpoint_path, os.path.join(move_to, group, os.path.basename(checkpoint_path)))
 
-def get_results(model, loader, logger, path_to_save, save_images):
+def get_results(model, loader, logger, path_to_save, save_images, baseline):
     iterator = iter(loader)
     scores = []
     with torch.no_grad():
@@ -60,6 +62,33 @@ def get_results(model, loader, logger, path_to_save, save_images):
                                                                                           ))
                     fig.savefig(image_path, dpi=800, bbox_inches = "tight")
                     plt.close()
+            
+            #save baseline
+            if baseline:
+                baseline_predictions=[]
+                baseline_metric=[]
+                for i in range(len(images)):
+                    image_mean=images[i][0,:,:].mean()
+                    baseline_prediction=np.zeros(images[i][0,:,:].shape)
+                    for x in range(len(images[i][0,:,0])):
+                        for y in range(len(images[i][0,0,:])):
+                            if images[i][0,x,y] > image_mean:
+                                baseline_prediction[x,y]=1.
+                    baseline_predictions.append(baseline_prediction)
+
+                for i in range(len(images)):
+                    baseline_metric.append(dice_and_iou_arrays(baseline_predictions[i], targets[i]))
+
+                for i in range(len(images)):
+                    fig = plot_results(images[i].transpose(1, 2, 0), targets[i], baseline_predictions[i], baseline_metric[i])
+                    baseline_path = os.path.join(path_to_save, "baseline")
+                    os.makedirs(baseline_path, exist_ok=True)
+                    image_path = os.path.join(baseline_path, 'baseline_res_{}_{}_IoU{:.2f}dice{:.2f}.png'.format(batch_idx, i,
+                                                                                        baseline_metric[i][0],
+                                                                                        baseline_metric[i][1]
+                                                                                        ))
+                    fig.savefig(image_path, dpi=800, bbox_inches = "tight")
+                    plt.close()
 
     logger.experiment.log({"sample_scores": wandb.Table(data=scores, columns=["IoU", "dice"])})
     return scores
@@ -71,7 +100,7 @@ def save_metrics(metrics, metrics_save_path):
         json.dump(metrics_dict, f)
 
 
-def main(model_name, seed, group, save_path, save_images):
+def main(model_name, seed, group, save_path, save_images, baseline):
     """
 
     :return:
@@ -127,7 +156,7 @@ def main(model_name, seed, group, save_path, save_images):
 
     model = load_best(model_module, configuration_dict, save_path)
 
-    scores = get_results(model, valid, wandb_logger, save_path, save_images)
+    scores = get_results(model, valid, wandb_logger, save_path, save_images, baseline)
 
     save_metrics(scores, save_path)
 
@@ -163,4 +192,4 @@ if __name__=="__main__":
 
     task_name = arguments['--model-name']
 
-    main(task_name, seed, arguments['--group'], arguments['--save-path'], bool(int(arguments['--save-images'])))
+    main(task_name, seed, arguments['--group'], arguments['--save-path'], bool(int(arguments['--save-images'])), bool(int(arguments['--baseline'])))

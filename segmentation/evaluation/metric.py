@@ -1,4 +1,4 @@
-from segmentation.evaluation.metrics.dice_and_iou import dice_and_iou
+from segmentation.evaluation.metrics.various_metrics import dice_and_iou
 
 class SegmentationMetric():
 
