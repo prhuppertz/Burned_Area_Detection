@@ -101,7 +101,7 @@ def main(
 
             # load the shapefile data of the days prior to the date of the mgrs scene
             shapefile_date = gdf[
-                (gdf["DATE_ECLOS"] < series_of_paths_sorted_by_date.index[path].strftime("%Y-%m-%d")) & (gdf['DATE_ECLOS']>(series_of_paths_sorted_by_date.index[path]-timedelta(days=90)).strftime('%Y-%m-%d'))]
+                (gdf["DHFim"] < series_of_paths_sorted_by_date.index[path].strftime("%Y-%m-%d")) & (gdf['DHFim']>(series_of_paths_sorted_by_date.index[path]-timedelta(days=90)).strftime('%Y-%m-%d'))]
 
             # create windows from where shapefile and scenes overlap
             patch_dfs, patch_windows = import_shapefile_for_patches(

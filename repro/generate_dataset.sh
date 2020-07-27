@@ -1,30 +1,27 @@
 dvc run -n merge_bands \
 -d preparedata/merge_bands.py \
--d raw_data/s2_aws/tiles/32/T/LP \
--d raw_data/s2_aws/tiles/31/T/GH \
--d raw_data/s2_aws/tiles/31/T/GJ \
 -o data/scenes \
-"python preparedata/merge_bands.py /home/robert/ds-wildfire/raw_data/s2_aws/tiles -s 31/T/GH -s 31/T/GJ -s 32/T/LP /home/robert/ds-wildfire/data/scenes"
+"python preparedata/merge_bands.py /home/robert/ds-wildfire/raw_data/s2_aws/tiles -s 29/S/MC -s 29/S/MD -s 29/S/NB -s 29/S/NC -s 29/S/ND -s 29/S/PB -s 29/S/PC -s 29/S/PD -s 29/T/ME -s 29/T/NE -s 29/T/NF -s 29/T/NG -s 29/T/PE -s 29/T/PF  /home/robert/ds-wildfire/data/scenes"
 
 dvc run -n patch_scenes \
 -d preparedata/extract_patches.py \
 -d preparedata/patchutils \
 -d preparedata/patching.py \
--d raw_data/wildfires-ground-truth/france/vars/N_DFCI_CONTOUR_FEUX_2017_S_083.shp \
+-d raw_data/wildfires-ground-truth/portugal/AArdida2016_ETRS89PTTM06_20190813.shp \
 -d data/scenes/ \
--o data/post_fire_model/extracted/ \
-"python preparedata/extract_patches.py /home/robert/ds-wildfire/raw_data/wildfires-ground-truth/france/vars/N_DFCI_CONTOUR_FEUX_2017_S_083.shp /home/robert/ds-wildfire/data/post_fire_model/extracted DATE_ECLOS /home/robert/ds-wildfire/data/scenes -s 31/T/GJ -s 31/T/GH -s 32/T/LP"
+-o data/post_fire_model_Scenario2/extracted/ \
+"python preparedata/extract_patches.py /home/robert/ds-wildfire/raw_data/wildfires-ground-truth/portugal/AArdida2016_ETRS89PTTM06_20190813.shp /home/robert/ds-wildfire/data/post_fire_model_Scenario2/extracted DHFim /home/robert/ds-wildfire/data/scenes -s 29/S/MC -s 29/S/MD -s 29/S/NB -s 29/S/NC -s 29/S/ND -s 29/S/PB -s 29/S/PC -s 29/S/PD -s 29/T/ME -s 29/T/NE -s 29/T/NF -s 29/T/NG -s 29/T/PE -s 29/T/PF"
 
 dvc run -n sort_patches \
 -d preparedata/sort_patches.py \
--d data/post_fire_model/extracted/ \
--o data/post_fire_model/training_patches/annotations/ \
--o data/post_fire_model/training_patches/patches/ \
-"python preparedata/sort_patches.py /home/robert/ds-wildfire/data/post_fire_model/training_patches /home/robert/ds-wildfire/excluded.txt /home/robert/ds-wildfire/data/post_fire_model/extracted/patches /home/robert/ds-wildfire/data/post_fire_model/extracted/annotations"
+-d data/post_fire_model_Scenario2/extracted/ \
+-o data/post_fire_model_Scenario2/training_patches/annotations/ \
+-o data/post_fire_model_Scenario2/training_patches/patches/ \
+"python preparedata/sort_patches.py /home/robert/ds-wildfire/data/post_fire_model_Scenario2/training_patches /home/robert/ds-wildfire/excluded.txt /home/robert/ds-wildfire/data/post_fire_model_Scenario2/extracted/patches /home/robert/ds-wildfire/data/post_fire_model_Scenario2/extracted/annotations"
 
 dvc run -n split_data \
 -d preparedata/split.py \
--d data/post_fire_model/training_patches/patches/ \
--d data/post_fire_model/training_patches/annotations/ \
--o data/post_fire_model/training_patches/training_indices.json \
-"python preparedata/split.py --root=data/post_fire_model/training_patches/"
+-d data/post_fire_model_Scenario2/training_patches/patches/ \
+-d data/post_fire_model_Scenario2/training_patches/annotations/ \
+-o data/post_fire_model_Scenario2/training_patches/training_indices.json \
+"python preparedata/split.py --root=data/post_fire_model_Scenario2/training_patches/"
