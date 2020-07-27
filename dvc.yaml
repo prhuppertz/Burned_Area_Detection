@@ -4,7 +4,20 @@ stages:
       /home/robert/ds-wildfire/data/post_fire_model_Scenario2/extracted DHFim /home/robert/ds-wildfire/data/scenes
       -s 29/S/MC -s 29/S/MD -s 29/S/NB -s 29/S/NC -s 29/S/ND -s 29/S/PB -s 29/S/PC -s 29/S/PD -s 29/T/ME -s 29/T/NE -s 29/T/NF -s 29/T/NG -s 29/T/PE -s 29/T/PF 
     deps:
-    - data/scenes/
+    - data/scenes/29/S/MC
+    - data/scenes/29/S/MD
+    - data/scenes/29/S/NB
+    - data/scenes/29/S/NC
+    - data/scenes/29/S/ND
+    - data/scenes/29/S/PB
+    - data/scenes/29/S/PC
+    - data/scenes/29/S/PD
+    - data/scenes/29/T/ME
+    - data/scenes/29/T/NE
+    - data/scenes/29/T/NF
+    - data/scenes/29/T/NG
+    - data/scenes/29/T/PE
+    - data/scenes/29/T/PF
     - preparedata/extract_patches.py
     - preparedata/patching.py
     - preparedata/patchutils
@@ -17,7 +30,20 @@ stages:
     deps:
     - preparedata/merge_bands.py
     outs:
-    - data/scenes
+    - data/scenes/29/S/MC
+    - data/scenes/29/S/MD
+    - data/scenes/29/S/NB
+    - data/scenes/29/S/NC
+    - data/scenes/29/S/ND
+    - data/scenes/29/S/PB
+    - data/scenes/29/S/PC
+    - data/scenes/29/S/PD
+    - data/scenes/29/T/ME
+    - data/scenes/29/T/NE
+    - data/scenes/29/T/NF
+    - data/scenes/29/T/NG
+    - data/scenes/29/T/PE
+    - data/scenes/29/T/PF
   sort_patches:
     cmd: python preparedata/sort_patches.py /home/robert/ds-wildfire/data/post_fire_model_Scenario2/training_patches
       /home/robert/ds-wildfire/excluded.txt /home/robert/ds-wildfire/data/post_fire_model_Scenario2/extracted/patches
