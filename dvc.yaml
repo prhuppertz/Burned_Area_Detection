@@ -51,4 +51,4 @@ stages:
     - segmentation/networks/resnetunet/
     outs:
     - checkpoint/
-    - data/post_fire_model_Scenario1/experiments/resnetunet_post_fire_model_Scenario1/
+    - data/post_fire_model_Scenario1/experiments/resnetunet_Scenario1/
