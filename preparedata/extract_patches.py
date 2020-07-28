@@ -55,7 +55,7 @@ def main(
     path_to_store_burn_vis_prev = os.path.join(save_path, "burn_vis_prev")
     os.makedirs(path_to_store_burn_vis_prev, exist_ok=True)
     """
-
+    
     for scene in scenes:
         path_to_scene = os.path.join(scenes_path, scene)
 
@@ -79,13 +79,15 @@ def main(
             date_end_index = list_of_paths[path].find("/B", date_start_index)
             date.append(list_of_paths[path][date_start_index:date_end_index])
             list_of_dates_as_datetime.append(datetime.strptime(date[path], "%Y/%m/%d"))
-
+            
         # create sorted Pandas series for dates and paths
         date_file_mapping = {
             dt: filename for dt, filename in zip(list_of_dates_as_datetime, list_of_paths)
         }
         series_of_paths_sorted_by_date = pd.Series(date_file_mapping).sort_index()
-
+        print(list_of_paths)
+        
+        """
         # create sorted date list with strings
         for path in range(0, len(series_of_paths_sorted_by_date)):
             list_of_dates_as_strings.append(series_of_paths_sorted_by_date.index[path].strftime("%Y-%m-%d"))
@@ -149,7 +151,7 @@ def main(
 
             # patch image from previous satelite image
             
-
+"""
 if __name__ == "__main__":
     arguments = docopt(__doc__)
 
