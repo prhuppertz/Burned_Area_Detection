@@ -46,9 +46,11 @@ class SegmentationData(Dataset):
         :return:
         """
         polygons = self.instance_dict[img_name]
+        
+        
         instance_mask = make_instance_mask(polygons, img_size)
         return instance_mask
-
+        
     def __getitem__(self, item):
         """
         Loads image and its mask
@@ -59,8 +61,9 @@ class SegmentationData(Dataset):
         image_name = os.path.basename(image_path)
         #Read image
         image = cv2.cvtColor(cv2.imread(image_path), cv2.COLOR_BGR2RGB)
-
+        
         # Read mask
+        
         targets = self._get_mask(image_name, image.shape[:-1])
 
         # Augment original image and mask

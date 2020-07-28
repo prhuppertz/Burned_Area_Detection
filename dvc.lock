@@ -107,24 +107,21 @@ split_data:
     md5: 23bb7c4574c767395ffe1b3460181b9b
 resnetunet:
   cmd: python run_training.py --seed=11 --gpu=1 --save-images=1 --baseline=1 --model-name=resnetunet
-    --group=resnetunet_Scenario1 --save-path=data/post_fire_model_Scenario1/
+    --group=resnetunet_Scenario2 --save-path=data/post_fire_model_Scenario2/
   deps:
-  - path: data/post_fire_model_Scenario1/training_patches/annotations/
-    md5: 12bcecb47c90f4c755551650c162af50.dir
-  - path: data/post_fire_model_Scenario1/training_patches/patches/
-    md5: aa2c20107e92b146c6626a30cf7139db.dir
-  - path: data/post_fire_model_Scenario1/training_patches/training_indices.json
-    md5: e9f16b3b10b4bc80d4d6c2bd7f64960d
+  - path: data/post_fire_model_Scenario2/training_patches/annotations/
+    md5: 6b75bb420bdb600e314a5e70b31eda52.dir
+  - path: data/post_fire_model_Scenario2/training_patches/patches/
+    md5: 24e9a8da295c270f2d4a83e9da45b3b4.dir
+  - path: data/post_fire_model_Scenario2/training_patches/training_indices.json
+    md5: 23bb7c4574c767395ffe1b3460181b9b
   - path: run_training.py
-    md5: fcb4399878b2ef2ae00e2444a5c2f5a3
+    md5: 518ebf9de76c069e4d3ea198ce7142fb
+  - path: segmentation/data/
+    md5: e11a1aa3bb07b48e06b49727a2f4ba49.dir
   - path: segmentation/evaluation/
     md5: a1ea7b81d9d4d361a9117511050391f2.dir
   - path: segmentation/models/resnetunet/
-    md5: e0f5d11854bffbb98f13946c7533de6b.dir
+    md5: 5e3d7a24f8e451f16bb39fcc92b6508d.dir
   - path: segmentation/networks/resnetunet/
     md5: 34aace89bb6eb4df000f4ac190a9d728.dir
-  outs:
-  - path: checkpoint/
-    md5: 57ac327250ed2e546f68dcd394269cf2.dir
-  - path: data/post_fire_model_Scenario1/experiments/resnetunet_Scenario1/
-    md5: 24f64ba81b3b1f3bcb71e9c829816cfe.dir

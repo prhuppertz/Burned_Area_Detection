@@ -137,7 +137,7 @@ def main(model_name, seed, group, save_path, save_images, baseline):
     # Pytorch lightning trainer
     trainer = Trainer(gpus=1,
                       weights_summary='top',
-                      max_epochs=60,
+                      max_epochs=40,
                       logger=wandb_logger,
                       early_stop_callback=early_stop_callback,
                       num_sanity_val_steps=0,

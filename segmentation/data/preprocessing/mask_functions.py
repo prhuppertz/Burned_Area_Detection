@@ -58,7 +58,11 @@ def make_instance_mask(polygons, img_shape: Tuple[int, int]) -> np.ndarray:
     :return:
     """
     mask_instance = instance_mask_for_polygons(polygons, img_shape)
+    #if mask_instance.ndim > 2:
     mask_multi = make_multi_channel(mask_instance)
+    #else:
+    #    mask_multi=mask_instance
+    
     mask = np.amax(mask_multi, 0).astype(np.int32)
     return mask
 
@@ -70,7 +74,8 @@ def make_multi_channel(mask: np.ndarray) -> np.ndarray:
     :return:
     """
     channels = []
-    for instance in np.unique(mask)[1:]:
+    #ROBERT: changed from [1:] to [0:] because of errors with np.unique(mask)= [0] or [1]
+    for instance in np.unique(mask)[0:]:
         channel = np.zeros(mask.shape)
         channel[mask == instance] = instance
         channels.append(erode_objects(channel)*instance)

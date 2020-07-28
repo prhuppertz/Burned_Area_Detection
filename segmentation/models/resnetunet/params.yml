@@ -1,4 +1,4 @@
-root: "data/training_patches/"
+root: "data/post_fire_model_Scenario2/training_patches/"
 encoder_name: "resnet18"
 pretrained: True
 decoder_name: "UnetDecoder"
