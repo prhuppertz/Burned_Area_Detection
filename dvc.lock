@@ -94,17 +94,17 @@ sort_patches:
   - path: data/post_fire_model_Scenario2/training_patches/patches/
     md5: 24e9a8da295c270f2d4a83e9da45b3b4.dir
 split_data:
-  cmd: python preparedata/split.py --root=data/post_fire_model_Scenario1/training_patches/
+  cmd: python preparedata/split.py --root=data/post_fire_model_Scenario2/training_patches/
   deps:
-  - path: data/post_fire_model_Scenario1/training_patches/annotations/
-    md5: 12bcecb47c90f4c755551650c162af50.dir
-  - path: data/post_fire_model_Scenario1/training_patches/patches/
-    md5: aa2c20107e92b146c6626a30cf7139db.dir
+  - path: data/post_fire_model_Scenario2/training_patches/annotations/
+    md5: 6b75bb420bdb600e314a5e70b31eda52.dir
+  - path: data/post_fire_model_Scenario2/training_patches/patches/
+    md5: 24e9a8da295c270f2d4a83e9da45b3b4.dir
   - path: preparedata/split.py
     md5: 6dbefcf9f2dd8300cfa2e1f506e20209
   outs:
-  - path: data/post_fire_model_Scenario1/training_patches/training_indices.json
-    md5: e9f16b3b10b4bc80d4d6c2bd7f64960d
+  - path: data/post_fire_model_Scenario2/training_patches/training_indices.json
+    md5: 23bb7c4574c767395ffe1b3460181b9b
 resnetunet:
   cmd: python run_training.py --seed=11 --gpu=1 --save-images=1 --baseline=1 --model-name=resnetunet
     --group=resnetunet_Scenario1 --save-path=data/post_fire_model_Scenario1/
