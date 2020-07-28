@@ -33,7 +33,7 @@ patch_scenes:
   - path: data/scenes/29/T/PF
     md5: 53514f117f2eed1ad2ab27f7907f6f77.dir
   - path: preparedata/extract_patches.py
-    md5: 2cb91abe16d6b037cc685af66793fc65
+    md5: 1baf46a682f4c4dd331bf1911a919fa0
   - path: preparedata/patching.py
     md5: c919ca992607248e931d68c51ef48ec3
   - path: preparedata/patchutils
@@ -42,7 +42,7 @@ patch_scenes:
     md5: a50b269c7ecb78b45f614451e93b17fc
   outs:
   - path: data/post_fire_model_Scenario2/extracted/
-    md5: d751713988987e9331980363e24189ce.dir
+    md5: 9e7e1feb982b58173d9a03c6f75351e3.dir
 merge_bands:
   cmd: python preparedata/merge_bands.py /home/robert/ds-wildfire/raw_data/s2_aws/tiles
     -s 29/S/MC -s 29/S/MD -s 29/S/NB -s 29/S/NC -s 29/S/ND -s 29/S/PB -s 29/S/PC -s
@@ -85,7 +85,7 @@ sort_patches:
     /home/robert/ds-wildfire/data/post_fire_model_Scenario2/extracted/annotations
   deps:
   - path: data/post_fire_model_Scenario2/extracted/
-    md5: 2a263b4b5126cd847668dd38db032b95.dir
+    md5: d751713988987e9331980363e24189ce.dir
   - path: preparedata/sort_patches.py
     md5: aa18994dad926cc0d5babc46f114a901
   outs:

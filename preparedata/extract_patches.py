@@ -23,9 +23,7 @@ from datetime import datetime, timedelta
 import geopandas as gpd
 import pandas as pd
 
-list_of_dates_as_datetime = []
-list_of_dates_as_strings = []
-date = []
+
 
 
 def main(
@@ -57,6 +55,10 @@ def main(
     """
     
     for scene in scenes:
+        list_of_dates_as_datetime = []
+        list_of_dates_as_strings = []
+        dates = []
+        
         path_to_scene = os.path.join(scenes_path, scene)
 
         list_of_paths = glob.glob(
@@ -77,17 +79,16 @@ def main(
             #looking for the beginning index number of the year in the string path
             date_start_index = list_of_paths[path].find("20")
             date_end_index = list_of_paths[path].find("/B", date_start_index)
-            date.append(list_of_paths[path][date_start_index:date_end_index])
-            list_of_dates_as_datetime.append(datetime.strptime(date[path], "%Y/%m/%d"))
-            
+            dates.append(list_of_paths[path][date_start_index:date_end_index])
+        for date in range(0, len(dates)):  
+            list_of_dates_as_datetime.append(datetime.strptime(dates[date], "%Y/%m/%d"))
+          
         # create sorted Pandas series for dates and paths
         date_file_mapping = {
             dt: filename for dt, filename in zip(list_of_dates_as_datetime, list_of_paths)
         }
         series_of_paths_sorted_by_date = pd.Series(date_file_mapping).sort_index()
-        print(list_of_paths)
-        
-        """
+
         # create sorted date list with strings
         for path in range(0, len(series_of_paths_sorted_by_date)):
             list_of_dates_as_strings.append(series_of_paths_sorted_by_date.index[path].strftime("%Y-%m-%d"))
@@ -151,7 +152,7 @@ def main(
 
             # patch image from previous satelite image
             
-"""
+
 if __name__ == "__main__":
     arguments = docopt(__doc__)
 

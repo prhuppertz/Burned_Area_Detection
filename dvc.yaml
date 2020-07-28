@@ -72,6 +72,6 @@ stages:
     - segmentation/evaluation/
     - segmentation/models/resnetunet/
     - segmentation/networks/resnetunet/
-    outs-persist:
+    outs:
     - checkpoint/
     - data/post_fire_model_Scenario2/experiments/resnetunet_Scenario2/
