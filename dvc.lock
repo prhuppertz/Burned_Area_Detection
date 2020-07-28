@@ -85,14 +85,14 @@ sort_patches:
     /home/robert/ds-wildfire/data/post_fire_model_Scenario2/extracted/annotations
   deps:
   - path: data/post_fire_model_Scenario2/extracted/
-    md5: d751713988987e9331980363e24189ce.dir
+    md5: 9e7e1feb982b58173d9a03c6f75351e3.dir
   - path: preparedata/sort_patches.py
     md5: aa18994dad926cc0d5babc46f114a901
   outs:
   - path: data/post_fire_model_Scenario2/training_patches/annotations/
-    md5: 37a1ab0a2fe6f3470b0f09d750bdbe1d.dir
+    md5: 6b75bb420bdb600e314a5e70b31eda52.dir
   - path: data/post_fire_model_Scenario2/training_patches/patches/
-    md5: d751713988987e9331980363e24189ce.dir
+    md5: 24e9a8da295c270f2d4a83e9da45b3b4.dir
 split_data:
   cmd: python preparedata/split.py --root=data/post_fire_model_Scenario1/training_patches/
   deps:
