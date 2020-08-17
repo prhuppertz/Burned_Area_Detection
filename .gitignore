@@ -171,3 +171,6 @@ __pycache__/
 /prepare_data/.ipynb_checkpoints
 /prepare_data/*.ipynb
 /checkpoint
+Scenario 2b_Overfit.ipynb
+Scenario2_Overfit.ipynb
+notebooks/data_experiments-2016_2015.ipynb
