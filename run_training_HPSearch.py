@@ -1,5 +1,5 @@
 """Usage:
-          train.py [--seed=<seed>] [--gpu=<id>] [--save-images=<images>] [--baseline=<boolean>] (--model-name=<model-name>) (--group=<group) (--save-path=<save-path>)
+          train.py [--seed=<seed>] [--gpu=<id>] [--save-images=<images>] [--baseline=<boolean>] (--model-name=<model-name>) (--group=<group) (--save-path=<save-path>) (--lr=<lr>)
 
 @ Jevgenij Gamper 2020
 Trains either selected model, and saves model checkpoints under `data/models/task-name/..
@@ -13,6 +13,7 @@ Options:
   --save-path=<save-path>                           Path to save results, logs and checkpoints
   --save-images=<images>                            If validation images should be saved [default: 0]
   --baseline=<boolean>                              If baseline should be stored on test images aswell [default:0]
+  --lr=<lr>                                         Optional parameter for the lr
 """
 from docopt import docopt
 import importlib
@@ -22,6 +23,7 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 import shutil
 from segmentation.evaluation.metrics.various_metrics import dice_and_iou_arrays
+import yaml
 
 PROJECT='burned_area_detection'
 
@@ -99,7 +101,14 @@ def save_metrics(metrics, metrics_save_path):
     with open(metrics_save_path, 'w') as f:
         json.dump(metrics_dict, f)
 
-
+def set_lr(lr):
+    #changes the lr in params.yml if feeded into the command 
+    file_name = "segmentation/models/resnetunet/params.yml"
+    with open(file_name) as f:
+        doc = yaml.safe_load(f)
+    doc['lr'] = lr
+    with open(file_name, 'w') as f:
+        yaml.safe_dump(doc, f, default_flow_style=False)
 def main(model_name, seed, group, save_path, save_images, baseline):
     """
 
@@ -165,7 +174,8 @@ def main(model_name, seed, group, save_path, save_images, baseline):
 
 if __name__=="__main__":
     arguments = docopt(__doc__)
-
+    lr=float(arguments['--lr'])
+    set_lr(lr)
     # Set gpu devices, then import pytorch and set random seeds
     seed = int(arguments['--seed'])
     gpu = arguments['--gpu']
@@ -191,5 +201,5 @@ if __name__=="__main__":
     import wandb
 
     task_name = arguments['--model-name']
-
+    
     main(task_name, seed, arguments['--group'], arguments['--save-path'], bool(int(arguments['--save-images'])), bool(int(arguments['--baseline'])))

@@ -116,7 +116,7 @@ resnetunet:
   - path: data/post_fire_model_Scenario2b/training_patches/training_indices.json
     md5: ba03b7e02e9945bcd4723829af0ff66c
   - path: run_training.py
-    md5: fcb4399878b2ef2ae00e2444a5c2f5a3
+    md5: 7ab6a5d0117fe8b1092c7825b776c25b
   - path: segmentation/data/
     md5: a9ce5c993ab18f614c64de7af5a7464e.dir
   - path: segmentation/evaluation/

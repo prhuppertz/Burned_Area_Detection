@@ -1,15 +1,15 @@
-root: "data/post_fire_model_Scenario2/training_patches/"
-encoder_name: "resnet18"
-pretrained: True
-decoder_name: "UnetDecoder"
-decoder_parameters:
-  n_classes: 1
-  encoder_name: "resnet18"
-  multiple: 2
 batch_size: 16
-lr: 0.0003
-weight_decay: 0.0001
-optimizer_type: "ADAM"
-w: 10
+decoder_name: UnetDecoder
+decoder_parameters:
+  encoder_name: resnet18
+  multiple: 2
+  n_classes: 1
+encoder_name: resnet18
+lr: 0.0009298081277974436
+optimizer_type: ADAM
+pretrained: true
+root: data/post_fire_model_Scenario2/training_patches/
+scheduler_type: step
 sigma: 5
-scheduler_type: "step"
+w: 10
+weight_decay: 0.0001
