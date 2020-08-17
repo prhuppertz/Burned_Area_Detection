@@ -6,7 +6,7 @@ decoder_parameters:
   n_classes: 1
   encoder_name: "resnet18"
   multiple: 2
-batch_size: 1
+batch_size: 16
 lr: 0.0003
 weight_decay: 0.0001
 optimizer_type: "ADAM"

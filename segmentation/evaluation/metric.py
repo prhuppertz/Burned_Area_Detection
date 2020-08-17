@@ -1,4 +1,4 @@
-from segmentation.evaluation.metrics.various_metrics import dice_and_iou
+from segmentation.evaluation.metrics.various_metrics import dice_and_iou_arrays
 
 class SegmentationMetric():
 
@@ -21,7 +21,7 @@ class SegmentationMetric():
         for idx in range(len(ground_truth)):
             gt = ground_truth[idx]
             instance_mask = prediction[idx]
-            score = dice_and_iou(instance_mask, gt)
+            score = dice_and_iou_arrays(instance_mask, gt)
 
             scores.append(score)
 

@@ -67,7 +67,7 @@ stages:
     - data/post_fire_model_Scenario2b/training_patches/training_indices.json
   resnetunet:
     cmd: python run_training.py --seed=11 --gpu=1 --save-images=1 --baseline=1 --model-name=resnetunet
-      --group=resnetunet_Scenario2b --save-path=data/post_fire_model_Scenario2b/
+      --group=resnetunet_Scenario2b_MetricExperiments --save-path=data/post_fire_model_Scenario2b/
     deps:
     - data/post_fire_model_Scenario2b/training_patches/annotations/
     - data/post_fire_model_Scenario2b/training_patches/patches/

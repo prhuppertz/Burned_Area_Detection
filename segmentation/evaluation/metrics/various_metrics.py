@@ -20,15 +20,15 @@ def dice_array(input:np.ndarray, targs:np.ndarray, empty_score=1.0):
     input = np.asarray(input).astype(np.bool)
     target = np.asarray(targs).astype(np.bool)
 
-    im_sum = input.sum() + target.sum()
+    im_sum = input.sum().abs() + target.sum().abs()
     if im_sum == 0:
         return empty_score
 
     # Compute Dice coefficient
     intersection = np.logical_and(input, target)
+    
 
-
-    return (2. * intersection.sum() / im_sum)
+    return (2. * intersection.sum().abs() / im_sum)
 
 def iou(input:np.ndarray, targs:np.ndarray, iou:bool=True, eps:float=1e-8)->float:
     "Returns the IoU metric for a binary target"
@@ -56,7 +56,7 @@ def iou_array(input:np.ndarray, targs:np.ndarray, eps:float=1e-8, empty_score:fl
     intersection = np.logical_and(input, target)
 
 
-    return (intersection.sum() / (im_sum-intersection.sum()+eps))
+    return (intersection.sum().abs() / (im_sum-intersection.sum().abs()+eps))
 
 def dice_and_iou(input:np.ndarray, targs:np.ndarray)->tuple:
     "Returns the dice and IoU metric in a tuple"
