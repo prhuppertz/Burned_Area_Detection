@@ -27,10 +27,6 @@ def loss(predicted_targets, label_mask, distance_mask):
     :param distance_mask:
     :return:
     """
-    print(predicted_targets.size())
-    print(torch.squeeze(predicted_targets).size())
-    print(label_mask.size())
-    print(torch.squeeze(label_mask).size())
     #using torch.squeeze(tensor) instead of .squeeze()
     loss = F.binary_cross_entropy_with_logits(torch.squeeze(predicted_targets), torch.squeeze(label_mask), reduction='none')
    
