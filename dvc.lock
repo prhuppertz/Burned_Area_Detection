@@ -107,7 +107,7 @@ split_data:
     md5: ba03b7e02e9945bcd4723829af0ff66c
 resnetunet:
   cmd: python run_training.py --seed=11 --gpu=1 --save-images=1 --baseline=1 --model-name=resnetunet
-    --group=resnetunet_Scenario2b_MetricExperiments --save-path=data/post_fire_model_Scenario2b/
+    --group=resnetunet_Scenario2b --save-path=data/post_fire_model_Scenario2b/
   deps:
   - path: data/post_fire_model_Scenario2b/training_patches/annotations/
     md5: 40322a0a14d461a168c641cf320f5cb2.dir
@@ -120,8 +120,8 @@ resnetunet:
   - path: segmentation/data/
     md5: a9ce5c993ab18f614c64de7af5a7464e.dir
   - path: segmentation/evaluation/
-    md5: ddcf26959aee9675b5e989fe5b1fb435.dir
+    md5: daca679f8e02f65ed90dbb07dc31d80f.dir
   - path: segmentation/models/resnetunet/
-    md5: 5fa2dfa874d646af393b0e81df54c78d.dir
+    md5: 020ac523dc646f61f1170b27ad9b8e13.dir
   - path: segmentation/networks/resnetunet/
     md5: 34aace89bb6eb4df000f4ac190a9d728.dir
