@@ -2,10 +2,10 @@ from torch import nn
 import torchvision.models as models
 from typeguard import typechecked
 
+
 @typechecked
 class ResNet(nn.Module):
-
-    def __init__(self, encoder_name: str, pretrained: bool=False):
+    def __init__(self, encoder_name: str, pretrained: bool = False):
         """
 
         :param encoder_name:
@@ -15,9 +15,15 @@ class ResNet(nn.Module):
 
         self.base_layers = get_encoder(encoder_name, pretrained)
 
-        self.layer0 = nn.Sequential(nn.Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False),
-                                    nn.BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True),
-                                    nn.ReLU(inplace=True))
+        self.layer0 = nn.Sequential(
+            nn.Conv2d(
+                3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False
+            ),
+            nn.BatchNorm2d(
+                64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True
+            ),
+            nn.ReLU(inplace=True),
+        )
         self.layer1 = nn.Sequential(*self.base_layers[0:2])
         self.layer2 = self.base_layers[2]
         self.layer3 = self.base_layers[3]
@@ -50,6 +56,7 @@ class ResNet(nn.Module):
         layer4 = self.layer4(layer3)
 
         return layer0, layer1, layer2, layer3, layer4
+
 
 def get_encoder(encoder_name, pretrained):
     if encoder_name == "resnet18":

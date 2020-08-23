@@ -1,14 +1,12 @@
 from segmentation.evaluation.metrics.various_metrics import dice_and_iou_arrays
 
-class SegmentationMetric():
 
+class SegmentationMetric:
     def __init__(self):
 
-
         self.num_classes = 1
-        #self.metric = PanopticQuality(self.num_classes)
+        # self.metric = PanopticQuality(self.num_classes)
         self.scores = []
-
 
     def batch_compute(self, prediction, ground_truth):
         """

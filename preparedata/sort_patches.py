@@ -33,9 +33,13 @@ def dump_polygons(annotation_dir_source, save_path, included):
     all_annotations = {}
     mgrs_annotations_files = os.listdir(annotation_dir_source)
     for annotations_file in mgrs_annotations_files:
-        #path = os.path.join(annotation_dir_source, annotations_file)
-        if "annotations" in other.load_json(os.path.join(annotation_dir_source, annotations_file)):
-            annotations_file = coco_to_shapely(os.path.join(annotation_dir_source, annotations_file))
+        # path = os.path.join(annotation_dir_source, annotations_file)
+        if "annotations" in other.load_json(
+            os.path.join(annotation_dir_source, annotations_file)
+        ):
+            annotations_file = coco_to_shapely(
+                os.path.join(annotation_dir_source, annotations_file)
+            )
             all_annotations = {**all_annotations, **annotations_file}
 
     included_annotations = {}
@@ -71,7 +75,11 @@ def get_all(path):
 
 
 def main(
-    save_path, excluded_path, all_extracted_path, path_to_annotations_source, delete=False
+    save_path,
+    excluded_path,
+    all_extracted_path,
+    path_to_annotations_source,
+    delete=False,
 ):
     """
     :param save_path: path where newly sorted patches and their annotations will be stored
@@ -93,23 +101,23 @@ def main(
     path_to_store_patches = os.path.join(save_path, "patches")
     os.makedirs(path_to_store_patches, exist_ok=True)
     path_to_store_annotations = os.path.join(save_path, "annotations")
-    os.makedirs(path_to_store_annotations , exist_ok=True)
+    os.makedirs(path_to_store_annotations, exist_ok=True)
 
     # Move image patches
     included = []  # To pass into dump_polygons
     for patch in all_patches:
-        
+
         if patch not in excluded_patches:
             source_patch_path = os.path.join(all_extracted_path, patch + ".jpg")
             target_patch_path = os.path.join(path_to_store_patches, patch + ".jpg")
-            #ROBERT:test if patch is empty
+            # ROBERT:test if patch is empty
             img = np.asarray(pilimage.open(source_patch_path))
             if np.unique(img).size > 2:
                 included.append(patch)
                 shutil.copy(source_patch_path, target_patch_path)
-            #else:
+            # else:
             #    os.remove(source_patch_path)
-        
+
     print("Number of included patches {}".format(len(included)))
     # Combine and move annotations to new directory
     save_annotations_file = os.path.join(path_to_store_annotations, "polygons.pkl")

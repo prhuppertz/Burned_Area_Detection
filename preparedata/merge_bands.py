@@ -70,6 +70,7 @@ def stack_bands(source_path, mgrs_coordinate, save_path):
                 with rasterio.open(list_of_paths[x][y]) as src1:
                     dst.write_band((x + 1), src1.read(1))
 
+
 def process_scenes(source_path, mgrs_coordinates, save_path):
     """
     Applies above function to multiple scenes

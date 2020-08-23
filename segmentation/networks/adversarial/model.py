@@ -4,6 +4,7 @@ Adversary for adversarial segmentation loss
 from torch import nn
 import torch.nn.functional as F
 
+
 class CNN(nn.Module):
     def __init__(self, input_channels):
         super(CNN, self).__init__()

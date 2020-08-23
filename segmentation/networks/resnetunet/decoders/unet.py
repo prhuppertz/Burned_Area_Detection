@@ -1,14 +1,15 @@
 import torch
 from torch import nn
 
+
 def convrelu(in_channels, out_channels, kernel, padding):
     return nn.Sequential(
         nn.Conv2d(in_channels, out_channels, kernel, padding=padding),
         nn.ReLU(inplace=True),
     )
 
-class UnetDecoder(nn.Module):
 
+class UnetDecoder(nn.Module):
     def __init__(self, n_classes: int, encoder_name: str, multiple: int):
         """
         Unet like resnet decoder
@@ -32,7 +33,7 @@ class UnetDecoder(nn.Module):
         self.layer3_1x1 = convrelu(latent_dims[3], 32 * multiple, 1, 0)
         self.layer4_1x1 = convrelu(latent_dims[4], 128 * multiple, 1, 0)
 
-        self.upsample = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)
+        self.upsample = nn.Upsample(scale_factor=2, mode="bilinear", align_corners=True)
 
         self.conv_up3 = convrelu(32 * multiple + 128 * multiple, 128 * multiple, 3, 1)
         self.conv_up2 = convrelu(16 * multiple + 128 * multiple, 32 * multiple, 3, 1)
@@ -41,7 +42,9 @@ class UnetDecoder(nn.Module):
 
         self.conv_original_size0 = convrelu(3, 8 * multiple, 3, 1)
 
-        self.conv_original_size2 = convrelu(8 * multiple + 16 * multiple, 8 * multiple, 3, 1)
+        self.conv_original_size2 = convrelu(
+            8 * multiple + 16 * multiple, 8 * multiple, 3, 1
+        )
 
         self.conv_last = nn.Conv2d(8 * multiple, n_classes, 1)
 

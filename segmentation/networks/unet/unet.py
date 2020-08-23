@@ -1,13 +1,24 @@
-from segmentation.networks.unet.unet_layers import InputConv, DownScale, UpScale, OutConv
+from segmentation.networks.unet.unet_layers import (
+    InputConv,
+    DownScale,
+    UpScale,
+    OutConv,
+)
 from torch import nn
 from typing import Dict, Optional, Union
 from typeguard import typechecked
 
+
 @typechecked
 class UNet(nn.Module):
-
-    def __init__(self, n_channels: int, decoders: Dict = {'classification': 1},
-                 multiple: float = 1, num_layers: int = 2, residual = False):
+    def __init__(
+        self,
+        n_channels: int,
+        decoders: Dict = {"classification": 1},
+        multiple: float = 1,
+        num_layers: int = 2,
+        residual=False,
+    ):
         """
         Defines UNet neural network
         :param n_channels: How many input channels are there
@@ -15,17 +26,41 @@ class UNet(nn.Module):
         :param multiple: multiple of the model size
         """
         super(UNet, self).__init__()
-        self.inc = InputConv(n_channels, int(8*multiple), num_layers = num_layers, residual = residual)
-        self.down1 = DownScale(int(8*multiple), int(16*multiple), num_layers = num_layers, residual = residual)
-        self.down2 = DownScale(int(16*multiple), int(32*multiple), num_layers = num_layers, residual = residual)
-        self.down3 = DownScale(int(32*multiple), int(64*multiple), num_layers = num_layers, residual = residual)
-        self.down4 = DownScale(int(64*multiple), int(64*multiple), num_layers = num_layers, residual = residual)
+        self.inc = InputConv(
+            n_channels, int(8 * multiple), num_layers=num_layers, residual=residual
+        )
+        self.down1 = DownScale(
+            int(8 * multiple),
+            int(16 * multiple),
+            num_layers=num_layers,
+            residual=residual,
+        )
+        self.down2 = DownScale(
+            int(16 * multiple),
+            int(32 * multiple),
+            num_layers=num_layers,
+            residual=residual,
+        )
+        self.down3 = DownScale(
+            int(32 * multiple),
+            int(64 * multiple),
+            num_layers=num_layers,
+            residual=residual,
+        )
+        self.down4 = DownScale(
+            int(64 * multiple),
+            int(64 * multiple),
+            num_layers=num_layers,
+            residual=residual,
+        )
 
         self.decoders = nn.ModuleDict({})
 
         for name, num_channels in decoders.items():
 
-            self.decoders.update({name: Decoder(num_channels, multiple, None, residual = residual)})
+            self.decoders.update(
+                {name: Decoder(num_channels, multiple, None, residual=residual)}
+            )
 
     def forward(self, x):
         x1 = self.inc(x)
@@ -40,19 +75,24 @@ class UNet(nn.Module):
 
 
 class Decoder(nn.Module):
-
-    def __init__(self, n_classes: int, multiple: float = 1, drop_prob: Optional[Union[int, float]]=None, residual = False):
+    def __init__(
+        self,
+        n_classes: int,
+        multiple: float = 1,
+        drop_prob: Optional[Union[int, float]] = None,
+        residual=False,
+    ):
 
         super(Decoder, self).__init__()
 
-        self.up1 = UpScale(int(128*multiple), int(32*multiple), residual = residual)
-        self.up2 = UpScale(int(64*multiple), int(16*multiple), residual = residual)
-        self.up3 = UpScale(int(32*multiple), int(8*multiple), residual = residual)
-        self.up4 = UpScale(int(16*multiple), int(8*multiple), residual = residual)
+        self.up1 = UpScale(int(128 * multiple), int(32 * multiple), residual=residual)
+        self.up2 = UpScale(int(64 * multiple), int(16 * multiple), residual=residual)
+        self.up3 = UpScale(int(32 * multiple), int(8 * multiple), residual=residual)
+        self.up4 = UpScale(int(16 * multiple), int(8 * multiple), residual=residual)
 
         if drop_prob:
             self.dropout = nn.Dropout(drop_prob)
-        self.outc = OutConv(int(8*multiple), n_classes)
+        self.outc = OutConv(int(8 * multiple), n_classes)
 
         self.drop_prob = drop_prob
 
@@ -72,4 +112,3 @@ class Decoder(nn.Module):
             x = self.dropout(x)
         x = self.outc(x)
         return x
-

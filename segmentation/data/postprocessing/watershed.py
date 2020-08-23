@@ -2,13 +2,16 @@ import numpy as np
 from skimage.measure import label
 from skimage.segmentation import watershed
 from skimage.morphology import remove_small_objects, binary_dilation
-from scipy.ndimage.morphology import (binary_erosion,
-                                    binary_dilation,
-                                    binary_fill_holes,
-                                    distance_transform_edt)
+from scipy.ndimage.morphology import (
+    binary_erosion,
+    binary_dilation,
+    binary_fill_holes,
+    distance_transform_edt,
+)
 from typeguard import typechecked
 from segmentation.data.utils import batched
 from typing import Optional
+
 
 @typechecked
 def gen_inst_dst_map(ann: np.ndarray):
@@ -28,8 +31,9 @@ def gen_inst_dst_map(ann: np.ndarray):
         nuc_map = np.copy(ann == nuc_id)
         nuc_dst = distance_transform_edt(nuc_map)
         nuc_dst = 255 * (nuc_dst / np.amax(nuc_dst))
-        canvas += nuc_dst.astype('uint8')
+        canvas += nuc_dst.astype("uint8")
     return canvas
+
 
 @typechecked
 def unet_watershed(thresh_pred: np.ndarray, dilation_kernel: Optional[int] = None):
@@ -57,22 +61,25 @@ def unet_watershed(thresh_pred: np.ndarray, dilation_kernel: Optional[int] = Non
 
     # Remove small objects from final output
     instance_mask = remove_small_objects(pred, min_size=10)
-    #dilate objects
+    # dilate objects
     if dilation_kernel:
 
         # Kernel for dilation
         kernel = np.ones((dilation_kernel, dilation_kernel))
         uniqe_ids = np.unique(instance_mask)
         uniqe_ids = np.delete(uniqe_ids, 0)
-        if len(uniqe_ids)>0:
+        if len(uniqe_ids) > 0:
             dilated_instance_mask = np.zeros((pred.shape[0], pred.shape[1]))
             for id in uniqe_ids:
-                this_mask = instance_mask==id
-                this_mask = binary_dilation(this_mask , kernel)
-                dilated_instance_mask = np.where(this_mask>0, id, dilated_instance_mask)
+                this_mask = instance_mask == id
+                this_mask = binary_dilation(this_mask, kernel)
+                dilated_instance_mask = np.where(
+                    this_mask > 0, id, dilated_instance_mask
+                )
             instance_mask = dilated_instance_mask
 
     return instance_mask
+
 
 @batched(mean=False)
 def batched_watershed(pred, dilatation_kernel):

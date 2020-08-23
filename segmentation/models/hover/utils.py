@@ -3,6 +3,7 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 
+
 def get_sobel_kernel(size):
     """
     Initialises kernel for sobel operator
@@ -10,7 +11,7 @@ def get_sobel_kernel(size):
     :param size:
     :return:
     """
-    assert size % 2 == 1, 'Must be odd, get size=%d' % size
+    assert size % 2 == 1, "Must be odd, get size=%d" % size
 
     h_range = np.arange(-size // 2 + 1, size // 2 + 1, dtype=np.float32)
     v_range = np.arange(-size // 2 + 1, size // 2 + 1, dtype=np.float32)
@@ -18,6 +19,7 @@ def get_sobel_kernel(size):
     kernel_h = h / (h * h + v * v + 1.0e-15)
     kernel_v = v / (h * h + v * v + 1.0e-15)
     return kernel_h, kernel_v
+
 
 def get_gradient(x, y):
     """
@@ -32,8 +34,8 @@ def get_gradient(x, y):
     kernel_h = torch.tensor(kernel_h, requires_grad=False)  # constant
     kernel_v = torch.tensor(kernel_v, requires_grad=False)  # constant
     # Reshape and place on cuda
-    kernel_h = kernel_h.view(1, 1, 5, 5).to('cuda')  # constant
-    kernel_v = kernel_v.view(1, 1, 5, 5).to('cuda')  # constant
+    kernel_h = kernel_h.view(1, 1, 5, 5).to("cuda")  # constant
+    kernel_v = kernel_v.view(1, 1, 5, 5).to("cuda")  # constant
 
     # Apply kernel
     horizontal = F.conv2d(x, kernel_h, padding=2)
@@ -41,6 +43,7 @@ def get_gradient(x, y):
     hv = torch.cat([horizontal, vertical], dim=1)
 
     return hv
+
 
 def gradient_mse(pred_x, pred_y, x, y, focus):
     """
@@ -63,8 +66,9 @@ def gradient_mse(pred_x, pred_y, x, y, focus):
         # artificial reduce_mean with focused region
         loss = loss.sum() / (focus.sum() + 1.0e-8)
     else:
-        loss = nn.MSELoss(reduction='mean')(pred_grad, true_grad)
+        loss = nn.MSELoss(reduction="mean")(pred_grad, true_grad)
     return loss
+
 
 def hover_loss(predicted_targets, targets, focus=None):
     """
@@ -77,15 +81,23 @@ def hover_loss(predicted_targets, targets, focus=None):
     :param focus: Binary semantic segmentation mask
     :return:
     """
-    pred_seg_map, pred_x, pred_y = predicted_targets[:, 0, :, :].unsqueeze(1), predicted_targets[:, 1, :, :].unsqueeze(1), predicted_targets[:, 2, :, :].unsqueeze(1)
+    pred_seg_map, pred_x, pred_y = (
+        predicted_targets[:, 0, :, :].unsqueeze(1),
+        predicted_targets[:, 1, :, :].unsqueeze(1),
+        predicted_targets[:, 2, :, :].unsqueeze(1),
+    )
 
-    seg_map, x, y = targets[:, 0, :, :].unsqueeze(1), targets[:, 1, :, :].unsqueeze(1), targets[:, 2, :, :].unsqueeze(1)
+    seg_map, x, y = (
+        targets[:, 0, :, :].unsqueeze(1),
+        targets[:, 1, :, :].unsqueeze(1),
+        targets[:, 2, :, :].unsqueeze(1),
+    )
 
-    seg_map_loss = nn.BCEWithLogitsLoss(reduction='mean')(pred_seg_map, seg_map)
+    seg_map_loss = nn.BCEWithLogitsLoss(reduction="mean")(pred_seg_map, seg_map)
 
-    x_loss = nn.MSELoss(reduction='mean')(pred_x, x)
+    x_loss = nn.MSELoss(reduction="mean")(pred_x, x)
 
-    y_loss = nn.MSELoss(reduction='mean')(pred_y, y)
+    y_loss = nn.MSELoss(reduction="mean")(pred_y, y)
 
     grad_loss = gradient_mse(pred_x, pred_y, x, y, focus)
 

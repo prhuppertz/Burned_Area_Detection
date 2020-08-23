@@ -2,6 +2,7 @@ import torch.nn.functional as F
 from torch import nn
 import torch
 
+
 class DiceLoss(nn.Module):
     def __init__(self):
         super(DiceLoss, self).__init__()
@@ -15,9 +16,10 @@ class DiceLoss(nn.Module):
         targets = targets.view(-1)
 
         intersection = (inputs * targets).sum()
-        dice = (2. * intersection + smooth) / (inputs.sum() + targets.sum() + smooth)
+        dice = (2.0 * intersection + smooth) / (inputs.sum() + targets.sum() + smooth)
 
         return 1 - dice
+
 
 def loss(predicted_targets, label_mask, distance_mask):
     """
@@ -28,7 +30,9 @@ def loss(predicted_targets, label_mask, distance_mask):
     :return:
     """
 
-    loss = F.binary_cross_entropy_with_logits(predicted_targets.squeeze(), label_mask, reduction='none')
+    loss = F.binary_cross_entropy_with_logits(
+        predicted_targets.squeeze(), label_mask, reduction="none"
+    )
 
     loss = loss * distance_mask
 

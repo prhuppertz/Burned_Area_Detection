@@ -24,8 +24,6 @@ import geopandas as gpd
 import pandas as pd
 
 
-
-
 def main(
     shapefile,
     save_path,
@@ -53,17 +51,15 @@ def main(
     path_to_store_burn_vis_prev = os.path.join(save_path, "burn_vis_prev")
     os.makedirs(path_to_store_burn_vis_prev, exist_ok=True)
     """
-    
+
     for scene in scenes:
         list_of_dates_as_datetime = []
         list_of_dates_as_strings = []
         dates = []
-        
+
         path_to_scene = os.path.join(scenes_path, scene)
 
-        list_of_paths = glob.glob(
-            path_to_scene + "/*/*/*/" + "*.tif"#.format(scene)
-        )
+        list_of_paths = glob.glob(path_to_scene + "/*/*/*/" + "*.tif")  # .format(scene)
 
         # create scene string with "_" instead of "/"
         scene_list = list(scene)
@@ -74,27 +70,30 @@ def main(
         scene_string = ""
         scene_string = scene_string.join(scene_list)
 
-        #creating a list of dates from the paths of the files
+        # creating a list of dates from the paths of the files
         for path in range(0, len(list_of_paths)):
-            #looking for the beginning index number of the year in the string path
+            # looking for the beginning index number of the year in the string path
             date_start_index = list_of_paths[path].find("20")
             date_end_index = list_of_paths[path].find("/B", date_start_index)
             dates.append(list_of_paths[path][date_start_index:date_end_index])
-        for date in range(0, len(dates)):  
+        for date in range(0, len(dates)):
             list_of_dates_as_datetime.append(datetime.strptime(dates[date], "%Y/%m/%d"))
-          
+
         # create sorted Pandas series for dates and paths
         date_file_mapping = {
-            dt: filename for dt, filename in zip(list_of_dates_as_datetime, list_of_paths)
+            dt: filename
+            for dt, filename in zip(list_of_dates_as_datetime, list_of_paths)
         }
         series_of_paths_sorted_by_date = pd.Series(date_file_mapping).sort_index()
 
         # create sorted date list with strings
         for path in range(0, len(series_of_paths_sorted_by_date)):
-            list_of_dates_as_strings.append(series_of_paths_sorted_by_date.index[path].strftime("%Y-%m-%d"))
+            list_of_dates_as_strings.append(
+                series_of_paths_sorted_by_date.index[path].strftime("%Y-%m-%d")
+            )
 
         for path in range(0, len(series_of_paths_sorted_by_date)):
-            
+
             # import image
             raster = import_image(series_of_paths_sorted_by_date[path])
             raster_meta = raster.meta
@@ -104,7 +103,17 @@ def main(
 
             # load the shapefile data of the days prior to the date of the mgrs scene
             shapefile_date = gdf[
-                (gdf["DHFim"] < series_of_paths_sorted_by_date.index[path].strftime("%Y-%m-%d")) & (gdf['DHFim']>(series_of_paths_sorted_by_date.index[path]-timedelta(days=30)).strftime('%Y-%m-%d'))]
+                (
+                    gdf["DHFim"]
+                    < series_of_paths_sorted_by_date.index[path].strftime("%Y-%m-%d")
+                )
+                & (
+                    gdf["DHFim"]
+                    > (
+                        series_of_paths_sorted_by_date.index[path] - timedelta(days=30)
+                    ).strftime("%Y-%m-%d")
+                )
+            ]
 
             # create windows from where shapefile and scenes overlap
             patch_dfs, patch_windows = import_shapefile_for_patches(
@@ -139,19 +148,25 @@ def main(
                 save_gt_overlaid(
                     os.path.join(
                         path_to_store_annotations,
-                        "annotations{}.json".format(scene_string + list_of_dates_as_strings[path]),
+                        "annotations{}.json".format(
+                            scene_string + list_of_dates_as_strings[path]
+                        ),
                     ),
                     path_to_store_patches,
                     path_to_store_burn_vis,
                 )
             except Exception as e:
                 print(e)
-                print("MGRS tile without annotations: {}".format(scene_string + list_of_dates_as_strings[path]))
+                print(
+                    "MGRS tile without annotations: {}".format(
+                        scene_string + list_of_dates_as_strings[path]
+                    )
+                )
 
             raster.close()
 
             # patch image from previous satelite image
-            
+
 
 if __name__ == "__main__":
     arguments = docopt(__doc__)

@@ -10,6 +10,7 @@ class Model(pl.LightningModule):
     """
     Simple boundary segmentation model, U-Net based
     """
+
     def __init__(self, hparams):
         """
 
@@ -20,8 +21,10 @@ class Model(pl.LightningModule):
         """
         super(Model, self).__init__()
         self.hparams = hparams
-        self.generator = UNet(hparams['n_channels'], hparams['decoders'], hparams['multiple'])
-        self.discriminator = CNN(input_channels=hparams['discriminator_num_channels'])
+        self.generator = UNet(
+            hparams["n_channels"], hparams["decoders"], hparams["multiple"]
+        )
+        self.discriminator = CNN(input_channels=hparams["discriminator_num_channels"])
 
     def forward(self, x):
         """
@@ -31,7 +34,7 @@ class Model(pl.LightningModule):
         """
         out = self.generator(x)
 
-        return out['classification'].squeeze()
+        return out["classification"].squeeze()
 
     def training_step(self, batch, batch_idx, optimizer_idx):
         """
@@ -51,9 +54,9 @@ class Model(pl.LightningModule):
 
             disc_pred_targets = self.discriminator(pred_targets)
 
-            g_loss = self.configuration['loss'](disc_pred_targets, valid)
+            g_loss = self.configuration["loss"](disc_pred_targets, valid)
 
-            binary_loss = self.configuration['loss'](pred_targets.squeeze(), targets)
+            binary_loss = self.configuration["loss"](pred_targets.squeeze(), targets)
 
             loss = g_loss + binary_loss
 
@@ -63,17 +66,17 @@ class Model(pl.LightningModule):
 
             real_targets = self.discriminator(targets.unsqueeze(1))
 
-            real_loss = self.configuration['loss'](real_targets, valid)
+            real_loss = self.configuration["loss"](real_targets, valid)
 
             fake = torch.zeros(images.size(0), 1).cuda()
 
             fake_targets = self.discriminator(self(images).detach().unsqueeze(1))
 
-            fake_loss = self.configuration['loss'](fake_targets, fake)
+            fake_loss = self.configuration["loss"](fake_targets, fake)
 
             loss = (real_loss + fake_loss) / 2
 
-        return {'loss': loss}
+        return {"loss": loss}
 
     def validation_step(self, batch, batch_idx):
         """
@@ -84,15 +87,18 @@ class Model(pl.LightningModule):
         """
         images, targets = batch
         predicted_targets = self(images)
-        loss = self.configuration['loss'](predicted_targets, targets).item()
+        loss = self.configuration["loss"](predicted_targets, targets).item()
 
-        if self.configuration['metric']:
-            predicted_postproc = self.configuration['postprocessing_func'](predicted_targets.cpu().numpy())
-            metric = self.configuration['metric'](predicted_postproc,
-                                               targets.cpu().numpy())
-            out = {'val_loss': loss, 'metric': metric}
+        if self.configuration["metric"]:
+            predicted_postproc = self.configuration["postprocessing_func"](
+                predicted_targets.cpu().numpy()
+            )
+            metric = self.configuration["metric"](
+                predicted_postproc, targets.cpu().numpy()
+            )
+            out = {"val_loss": loss, "metric": metric}
         else:
-            out = {'val_loss': loss}
+            out = {"val_loss": loss}
 
         return out
 
@@ -102,18 +108,20 @@ class Model(pl.LightningModule):
         :param outputs: a list of the form [{'loss': loss, 'metric': metric, 'dataset_name': dataset_name}, ...]
         :return:
         """
-        loss = np.mean([x['val_loss'] for x in outputs])
-        if self.configuration['metric']:
-            metric = np.mean([x['metric'] for x in outputs])
-            return {'val_loss': torch.Tensor([loss]), 'metric': torch.Tensor([metric])}
+        loss = np.mean([x["val_loss"] for x in outputs])
+        if self.configuration["metric"]:
+            metric = np.mean([x["metric"] for x in outputs])
+            return {"val_loss": torch.Tensor([loss]), "metric": torch.Tensor([metric])}
         else:
-            return {'val_loss': torch.Tensor([loss])}
+            return {"val_loss": torch.Tensor([loss])}
 
     def configure_optimizers(self):
         """
         This is required as part of pytorch-lightning
         :return:
         """
-        opt_g = optim.Adam(self.generator.parameters(), lr=self.hparams['generator_lr'])
-        opt_d = optim.Adam(self.discriminator.parameters(), lr=self.hparams['discriminator_lr'])
+        opt_g = optim.Adam(self.generator.parameters(), lr=self.hparams["generator_lr"])
+        opt_d = optim.Adam(
+            self.discriminator.parameters(), lr=self.hparams["discriminator_lr"]
+        )
         return [opt_g, opt_d], []

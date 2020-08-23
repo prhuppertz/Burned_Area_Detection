@@ -16,6 +16,7 @@ from PIL import Image as pilimg
 from tqdm import tqdm
 import rasterio.plot
 
+
 def get_chip_windows(
     raster_width: int,
     raster_height: int,
@@ -101,11 +102,19 @@ def cut_chip_images(
         """
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            
+
         Path(output_patch_path).mkdir(parents=True, exist_ok=True)
-        with rasterio.open(Path(rf"{output_patch_path}/{chip_name}.tif"), "w", driver='GTiff', height=img_array.shape[0], width=img_array.shape[1], count=3,dtype=img_array.dtype) as dst:
-            dst.write(rasterio.plot.reshape_as_raster(img_array),indexes=bands)
-        
+        with rasterio.open(
+            Path(rf"{output_patch_path}/{chip_name}.tif"),
+            "w",
+            driver="GTiff",
+            height=img_array.shape[0],
+            width=img_array.shape[1],
+            count=3,
+            dtype=img_array.dtype,
+        ) as dst:
+            dst.write(rasterio.plot.reshape_as_raster(img_array), indexes=bands)
+
         all_chip_stats[chip_name] = {
             "mean": np.nanmean(img_array, axis=(0, 1)),
             "std": np.nanstd(img_array, axis=(0, 1)),

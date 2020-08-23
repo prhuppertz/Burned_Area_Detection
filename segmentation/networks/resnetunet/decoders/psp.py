@@ -4,10 +4,15 @@ import torch.nn.functional as F
 from typing import Tuple
 from typeguard import typechecked
 
+
 @typechecked
 class PSPModule(nn.Module):
-
-    def __init__(self, in_features: int, out_features: int = 1024, sizes: Tuple[int, int, int, int] = (1, 2, 3, 6)):
+    def __init__(
+        self,
+        in_features: int,
+        out_features: int = 1024,
+        sizes: Tuple[int, int, int, int] = (1, 2, 3, 6),
+    ):
         """
         Performs pooling accross different spatial dimensions
         :param in_features:
@@ -17,13 +22,22 @@ class PSPModule(nn.Module):
         super(PSPModule, self).__init__()
 
         self.stages = []
-        self.stages = nn.ModuleList([self._make_stage(in_features, size) for size in sizes])
-        self.bottleneck = nn.Conv2d(in_features * (len(sizes) + 1), out_features, kernel_size=1)
+        self.stages = nn.ModuleList(
+            [self._make_stage(in_features, size) for size in sizes]
+        )
+        self.bottleneck = nn.Conv2d(
+            in_features * (len(sizes) + 1), out_features, kernel_size=1
+        )
         self.relu = nn.ReLU()
 
     def forward(self, feats):
         h, w = feats.size(2), feats.size(3)
-        priors = [F.interpolate(input=stage(feats), size=(h, w), mode='bilinear', align_corners=True) for stage in self.stages] + [feats]
+        priors = [
+            F.interpolate(
+                input=stage(feats), size=(h, w), mode="bilinear", align_corners=True
+            )
+            for stage in self.stages
+        ] + [feats]
         bottle = self.bottleneck(torch.cat(priors, 1))
         return self.relu(bottle)
 
@@ -42,7 +56,6 @@ class PSPModule(nn.Module):
 
 @typechecked
 class PSPUpsample(nn.Module):
-
     def __init__(self, in_channels: int, out_channels: int):
         """
         Upsampling module for psp network
@@ -54,11 +67,12 @@ class PSPUpsample(nn.Module):
         self.conv = nn.Sequential(
             nn.Conv2d(in_channels, out_channels, 3, padding=1),
             nn.BatchNorm2d(out_channels),
-            nn.PReLU())
+            nn.PReLU(),
+        )
 
     def forward(self, x, upsample_ratio=2):
         h, w = upsample_ratio * x.size(2), upsample_ratio * x.size(3)
-        p = F.interpolate(input=x, size=(h, w), mode='bilinear', align_corners=True)
+        p = F.interpolate(input=x, size=(h, w), mode="bilinear", align_corners=True)
         return self.conv(p)
 
 
@@ -69,7 +83,13 @@ class PSPDecoder(nn.Module):
     Based on Pyramid Scene Parsing Network CVPR 2017
     http://openaccess.thecvf.com/content_cvpr_2017/html/Zhao_Pyramid_Scene_Parsing_CVPR_2017_paper.html
     """
-    def __init__(self,  input_dim: int = 2048, n_classes: int = 6, pooling_sizes: Tuple[int, int, int, int] = (1, 2, 3, 6)):
+
+    def __init__(
+        self,
+        input_dim: int = 2048,
+        n_classes: int = 6,
+        pooling_sizes: Tuple[int, int, int, int] = (1, 2, 3, 6),
+    ):
         """
         :param input_dim: latent feature dimension received from the encoder
         :param n_classes: number of classes to classify into pixel-wise
@@ -92,8 +112,8 @@ class PSPDecoder(nn.Module):
 
         p = self.up_1(p)
 
-        p = self.up_2(p, upsample_ratio = 4)
+        p = self.up_2(p, upsample_ratio=4)
 
-        p = self.up_3(p, upsample_ratio = 4)
+        p = self.up_3(p, upsample_ratio=4)
 
         return self.final(p)

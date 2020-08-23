@@ -1,14 +1,14 @@
-batch_size: 31
+batch_size: 32
 decoder_name: UnetDecoder
 decoder_parameters:
   encoder_name: resnet18
   multiple: 2
   n_classes: 1
 encoder_name: resnet18
-lr: 0.000929114465312351
+lr: 0.0003
 optimizer_type: ADAM
 pretrained: true
-root: data/post_fire_model_Scenario2b/training_patches/
+root: data/post_fire_model_Scenario4/training_patches/
 scheduler_type: step
 sigma: 5
 w: 10

@@ -37,7 +37,7 @@ def split(root, frac):
 
     splits = {"train": train_ids, "valid": valid_ids, "test": test_ids}
 
-    with open(root+"training_indices.json", "w") as fp:
+    with open(root + "training_indices.json", "w") as fp:
         json.dump(splits, fp)
 
 

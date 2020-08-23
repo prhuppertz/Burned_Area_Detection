@@ -5,11 +5,13 @@ import numpy as np
 import torch
 import pytorch_lightning as pl
 
+
 @typechecked
 class Model(pl.LightningModule):
     """
     Simple boundary segmentation model, U-Net based
     """
+
     def __init__(self, hparams):
         """
 
@@ -20,7 +22,9 @@ class Model(pl.LightningModule):
         """
         super(Model, self).__init__()
         self.hparams = hparams
-        self.model = UNet(hparams['n_channels'], hparams['decoders'], hparams['multiple'])
+        self.model = UNet(
+            hparams["n_channels"], hparams["decoders"], hparams["multiple"]
+        )
 
     def forward(self, x):
         """
@@ -30,8 +34,8 @@ class Model(pl.LightningModule):
         """
         out = self.model(x)
 
-        cls = out['classification']
-        hv = out['hover']
+        cls = out["classification"]
+        hv = out["hover"]
         return torch.cat([cls, hv], dim=1)
 
     def training_step(self, batch, batch_idx):
@@ -43,8 +47,10 @@ class Model(pl.LightningModule):
         """
         images, targets = batch
         predicted_targets = self(images)
-        loss = self.configuration['loss'](predicted_targets, targets, focus=targets[:,0,:,:])
-        return {'loss': loss}
+        loss = self.configuration["loss"](
+            predicted_targets, targets, focus=targets[:, 0, :, :]
+        )
+        return {"loss": loss}
 
     def validation_step(self, batch, batch_idx):
         """
@@ -56,17 +62,20 @@ class Model(pl.LightningModule):
         images, targets = batch
         # For evaluation during validation we need both semantic and instance mask
         # Semantic is indexed with 0 and instance mask is indexed at 1 #TODO! double check this!
-        instance_mask, targets = targets[:,0,:,:], targets[:,0:,:,:]
+        instance_mask, targets = targets[:, 0, :, :], targets[:, 0:, :, :]
         predicted_targets = self(images)
-        loss = self.configuration['loss'](predicted_targets, targets).item()
+        loss = self.configuration["loss"](predicted_targets, targets).item()
 
-        if self.configuration['metric']:
-            predicted_postproc = self.configuration['postprocessing_func'](predicted_targets.cpu().numpy())
-            metric = self.configuration['metric'](predicted_postproc,
-                                               instance_mask.cpu().numpy())
-            out = {'val_loss': loss, 'metric': metric}
+        if self.configuration["metric"]:
+            predicted_postproc = self.configuration["postprocessing_func"](
+                predicted_targets.cpu().numpy()
+            )
+            metric = self.configuration["metric"](
+                predicted_postproc, instance_mask.cpu().numpy()
+            )
+            out = {"val_loss": loss, "metric": metric}
         else:
-            out = {'val_loss': loss}
+            out = {"val_loss": loss}
 
         return out
 
@@ -76,25 +85,28 @@ class Model(pl.LightningModule):
         :param outputs: a list of the form [{'loss': loss, 'metric': metric}, ...]
         :return:
         """
-        loss = np.mean([x['val_loss'] for x in outputs])
-        if self.configuration['metric']:
-            metric = np.mean([x['metric'] for x in outputs])
-            return {'val_loss': torch.Tensor([loss]), 'metric': torch.Tensor([metric])}
+        loss = np.mean([x["val_loss"] for x in outputs])
+        if self.configuration["metric"]:
+            metric = np.mean([x["metric"] for x in outputs])
+            return {"val_loss": torch.Tensor([loss]), "metric": torch.Tensor([metric])}
         else:
-            return {'val_loss': torch.Tensor([loss])}
+            return {"val_loss": torch.Tensor([loss])}
 
     def configure_optimizers(self):
         """
         This is required as part of pytorch-lightning
         :return:
         """
-        optimizer_type = self.hparams['optimizer_type']
-        if optimizer_type == 'SGD':
+        optimizer_type = self.hparams["optimizer_type"]
+        if optimizer_type == "SGD":
             return optim.SGD(
                 self.parameters(),
-                lr=self.hparams['lr'],
-                weight_decay=self.hparams['weight_decay'],
+                lr=self.hparams["lr"],
+                weight_decay=self.hparams["weight_decay"],
             )
-        if optimizer_type == 'ADAM':
-            return optim.Adam(self.parameters(), lr=self.hparams['lr'],
-                              weight_decay=self.hparams['weight_decay'])
+        if optimizer_type == "ADAM":
+            return optim.Adam(
+                self.parameters(),
+                lr=self.hparams["lr"],
+                weight_decay=self.hparams["weight_decay"],
+            )

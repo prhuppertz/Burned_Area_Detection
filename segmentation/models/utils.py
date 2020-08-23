@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
+
 @typechecked
 def assert_configuration(task_name: str, config_dict: Dict) -> bool:
     """
@@ -15,8 +16,14 @@ def assert_configuration(task_name: str, config_dict: Dict) -> bool:
     :param config_dict:
     :return:
     """
-    required = {'augmentation_func', 'preprocessing_func', 'get_dataset_func',
-                'test_preprocessing_func', 'postprocessing_func', 'metric'}
+    required = {
+        "augmentation_func",
+        "preprocessing_func",
+        "get_dataset_func",
+        "test_preprocessing_func",
+        "postprocessing_func",
+        "metric",
+    }
     keys = set(config_dict.keys())
 
     extra = keys - required
@@ -28,6 +35,7 @@ def assert_configuration(task_name: str, config_dict: Dict) -> bool:
     else:
         return False
 
+
 @typechecked
 def get_params(task_name: str) -> Dict:
     """
@@ -36,10 +44,13 @@ def get_params(task_name: str) -> Dict:
     :param path_to_data_dir:
     :return:
     """
-    path_to_params = os.path.join("segmentation/models/{}".format(task_name),"params.yml")
+    path_to_params = os.path.join(
+        "segmentation/models/{}".format(task_name), "params.yml"
+    )
     with open(path_to_params) as f:
         yaml_dict = yaml.safe_load(f)
     return yaml_dict
+
 
 @typechecked
 def get_configuration(task_name: str, hparams: Dict) -> Dict:
@@ -49,12 +60,20 @@ def get_configuration(task_name: str, hparams: Dict) -> Dict:
     :param hparams:
     :return:
     """
-    configure_module = importlib.import_module("segmentation.models.{}.configuration".format(task_name))
+    configure_module = importlib.import_module(
+        "segmentation.models.{}.configuration".format(task_name)
+    )
     configuration = configure_module.configure(hparams)
     return configuration
 
+
 @typechecked
-def plot_results(image: np.ndarray, target_mask: np.ndarray, prediction: np.ndarray, scores: Tuple[float, float]):
+def plot_results(
+    image: np.ndarray,
+    target_mask: np.ndarray,
+    prediction: np.ndarray,
+    scores: Tuple[float, float],
+):
     """
     # TODO!
     :param image:
@@ -64,12 +83,12 @@ def plot_results(image: np.ndarray, target_mask: np.ndarray, prediction: np.ndar
     :return:
     """
     to_visualise = [image, target_mask, prediction]
-    titles = ['Image', 'Target', 'Prediction']
+    titles = ["Image", "Target", "Prediction"]
     fig, axes = plt.subplots(ncols=3, nrows=1, figsize=(12, 4))
     for i, ax in enumerate(axes):
         ax.imshow(to_visualise[i])
         ax.set_yticks([])
         ax.set_xticks([])
-        ax.set_title(titles[i], fontdict={'fontsize': 16})
-    fig.suptitle('IoU: {:.2f}; dice: {:.2f}'.format(scores[0], scores[1]), fontsize=16)
+        ax.set_title(titles[i], fontdict={"fontsize": 16})
+    fig.suptitle("IoU: {:.2f}; dice: {:.2f}".format(scores[0], scores[1]), fontsize=16)
     return fig

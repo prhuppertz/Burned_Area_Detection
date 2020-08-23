@@ -6,9 +6,9 @@ from segmentation.data.preprocessing.mask_functions import make_instance_mask
 from segmentation.data.preprocessing.distance_maps.unet import get_unet_map
 import torch
 
-@typechecked
-class Preprocessor():
 
+@typechecked
+class Preprocessor:
     def __init__(self, w: int = 10, sigma: int = 5):
         self.w = w
         self.sigma = sigma
@@ -25,7 +25,7 @@ class Preprocessor():
         # Put image channel first
         image = image.transpose(2, 0, 1)
 
-        distance_mask = get_unet_map(target, w0 = self.w, sigma = self.sigma)
+        distance_mask = get_unet_map(target, w0=self.w, sigma=self.sigma)
 
         image = torch.from_numpy(np.ascontiguousarray(image)).float()
 

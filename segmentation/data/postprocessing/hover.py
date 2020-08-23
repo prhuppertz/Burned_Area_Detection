@@ -8,6 +8,7 @@ from scipy.ndimage.morphology import binary_fill_holes
 from skimage.morphology import remove_small_objects, watershed
 from segmentation.data.utils import batched
 
+
 @typechecked
 def _otsu_threshold(targets: np.ndarray) -> np.ndarray:
     """
@@ -21,6 +22,7 @@ def _otsu_threshold(targets: np.ndarray) -> np.ndarray:
     binary = binary_fill_holes(binary)
     output[binary] = 1
     return output
+
 
 @typechecked
 def _xy_watershed(targets: np.ndarray):
@@ -40,21 +42,43 @@ def _xy_watershed(targets: np.ndarray):
     # Threshold pixel predictions
     blb = np.copy(pixel_map)
     blb[blb >= 0.5] = 1
-    blb[blb <  0.5] = 0
+    blb[blb < 0.5] = 0
 
     blb = measurements.label(blb)[0]
     blb = remove_small_objects(blb, min_size=10)
-    blb[blb > 0] = 1 # back ground is 0 already
+    blb[blb > 0] = 1  # back ground is 0 already
 
-    horizontal = cv2.normalize(horizontal, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
-    vertical = cv2.normalize(vertical, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+    horizontal = cv2.normalize(
+        horizontal, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F
+    )
+    vertical = cv2.normalize(
+        vertical, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F
+    )
 
     # Applies Sobel operator
     horizontal_grad = cv2.Sobel(horizontal, cv2.CV_64F, 1, 0, ksize=21)
     vertical_grad = cv2.Sobel(vertical, cv2.CV_64F, 0, 1, ksize=21)
 
-    horizontal_grad = 1 - (cv2.normalize(horizontal_grad, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F))
-    vertical_grad = 1 - (cv2.normalize(vertical_grad, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F))
+    horizontal_grad = 1 - (
+        cv2.normalize(
+            horizontal_grad,
+            None,
+            alpha=0,
+            beta=1,
+            norm_type=cv2.NORM_MINMAX,
+            dtype=cv2.CV_32F,
+        )
+    )
+    vertical_grad = 1 - (
+        cv2.normalize(
+            vertical_grad,
+            None,
+            alpha=0,
+            beta=1,
+            norm_type=cv2.NORM_MINMAX,
+            dtype=cv2.CV_32F,
+        )
+    )
 
     # Takes the maximum between horizontal and vertical gradient maps
     overall = np.maximum(horizontal_grad, vertical_grad)
@@ -71,7 +95,7 @@ def _xy_watershed(targets: np.ndarray):
 
     marker = blb - overall
     marker[marker < 0] = 0
-    marker = binary_fill_holes(marker).astype('uint8')
+    marker = binary_fill_holes(marker).astype("uint8")
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
     marker = cv2.morphologyEx(marker, cv2.MORPH_OPEN, kernel)
     marker = measurements.label(marker)[0]
@@ -81,19 +105,20 @@ def _xy_watershed(targets: np.ndarray):
 
     return proced_pred
 
+
 @batched(mean=False)
 def otsu_threshold(targets: np.ndarray) -> np.ndarray:
     res = _otsu_threshold(targets)
     return res
+
 
 @batched(mean=False)
 def label(targets_binary: np.ndarray) -> np.ndarray:
     res = _label(targets_binary)
     return res
 
+
 @batched(mean=False)
 def xy_watershed(targets_binary: np.ndarray) -> np.ndarray:
     res = _xy_watershed(targets_binary)
     return res
-
-

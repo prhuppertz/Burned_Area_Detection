@@ -2,9 +2,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-class ConvBlock(nn.Module):
 
-    def __init__(self, num_channels_in, num_channels_out, relu = True):
+class ConvBlock(nn.Module):
+    def __init__(self, num_channels_in, num_channels_out, relu=True):
         """
         :param num_channels_in:
         :param num_channels_out:
@@ -24,9 +24,9 @@ class ConvBlock(nn.Module):
             x = self.relu(x)
         return x
 
-class DoubleConv(nn.Module):
 
-    def __init__(self, num_channels_in, num_channels_out, num_layers = 2, residual = False):
+class DoubleConv(nn.Module):
+    def __init__(self, num_channels_in, num_channels_out, num_layers=2, residual=False):
         """
 
         :param num_channels_in:
@@ -40,7 +40,9 @@ class DoubleConv(nn.Module):
             if k == 0:
                 conv.append(ConvBlock(num_channels_in, num_channels_out))
             else:
-                conv.append(ConvBlock(num_channels_out, num_channels_out, relu=self.last_relu))
+                conv.append(
+                    ConvBlock(num_channels_out, num_channels_out, relu=self.last_relu)
+                )
 
         self.conv = nn.Sequential(*conv)
 
@@ -58,8 +60,7 @@ class DoubleConv(nn.Module):
 
 
 class InputConv(nn.Module):
-
-    def __init__(self, num_channels_in, num_channels_out, num_layers = 2, residual = False):
+    def __init__(self, num_channels_in, num_channels_out, num_layers=2, residual=False):
         """
 
         :param num_channels_in:
@@ -67,7 +68,9 @@ class InputConv(nn.Module):
         """
         super(InputConv, self).__init__()
         self.bn = nn.BatchNorm2d(num_channels_in)
-        self.conv = DoubleConv(num_channels_in, num_channels_out, num_layers = num_layers, residual = residual)
+        self.conv = DoubleConv(
+            num_channels_in, num_channels_out, num_layers=num_layers, residual=residual
+        )
 
     def forward(self, x):
         x = self.bn(x)
@@ -76,8 +79,7 @@ class InputConv(nn.Module):
 
 
 class DownScale(nn.Module):
-
-    def __init__(self, num_channels_in, num_channels_out, num_layers = 2, residual = False):
+    def __init__(self, num_channels_in, num_channels_out, num_layers=2, residual=False):
         """
 
         :param in_ch:
@@ -86,7 +88,12 @@ class DownScale(nn.Module):
         super(DownScale, self).__init__()
         self.mpconv = nn.Sequential(
             nn.MaxPool2d(2),
-            DoubleConv(num_channels_in, num_channels_out, num_layers = num_layers, residual = residual)
+            DoubleConv(
+                num_channels_in,
+                num_channels_out,
+                num_layers=num_layers,
+                residual=residual,
+            ),
         )
 
     def forward(self, x):
@@ -95,8 +102,14 @@ class DownScale(nn.Module):
 
 
 class UpScale(nn.Module):
-
-    def __init__(self, num_channels_in, num_channels_out, bilinear=True, num_layers = 2, residual = False):
+    def __init__(
+        self,
+        num_channels_in,
+        num_channels_out,
+        bilinear=True,
+        num_layers=2,
+        residual=False,
+    ):
         """
 
         :param in_ch:
@@ -106,11 +119,15 @@ class UpScale(nn.Module):
         super(UpScale, self).__init__()
 
         if bilinear:
-            self.up = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)
+            self.up = nn.Upsample(scale_factor=2, mode="bilinear", align_corners=True)
         else:
-            self.up = nn.ConvTranspose2d(num_channels_in // 2, num_channels_in // 2, 2, stride=2)
+            self.up = nn.ConvTranspose2d(
+                num_channels_in // 2, num_channels_in // 2, 2, stride=2
+            )
 
-        self.conv = DoubleConv(num_channels_in, num_channels_out, num_layers = num_layers, residual = residual)
+        self.conv = DoubleConv(
+            num_channels_in, num_channels_out, num_layers=num_layers, residual=residual
+        )
 
     def forward(self, x1, x2):
         x1 = self.up(x1)
@@ -119,8 +136,7 @@ class UpScale(nn.Module):
         diffY = x2.size()[2] - x1.size()[2]
         diffX = x2.size()[3] - x1.size()[3]
 
-        x1 = F.pad(x1, (diffX // 2, diffX - diffX // 2,
-                        diffY // 2, diffY - diffY // 2))
+        x1 = F.pad(x1, (diffX // 2, diffX - diffX // 2, diffY // 2, diffY - diffY // 2))
 
         # for padding issues, see
         # https://github.com/HaiyongJiang/U-Net-Pytorch-Unstructured-Buggy/commit/0e854509c2cea854e247a9c615f175f76fbb2e3a
@@ -130,8 +146,8 @@ class UpScale(nn.Module):
         x = self.conv(x)
         return x
 
-class OutConv(nn.Module):
 
+class OutConv(nn.Module):
     def __init__(self, num_channels_in, num_channels_out):
         """
 

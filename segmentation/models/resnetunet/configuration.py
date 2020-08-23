@@ -5,9 +5,10 @@ from segmentation.models.resnetunet.postprocessor import Postprocessor
 from segmentation.models.resnetunet.loss import loss
 from segmentation.evaluation.metric import SegmentationMetric
 
+
 def configure(hparams):
-    augmentor = Augmentor(sequence = sequences.seq, augment_target = True)
-    preprocessor = Preprocessor(w = hparams['w'], sigma = hparams['sigma'])
+    augmentor = Augmentor(sequence=sequences.seq, augment_target=True)
+    preprocessor = Preprocessor(w=hparams["w"], sigma=hparams["sigma"])
     postprocessor = Postprocessor()
     metric = SegmentationMetric()
 

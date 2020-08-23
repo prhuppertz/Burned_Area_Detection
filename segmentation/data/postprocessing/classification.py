@@ -16,6 +16,7 @@ def sigmoid(targets: np.ndarray) -> np.ndarray:
     targets = expit(targets)
     return targets
 
+
 @typechecked
 def threshold_binary(targets: np.ndarray) -> np.ndarray:
     """
@@ -25,6 +26,7 @@ def threshold_binary(targets: np.ndarray) -> np.ndarray:
     """
     targets = targets > 0.5
     return targets.astype(np.int32)
+
 
 @typechecked
 def bg_to_segmentation(mask: np.ndarray) -> np.ndarray:
@@ -39,6 +41,7 @@ def bg_to_segmentation(mask: np.ndarray) -> np.ndarray:
     binary = binary_fill_holes(binary)
     output[binary] = 1
     return output
+
 
 @batched(mean=False)
 def batched_bg_to_segmentation(mask):

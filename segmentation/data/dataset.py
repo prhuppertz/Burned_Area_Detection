@@ -8,13 +8,15 @@ import glob
 from typing import Callable, Optional, Tuple
 from segmentation.data.preprocessing.mask_functions import make_instance_mask
 
+
 @typechecked
 class SegmentationData(Dataset):
-
-    def __init__(self,
-                 root: str,
-                 augmentation_func: Optional[Callable[[np.ndarray, np.ndarray], Tuple]] = None,
-                 preprocessing_func: Optional[Callable[[np.ndarray, np.ndarray], Tuple]] = None):
+    def __init__(
+        self,
+        root: str,
+        augmentation_func: Optional[Callable[[np.ndarray, np.ndarray], Tuple]] = None,
+        preprocessing_func: Optional[Callable[[np.ndarray, np.ndarray], Tuple]] = None,
+    ):
         """
         Instantiates pytorch dataset for any segmentation task
         :param root: path to where dataset is stored, generally "data/name"
@@ -28,11 +30,11 @@ class SegmentationData(Dataset):
         self.preprocessing_func = preprocessing_func
 
         # Get image names
-        self.image_names = glob.glob(os.path.join(root, 'patches', '*.jpg'))
+        self.image_names = glob.glob(os.path.join(root, "patches", "*.jpg"))
 
         # Prepare instance based GT
-        path = os.path.join(root, 'annotations', 'polygons.pkl')
-        with open(path, 'rb') as f:
+        path = os.path.join(root, "annotations", "polygons.pkl")
+        with open(path, "rb") as f:
             self.instance_dict = pickle.load(f)
 
     def __len__(self):
@@ -46,11 +48,10 @@ class SegmentationData(Dataset):
         :return:
         """
         polygons = self.instance_dict[img_name]
-        
-        
+
         instance_mask = make_instance_mask(polygons, img_size)
         return instance_mask
-        
+
     def __getitem__(self, item):
         """
         Loads image and its mask
@@ -59,11 +60,11 @@ class SegmentationData(Dataset):
         """
         image_path = self.image_names[item]
         image_name = os.path.basename(image_path)
-        #Read image
+        # Read image
         image = cv2.cvtColor(cv2.imread(image_path), cv2.COLOR_BGR2RGB)
-        
+
         # Read mask
-        
+
         targets = self._get_mask(image_name, image.shape[:-1])
 
         # Augment original image and mask
@@ -76,10 +77,13 @@ class SegmentationData(Dataset):
 
         return image, targets
 
+
 @typechecked
-def get_segmentation_dataset(root: str,
-                    augmentation_func: Optional[Callable[[np.ndarray, np.ndarray], Tuple]] = None,
-                    preprocessing_func: Optional[Callable[[np.ndarray, np.ndarray], Tuple]] = None):
+def get_segmentation_dataset(
+    root: str,
+    augmentation_func: Optional[Callable[[np.ndarray, np.ndarray], Tuple]] = None,
+    preprocessing_func: Optional[Callable[[np.ndarray, np.ndarray], Tuple]] = None,
+):
     """
     """
     dataset = SegmentationData(root, augmentation_func, preprocessing_func)

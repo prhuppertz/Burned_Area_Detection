@@ -18,15 +18,23 @@ import importlib
 import numpy as np
 from torch.utils.data import DataLoader
 from segmentation.models.utils import get_params, get_configuration
-from segmentation.data.test.test_time import load_stack, split_into_patches, find_checkpoint
-from segmentation.data.test.test_time import apply_to_batch, mask_to_polygons, SceneDataset
+from segmentation.data.test.test_time import (
+    load_stack,
+    split_into_patches,
+    find_checkpoint,
+)
+from segmentation.data.test.test_time import (
+    apply_to_batch,
+    mask_to_polygons,
+    SceneDataset,
+)
 from shapely.geometry import mapping
 from shapely.errors import TopologicalError
 import fiona
 
 schema = {
-    'geometry': 'Polygon',
-    'properties': {'id': 'int'}
+    "geometry": "Polygon",
+    "properties": {"id": "int"}
     # TODO! add spatial info!
     # 'crs': {'init': 'epsg:27700'},
     # 'crs_wkt': 'PROJCS["OSGB 1936 / British National Grid",GEOGCS["OSGB
@@ -42,6 +50,7 @@ schema = {
     # AXIS["Northing",NORTH],AUTHORITY["EPSG","27700"]]'
 }
 
+
 def main(model_name, group, path_to_image, shp_name, batch_size):
     """
 
@@ -52,7 +61,9 @@ def main(model_name, group, path_to_image, shp_name, batch_size):
     configuration_dict = get_configuration(model_name, hparams)
 
     # Load module specific to model-name
-    model_module = importlib.import_module("segmentation.models.{}.model".format(model_name))
+    model_module = importlib.import_module(
+        "segmentation.models.{}.model".format(model_name)
+    )
 
     checkpoint_path = find_checkpoint(group)
 
@@ -64,8 +75,10 @@ def main(model_name, group, path_to_image, shp_name, batch_size):
 
     # View array as patches
     arrays = split_into_patches(img_array)
-    shape = arrays.shape # Get the shape of the array
-    arrays = arrays.reshape((shape[0] * shape[1], *shape[2:])) # Reshape into (num_patches, **dims))
+    shape = arrays.shape  # Get the shape of the array
+    arrays = arrays.reshape(
+        (shape[0] * shape[1], *shape[2:])
+    )  # Reshape into (num_patches, **dims))
     dts = SceneDataset(arrays)
     loader = DataLoader(dts, batch_size=batch_size, shuffle=False, drop_last=False)
 
@@ -79,22 +92,22 @@ def main(model_name, group, path_to_image, shp_name, batch_size):
     masks = masks.reshape((shape[0], shape[1], shape[2], shape[3]))
 
     # Merge masks into a single mask of size of img_array
-    masks = masks.transpose(0,3,1,2).reshape(-1,masks.shape[1]*masks.shape[3])
+    masks = masks.transpose(0, 3, 1, 2).reshape(-1, masks.shape[1] * masks.shape[3])
 
     # Convert the binary mask into polygons
     polygons = mask_to_polygons(masks, min_area=200)
 
     # Save as a shapefile
-    with fiona.open(shp_name, 'w', 'ESRI Shapefile', schema) as c:
+    with fiona.open(shp_name, "w", "ESRI Shapefile", schema) as c:
         ## If there are multiple geometries, put the "for" loop here
         for i, poly in enumerate(tqdm(polygons)):
             try:
-                c.write({
-                    'geometry': mapping(poly),
-                    'properties': {'id': i},
-                })
+                c.write(
+                    {"geometry": mapping(poly), "properties": {"id": i},}
+                )
             except TopologicalError as e:
                 continue
+
 
 if __name__ == "__main__":
     arguments = docopt(__doc__)

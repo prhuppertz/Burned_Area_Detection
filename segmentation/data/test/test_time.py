@@ -11,6 +11,7 @@ from shapely.geometry import MultiPolygon
 from collections import defaultdict
 import os
 
+
 def find_checkpoint(group):
     """
     Finds checkpoint path
@@ -22,6 +23,7 @@ def find_checkpoint(group):
             if file.endswith(".ckpt"):
                 checkpoint_path = os.path.join(root, file)
     return checkpoint_path
+
 
 def apply_to_batch(model, batch, batch_idx):
     """
@@ -36,11 +38,15 @@ def apply_to_batch(model, batch, batch_idx):
             batch = batch.cuda()
 
         pred = model(batch).cpu().numpy()
-        pred_postproc = model.configuration['postprocessing_func'](pred)
+        pred_postproc = model.configuration["postprocessing_func"](pred)
 
-    pred_postproc = [resize(img, (122, 122), preserve_range=True).astype(np.int32)*(batch_idx+1) for img in pred_postproc]
+    pred_postproc = [
+        resize(img, (122, 122), preserve_range=True).astype(np.int32) * (batch_idx + 1)
+        for img in pred_postproc
+    ]
 
     return pred_postproc
+
 
 def prepare_patch(img, seq_test=None):
     """
@@ -56,6 +62,7 @@ def prepare_patch(img, seq_test=None):
     img = torch.from_numpy(img.transpose(2, 1, 0).astype(np.float32))
     return img.unsqueeze(0)
 
+
 def normalise_patch(patch):
     """
     Normalises individual patch extracted from the test MGRS image
@@ -63,18 +70,20 @@ def normalise_patch(patch):
     :return:and so my efforts are waste of time
     """
     patch = np.nan_to_num(patch)
-    patch = ((patch - patch.min()) * (1 / (patch.max() - patch.min()) * 255))
+    patch = (patch - patch.min()) * (1 / (patch.max() - patch.min()) * 255)
     return patch
+
 
 def load_stack(path_to_image):
     """
     Loads MGRS stack
     :return:
     """
-    src = rasterio.open(path_to_image, 'r')
+    src = rasterio.open(path_to_image, "r")
     # Read the bands we are interested in
     img_array = np.dstack(list(src.read([4, 3, 2])))
     return img_array
+
 
 def split_into_patches(img_array, size=122, stride=122):
     """
@@ -87,10 +96,12 @@ def split_into_patches(img_array, size=122, stride=122):
     arrays = view_as_windows(img_array, (size, size, 3), stride).squeeze()
     return arrays
 
-def reflection(x0):
-    return lambda x, y: (x, 2*x0 - y)
 
-def mask_to_polygons(mask, min_area=2.):
+def reflection(x0):
+    return lambda x, y: (x, 2 * x0 - y)
+
+
+def mask_to_polygons(mask, min_area=2.0):
     """
     Convert a mask ndarray (binarized image) to Multipolygons
     :param mask:
@@ -99,9 +110,10 @@ def mask_to_polygons(mask, min_area=2.):
     """
     # first, find contours with cv2: it's much faster than shapely
     contours, hierarchy = cv2.findContours(
-        mask.copy().astype(np.uint8), cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
-#     if not hierarchy.all():
-#         return MultiPolygon()
+        mask.copy().astype(np.uint8), cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE
+    )
+    #     if not hierarchy.all():
+    #         return MultiPolygon()
     # now messy stuff to associate parent and child contours
     cnt_children = defaultdict(list)
     child_contours = set()
@@ -118,15 +130,19 @@ def mask_to_polygons(mask, min_area=2.):
             assert cnt.shape[1] == 1
             poly = Polygon(
                 shell=cnt[:, 0, :],
-                holes=[c[:, 0, :] for c in cnt_children.get(idx, [])
-                       if cv2.contourArea(c) >= min_area])
+                holes=[
+                    c[:, 0, :]
+                    for c in cnt_children.get(idx, [])
+                    if cv2.contourArea(c) >= min_area
+                ],
+            )
             all_polygons.append(transform(reflection(1), poly))
     all_polygons = MultiPolygon(all_polygons)
 
     return all_polygons
 
-class SceneDataset(Dataset):
 
+class SceneDataset(Dataset):
     def __init__(self, arrays, seq_test=None):
 
         self.arrays = arrays
