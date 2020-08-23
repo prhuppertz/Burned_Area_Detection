@@ -1,5 +1,5 @@
 """Usage:
-          train.py [--seed=<seed>] [--gpu=<id>] [--save-images=<images>] [--baseline=<boolean>] (--model-name=<model-name>) (--group=<group) (--save-path=<save-path>) (--lr=<lr>)
+          train.py [--seed=<seed>] [--gpu=<id>] [--save-images=<images>] [--baseline=<boolean>] (--model-name=<model-name>) (--group=<group) (--save-path=<save-path>) (--lr=<lr>) (--batch_size=<batch_size)
 
 @ Jevgenij Gamper 2020
 Trains either selected model, and saves model checkpoints under `data/models/task-name/..
@@ -13,7 +13,8 @@ Options:
   --save-path=<save-path>                           Path to save results, logs and checkpoints
   --save-images=<images>                            If validation images should be saved [default: 0]
   --baseline=<boolean>                              If baseline should be stored on test images aswell [default:0]
-  --lr=<lr>                                         Optional parameter for the lr
+  --lr=<lr>                                         parameter for the lr
+  --batch_size=<batch_size                          parameter for batch-size
 """
 from docopt import docopt
 import importlib
@@ -109,6 +110,15 @@ def set_lr(lr):
     doc['lr'] = lr
     with open(file_name, 'w') as f:
         yaml.safe_dump(doc, f, default_flow_style=False)
+
+def set_batch_size(batch_size):
+    #changes the batch_size in params.yml
+    file_name = "segmentation/models/resnetunet/params.yml"
+    with open(file_name) as f:
+        doc = yaml.safe_load(f)
+    doc['batch_size'] = batch_size
+    with open(file_name, 'w') as f:
+        yaml.safe_dump(doc, f, default_flow_style=False)
 def main(model_name, seed, group, save_path, save_images, baseline):
     """
 
@@ -176,6 +186,8 @@ if __name__=="__main__":
     arguments = docopt(__doc__)
     lr=float(arguments['--lr'])
     set_lr(lr)
+    batch_size=int(arguments['--batch_size'])
+    set_batch_size(batch_size)
     # Set gpu devices, then import pytorch and set random seeds
     seed = int(arguments['--seed'])
     gpu = arguments['--gpu']

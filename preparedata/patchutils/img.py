@@ -81,10 +81,11 @@ def cut_chip_images(
     for chip_name, chip_window in tqdm(zip(patch_names, patch_windows)):
         img_array = np.dstack(list(src.read(bands, window=chip_window)))
         img_array = np.nan_to_num(img_array)
-        img_array = (
-            (img_array - img_array.min())
-            * (1 / (img_array.max() - img_array.min()) * 255)
-        ).astype("uint8")
+        #normalisation which is deleting information
+        #img_array = (
+        #    (img_array - img_array.min())
+        #    * (1 / (img_array.max() - img_array.min()) * 255)
+        #).astype("uint8")
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             # img_array = img_as_ubyte(img_array)
@@ -94,7 +95,7 @@ def cut_chip_images(
         Path(output_patch_path).mkdir(parents=True, exist_ok=True)
         with open(Path(rf"{output_patch_path}/{chip_name}.jpg"), "w") as dst:
 
-            img_pil.save(dst, format="JPEG", subsampling=0, quality=100)
+            img_pil.save(dst, format="TIF", subsampling=0, quality=100)
 
         all_chip_stats[chip_name] = {
             "mean": np.nanmean(img_array, axis=(0, 1)),

@@ -63,13 +63,12 @@ def stack_bands(source_path, mgrs_coordinate, save_path):
             save_path, mgrs_coordinate, date[i], BANDS + ".tif"
         )
 
-    for x in range(0, len(SELECTED_BANDS)):
-        for y in range(0, len(list_of_paths[0])):
-            # write SELECTED_BANDS into the target files
-            with rasterio.open(path_target[y], "w", **meta_source[x]) as dst:
+    # write SELECTED_BANDS into the target files
+    for y in range(0, len(list_of_paths[0])):
+        with rasterio.open(path_target[y], "w", **meta_source[0]) as dst:
+            for x in range(0, len(SELECTED_BANDS)):
                 with rasterio.open(list_of_paths[x][y]) as src1:
                     dst.write_band((x + 1), src1.read(1))
-
 
 def process_scenes(source_path, mgrs_coordinates, save_path):
     """

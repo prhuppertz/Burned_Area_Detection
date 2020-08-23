@@ -174,3 +174,4 @@ __pycache__/
 Scenario 2b_Overfit.ipynb
 Scenario2_Overfit.ipynb
 notebooks/data_experiments-2016_2015.ipynb
+wandb/
