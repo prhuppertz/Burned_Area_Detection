@@ -17,7 +17,7 @@ from docopt import docopt
 from datetime import datetime
 
 # selecting bands that are needed for the task at hand
-SELECTED_BANDS = ["B8A", "B11", "B12"]
+SELECTED_BANDS = ["B12", "B8A", "B03"]
 
 
 def stack_bands(source_path, mgrs_coordinate, save_path):

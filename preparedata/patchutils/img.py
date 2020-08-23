@@ -14,7 +14,7 @@ import shapely
 from shapely.geometry import Polygon
 from PIL import Image as pilimg
 from tqdm import tqdm
-
+import rasterio.plot
 
 def get_chip_windows(
     raster_width: int,
@@ -70,7 +70,7 @@ def cut_chip_images(
     output_patch_path: Union[Path, str],
     patch_names: List[str],
     patch_windows: List,
-    bands=[3, 2, 1],
+    bands=[1, 2, 3],
 ):
     """
     Cuts image raster to patches via the given windows and exports them to jpg.
@@ -81,11 +81,13 @@ def cut_chip_images(
     for chip_name, chip_window in tqdm(zip(patch_names, patch_windows)):
         img_array = np.dstack(list(src.read(bands, window=chip_window)))
         img_array = np.nan_to_num(img_array)
-        #normalisation which is deleting information
-        #img_array = (
-        #    (img_array - img_array.min())
-        #    * (1 / (img_array.max() - img_array.min()) * 255)
-        #).astype("uint8")
+        """
+        #normalisation to make the image work with the PIL library
+        img_array = (
+            (img_array - img_array.min())
+            * (1 / (img_array.max() - img_array.min()) * 255)
+        ).astype("uint8")
+
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             # img_array = img_as_ubyte(img_array)
@@ -93,10 +95,17 @@ def cut_chip_images(
 
         # Export chip images
         Path(output_patch_path).mkdir(parents=True, exist_ok=True)
-        with open(Path(rf"{output_patch_path}/{chip_name}.jpg"), "w") as dst:
+        with open(Path(rf"{output_patch_path}/{chip_name}.tif"), "wb") as dst:
 
-            img_pil.save(dst, format="TIF", subsampling=0, quality=100)
-
+            img_pil.save(dst, format="TIFF", save_all=1)
+        """
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            
+        Path(output_patch_path).mkdir(parents=True, exist_ok=True)
+        with rasterio.open(Path(rf"{output_patch_path}/{chip_name}.tif"), "w", driver='GTiff', height=img_array.shape[0], width=img_array.shape[1], count=3,dtype=img_array.dtype) as dst:
+            dst.write(rasterio.plot.reshape_as_raster(img_array),indexes=bands)
+        
         all_chip_stats[chip_name] = {
             "mean": np.nanmean(img_array, axis=(0, 1)),
             "std": np.nanstd(img_array, axis=(0, 1)),

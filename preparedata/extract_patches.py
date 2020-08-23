@@ -104,7 +104,7 @@ def main(
 
             # load the shapefile data of the days prior to the date of the mgrs scene
             shapefile_date = gdf[
-                (gdf["DHFim"] < series_of_paths_sorted_by_date.index[path].strftime("%Y-%m-%d")) & (gdf['DHFim']>(series_of_paths_sorted_by_date.index[path]-timedelta(days=30)).strftime('%Y-%m-%d')) & (gdf["AREA_HA"]>10.0)&(gdf["Tipo"]=="Florestal")]
+                (gdf["DHFim"] < series_of_paths_sorted_by_date.index[path].strftime("%Y-%m-%d")) & (gdf['DHFim']>(series_of_paths_sorted_by_date.index[path]-timedelta(days=30)).strftime('%Y-%m-%d'))]
 
             # create windows from where shapefile and scenes overlap
             patch_dfs, patch_windows = import_shapefile_for_patches(
@@ -122,7 +122,7 @@ def main(
                 path_to_store_patches,
                 patch_windows.keys(),
                 patch_windows.values(),
-                bands=[3, 2, 1],
+                bands=[1, 2, 3],
             )
 
             # Save annotations
@@ -146,7 +146,7 @@ def main(
                 )
             except Exception as e:
                 print(e)
-                print("MGRS tile without annotations: {}".format(scene_string))
+                print("MGRS tile without annotations: {}".format(scene_string + list_of_dates_as_strings[path]))
 
             raster.close()
 
