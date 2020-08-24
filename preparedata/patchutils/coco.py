@@ -9,7 +9,7 @@ from matplotlib.collections import PatchCollection
 from descartes import PolygonPatch
 from PIL import Image as pilimage
 from patchutils import other
-
+import rasterio
 
 def format_coco(chip_dfs: Dict, patch_size: int, row_name: str):
     """
@@ -33,7 +33,7 @@ def format_coco(chip_dfs: Dict, patch_size: int, row_name: str):
     for key_idx, key in enumerate(chip_dfs.keys()):
 
         key_image = {
-            "file_name": f"{key}.jpg",
+            "file_name": f"{key}.tif",
             "id": int(key_idx),
             "height": chip_width,
             "width": chip_height,
@@ -137,9 +137,12 @@ def plot_coco(inpath_json, inpath_image_folder, start=0, end=2):
         plt.figure(figsize=(5, 5))
         plt.axis("off")
 
-        img = np.asarray(pilimage.open(os.path.join(inpath_image_folder, key)))
+        with rasterio.open(os.path.join(inpath_image_folder, key)) as dst:
+            rasterio.plot.show(dst)
+        """
+        img=np.asarray(pilimage.open(os.path.join(inpath_image_folder, key)))
         plt.imshow(img, interpolation="none")
-
+        """
         mp = extracted[key]
         patches = [
             PolygonPatch(p, ec="r", fill=False, alpha=1, lw=0.7, zorder=1) for p in mp
@@ -161,9 +164,14 @@ def save_gt_overlaid(inpath_json, inpath_image_folder, save_path):
     for key in sorted(extracted.keys()):
         plt.figure(figsize=(5, 5))
         plt.axis("off")
-
-        img = np.asarray(pilimage.open(os.path.join(inpath_image_folder, key)))
+        
+        with rasterio.open(os.path.join(inpath_image_folder, key)) as dst:
+            rasterio.plot.show(dst)
+        img = np.asarray(dst.read(1))
+        """
+        img=np.asarray(pilimage.open(os.path.join(inpath_image_folder, key)))
         plt.imshow(img, interpolation="none")
+        """
 
         # ADDED by Robert for skipping empty patches
         if np.unique(img).size > 2:

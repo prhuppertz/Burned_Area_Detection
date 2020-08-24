@@ -19,6 +19,7 @@ from patchutils.coco import coco_to_shapely
 from PIL import Image as pilimage
 import numpy as np
 from patchutils import other
+import rasterio as rio
 
 
 def dump_polygons(annotation_dir_source, save_path, included):
@@ -44,8 +45,8 @@ def dump_polygons(annotation_dir_source, save_path, included):
 
     included_annotations = {}
     for in_test_img in included:
-        included_annotations[in_test_img + ".jpg"] = all_annotations[
-            in_test_img + ".jpg"
+        included_annotations[in_test_img + ".tif"] = all_annotations[
+            in_test_img + ".tif"
         ]
 
     with open(save_path, "wb") as f:
@@ -108,13 +109,14 @@ def main(
     for patch in all_patches:
 
         if patch not in excluded_patches:
-            source_patch_path = os.path.join(all_extracted_path, patch + ".jpg")
-            target_patch_path = os.path.join(path_to_store_patches, patch + ".jpg")
+            source_patch_path = os.path.join(all_extracted_path, patch + ".tif")
+            target_patch_path = os.path.join(path_to_store_patches, patch + ".tif")
             # ROBERT:test if patch is empty
-            img = np.asarray(pilimage.open(source_patch_path))
-            if np.unique(img).size > 2:
-                included.append(patch)
-                shutil.copy(source_patch_path, target_patch_path)
+            with rio.open(source_patch_path) as rds:
+                img = np.asarray(rds.read(1))
+                if np.unique(img).size > 2:
+                    included.append(patch)
+                    shutil.copy(source_patch_path, target_patch_path)
             # else:
             #    os.remove(source_patch_path)
 
