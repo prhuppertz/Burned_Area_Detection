@@ -98,7 +98,7 @@ def get_results(model, loader, logger, path_to_save, save_images, baseline):
 
                 for i in range(len(images)):
                     fig = plot_results(
-                        images[i].transpose(1, 2, 0)
+                        images[i].transpose(1, 2, 0),
                         targets[i],
                         baseline_predictions[i],
                         baseline_metric[i],

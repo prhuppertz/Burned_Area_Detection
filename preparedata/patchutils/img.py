@@ -84,21 +84,22 @@ def cut_chip_images(
         img_array = np.nan_to_num(img_array)
         
         #normalisation to make the image work with the PIL library
-        img_array = (
-            (img_array - img_array.min())
-            * (1 / (img_array.max() - img_array.min()) * 255)
-        ).astype("uint8")
+        if img_array.max()!= img_array.min():
+            img_array = (
+                        (img_array - img_array.min())
+                        * (1 / (img_array.max() - img_array.min()) * 255)
+                        ).astype("uint8")
 
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore")
-            # img_array = img_as_ubyte(img_array)
-        img_pil = pilimg.fromarray(img_array)
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                # img_array = img_as_ubyte(img_array)
+            img_pil = pilimg.fromarray(img_array)
 
-        # Export chip images
-        Path(output_patch_path).mkdir(parents=True, exist_ok=True)
-        with open(Path(rf"{output_patch_path}/{chip_name}.jpg"), "w") as dst:
+            # Export chip images
+            Path(output_patch_path).mkdir(parents=True, exist_ok=True)
+            with open(Path(rf"{output_patch_path}/{chip_name}.jpg"), "w") as dst:
 
-            img_pil.save(dst, format='JPEG', subsampling=0, quality=100)
+                img_pil.save(dst, format='JPEG', subsampling=0, quality=100)
         """
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")

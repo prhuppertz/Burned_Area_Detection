@@ -1,6 +1,6 @@
 patch_scenes:
   cmd: python preparedata/extract_patches.py /home/robert/ds-wildfire/raw_data/wildfires-ground-truth/portugal/AArdida2016_ETRS89PTTM06_20190813.shp
-    /home/robert/ds-wildfire/data/post_fire_model_Scenario4/extracted DHFim /home/robert/ds-wildfire/data/scenes
+    /home/robert/ds-wildfire/data/post_fire_model_Scenario5/extracted DHFim /home/robert/ds-wildfire/data/scenes
     -s 29/S/MC -s 29/S/MD -s 29/S/NB -s 29/S/NC -s 29/S/ND -s 29/S/PB -s 29/S/PC -s
     29/S/PD -s 29/T/ME -s 29/T/NE -s 29/T/NF -s 29/T/NG -s 29/T/PE -s 29/T/PF
   deps:
@@ -37,12 +37,12 @@ patch_scenes:
   - path: preparedata/patching.py
     md5: c919ca992607248e931d68c51ef48ec3
   - path: preparedata/patchutils
-    md5: f0d83cb2d9d5fc4d506c0ad5740004e5.dir
+    md5: a4f48823f097d3a6743fa209b7e94681.dir
   - path: raw_data/wildfires-ground-truth/portugal/AArdida2016_ETRS89PTTM06_20190813.shp
     md5: a50b269c7ecb78b45f614451e93b17fc
   outs:
-  - path: data/post_fire_model_Scenario4/extracted/
-    md5: bedb511f93140e5f328605ee16e151dc.dir
+  - path: data/post_fire_model_Scenario5/extracted/
+    md5: f5f5da5a8529ae785419e5ffa20fe77d.dir
 merge_bands:
   cmd: python preparedata/merge_bands.py /home/robert/ds-wildfire/raw_data/s2_aws/tiles
     -s 29/S/MC -s 29/S/MD -s 29/S/NB -s 29/S/NC -s 29/S/ND -s 29/S/PB -s 29/S/PC -s
@@ -80,31 +80,31 @@ merge_bands:
   - path: data/scenes/29/T/PF
     md5: bd457339a9db42026aa96e6ab4c23ce7.dir
 sort_patches:
-  cmd: python preparedata/sort_patches.py /home/robert/ds-wildfire/data/post_fire_model_Scenario4/training_patches
-    /home/robert/ds-wildfire/excluded.txt /home/robert/ds-wildfire/data/post_fire_model_Scenario4/extracted/patches
-    /home/robert/ds-wildfire/data/post_fire_model_Scenario4/extracted/annotations
+  cmd: python preparedata/sort_patches.py /home/robert/ds-wildfire/data/post_fire_model_Scenario5/training_patches
+    /home/robert/ds-wildfire/excluded.txt /home/robert/ds-wildfire/data/post_fire_model_Scenario5/extracted/patches
+    /home/robert/ds-wildfire/data/post_fire_model_Scenario5/extracted/annotations
   deps:
-  - path: data/post_fire_model_Scenario4/extracted/
-    md5: bedb511f93140e5f328605ee16e151dc.dir
+  - path: data/post_fire_model_Scenario5/extracted/
+    md5: f5f5da5a8529ae785419e5ffa20fe77d.dir
   - path: preparedata/sort_patches.py
-    md5: 8a02f5beddc068fb782c18612284eb62
+    md5: 641ee99d814a9cef2e33acd5be3cd5f0
   outs:
-  - path: data/post_fire_model_Scenario4/training_patches/annotations/
-    md5: e28b10ba356540fa6b7ba0960d588981.dir
-  - path: data/post_fire_model_Scenario4/training_patches/patches/
-    md5: 55f808c1fab90f4fed89508fa4c96c34.dir
+  - path: data/post_fire_model_Scenario5/training_patches/annotations/
+    md5: 0b910e95e8777e86d7176d3a0cc2497c.dir
+  - path: data/post_fire_model_Scenario5/training_patches/patches/
+    md5: 2f9d0e109ef4dc0b36623b117bdece1b.dir
 split_data:
-  cmd: python preparedata/split.py --root=data/post_fire_model_Scenario4/training_patches/
+  cmd: python preparedata/split.py --root=data/post_fire_model_Scenario5/training_patches/
   deps:
-  - path: data/post_fire_model_Scenario4/training_patches/annotations/
-    md5: e28b10ba356540fa6b7ba0960d588981.dir
-  - path: data/post_fire_model_Scenario4/training_patches/patches/
-    md5: 55f808c1fab90f4fed89508fa4c96c34.dir
+  - path: data/post_fire_model_Scenario5/training_patches/annotations/
+    md5: 0b910e95e8777e86d7176d3a0cc2497c.dir
+  - path: data/post_fire_model_Scenario5/training_patches/patches/
+    md5: 2f9d0e109ef4dc0b36623b117bdece1b.dir
   - path: preparedata/split.py
     md5: 91f995f5759245773f957130d9ccf2bb
   outs:
-  - path: data/post_fire_model_Scenario4/training_patches/training_indices.json
-    md5: ba03b7e02e9945bcd4723829af0ff66c
+  - path: data/post_fire_model_Scenario5/training_patches/training_indices.json
+    md5: b4921f95b7e0291875c2fed58cfbc14d
 resnetunet:
   cmd: python run_training.py --seed=11 --gpu=1 --save-images=1 --baseline=1 --model-name=resnetunet
     --group=resnetunet_Scenario4 --save-path=data/post_fire_model_Scenario4/

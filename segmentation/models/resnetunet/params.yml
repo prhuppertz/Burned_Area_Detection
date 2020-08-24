@@ -1,4 +1,4 @@
-batch_size: 32
+batch_size: 16
 decoder_name: UnetDecoder
 decoder_parameters:
   encoder_name: resnet18
