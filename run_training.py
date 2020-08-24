@@ -83,11 +83,11 @@ def get_results(model, loader, logger, path_to_save, save_images, baseline):
                 baseline_predictions = []
                 baseline_metric = []
                 for i in range(len(images)):
-                    image_mean = images[i][0, :, :].mean()
-                    baseline_prediction = np.zeros(images[i][0, :, :].shape)
-                    for x in range(len(images[i][0, :, 0])):
-                        for y in range(len(images[i][0, 0, :])):
-                            if images[i][0, x, y] > image_mean:
+                    image_mean = images[i][1, :, :].mean()
+                    baseline_prediction = np.zeros(images[i][1, :, :].shape)
+                    for x in range(len(images[i][1, :, 0])):
+                        for y in range(len(images[i][1, 0, :])):
+                            if images[i][1, x, y] > image_mean:
                                 baseline_prediction[x, y] = 1.0
                     baseline_predictions.append(baseline_prediction)
 
@@ -98,7 +98,7 @@ def get_results(model, loader, logger, path_to_save, save_images, baseline):
 
                 for i in range(len(images)):
                     fig = plot_results(
-                        images[i].transpose(1, 2, 0),
+                        images[i].transpose(1, 2, 0)
                         targets[i],
                         baseline_predictions[i],
                         baseline_metric[i],

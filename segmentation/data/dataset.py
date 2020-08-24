@@ -30,7 +30,7 @@ class SegmentationData(Dataset):
         self.preprocessing_func = preprocessing_func
 
         # Get image names
-        self.image_names = glob.glob(os.path.join(root, "patches", "*.tif"))
+        self.image_names = glob.glob(os.path.join(root, "patches", "*.jpg"))
 
         # Prepare instance based GT
         path = os.path.join(root, "annotations", "polygons.pkl")

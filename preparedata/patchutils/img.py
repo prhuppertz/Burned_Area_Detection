@@ -82,7 +82,7 @@ def cut_chip_images(
     for chip_name, chip_window in tqdm(zip(patch_names, patch_windows)):
         img_array = np.dstack(list(src.read(bands, window=chip_window)))
         img_array = np.nan_to_num(img_array)
-        """
+        
         #normalisation to make the image work with the PIL library
         img_array = (
             (img_array - img_array.min())
@@ -96,9 +96,9 @@ def cut_chip_images(
 
         # Export chip images
         Path(output_patch_path).mkdir(parents=True, exist_ok=True)
-        with open(Path(rf"{output_patch_path}/{chip_name}.tif"), "wb") as dst:
+        with open(Path(rf"{output_patch_path}/{chip_name}.jpg"), "w") as dst:
 
-            img_pil.save(dst, format="TIFF", save_all=1)
+            img_pil.save(dst, format='JPEG', subsampling=0, quality=100)
         """
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
@@ -114,7 +114,7 @@ def cut_chip_images(
             dtype=img_array.dtype,
         ) as dst:
             dst.write(rasterio.plot.reshape_as_raster(img_array), indexes=bands)
-
+        """
         all_chip_stats[chip_name] = {
             "mean": np.nanmean(img_array, axis=(0, 1)),
             "std": np.nanstd(img_array, axis=(0, 1)),
