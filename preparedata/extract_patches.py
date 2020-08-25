@@ -113,6 +113,10 @@ def main(
                         series_of_paths_sorted_by_date.index[path] - timedelta(days=30)
                     ).strftime("%Y-%m-%d")
                 )
+                & (
+                    gdf["AREA_HA"]
+                    > 5.0
+                )
             ]
 
             # create windows from where shapefile and scenes overlap

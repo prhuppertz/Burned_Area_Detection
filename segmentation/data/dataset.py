@@ -31,7 +31,6 @@ class SegmentationData(Dataset):
 
         # Get image names
         self.image_names = glob.glob(os.path.join(root, "patches", "*.jpg"))
-
         # Prepare instance based GT
         path = os.path.join(root, "annotations", "polygons.pkl")
         with open(path, "rb") as f:
@@ -76,7 +75,6 @@ class SegmentationData(Dataset):
             image, targets = self.preprocessing_func(image, targets)
 
         return image, targets
-
 
 @typechecked
 def get_segmentation_dataset(

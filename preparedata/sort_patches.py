@@ -112,6 +112,7 @@ def main(
             source_patch_path = os.path.join(all_extracted_path, patch + ".jpg")
             target_patch_path = os.path.join(path_to_store_patches, patch + ".jpg")
             # ROBERT:test if patch is empty
+            
             img = np.asarray(pilimage.open(source_patch_path))
             if np.unique(img).size > 2:
                 included.append(patch)

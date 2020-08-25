@@ -87,7 +87,7 @@ def get_results(model, loader, logger, path_to_save, save_images, baseline):
                     baseline_prediction = np.zeros(images[i][1, :, :].shape)
                     for x in range(len(images[i][1, :, 0])):
                         for y in range(len(images[i][1, 0, :])):
-                            if images[i][1, x, y] > image_mean:
+                            if images[i][1, x, y] < image_mean:
                                 baseline_prediction[x, y] = 1.0
                     baseline_predictions.append(baseline_prediction)
 

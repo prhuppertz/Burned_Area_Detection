@@ -8,7 +8,7 @@ encoder_name: resnet18
 lr: 0.0003
 optimizer_type: ADAM
 pretrained: true
-root: data/post_fire_model_Scenario4/training_patches/
+root: data/post_fire_model_Scenario5/training_patches/
 scheduler_type: step
 sigma: 5
 w: 10
