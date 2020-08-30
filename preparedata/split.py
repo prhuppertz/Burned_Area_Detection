@@ -33,7 +33,7 @@ def split(root, frac):
 
     train_ids, test_ids = train_test_split(all_ids, train_size=frac, shuffle=True)
 
-    valid_ids, test_ids = train_test_split(test_ids, train_size=0.1)
+    valid_ids, test_ids = train_test_split(test_ids, train_size=0.9)
 
     splits = {"train": train_ids, "valid": valid_ids, "test": test_ids}
 

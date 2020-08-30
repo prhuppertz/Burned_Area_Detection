@@ -48,30 +48,30 @@ stages:
     - data/scenes/29/T/PE
     - data/scenes/29/T/PF
   sort_patches:
-    cmd: python preparedata/sort_patches.py /home/robert/ds-wildfire/data/post_fire_model_Scenario5/training_patches
+    cmd: python preparedata/sort_patches.py /home/robert/ds-wildfire/data/post_fire_model_Scenario5_Test/training_patches
       /home/robert/ds-wildfire/excluded.txt /home/robert/ds-wildfire/data/post_fire_model_Scenario5/extracted/patches
       /home/robert/ds-wildfire/data/post_fire_model_Scenario5/extracted/annotations
     deps:
     - data/post_fire_model_Scenario5/extracted/
     - preparedata/sort_patches.py
     outs:
-    - data/post_fire_model_Scenario5/training_patches/annotations/
-    - data/post_fire_model_Scenario5/training_patches/patches/
+    - data/post_fire_model_Scenario5_Test/training_patches/annotations/
+    - data/post_fire_model_Scenario5_Test/training_patches/patches/
   split_data:
-    cmd: python preparedata/split.py --root=data/post_fire_model_Scenario5/training_patches/
+    cmd: python preparedata/split.py --root=data/post_fire_model_Scenario5_Test/training_patches/
     deps:
-    - data/post_fire_model_Scenario5/training_patches/annotations/
-    - data/post_fire_model_Scenario5/training_patches/patches/
+    - data/post_fire_model_Scenario5_Test/training_patches/annotations/
+    - data/post_fire_model_Scenario5_Test/training_patches/patches/
     - preparedata/split.py
     outs:
-    - data/post_fire_model_Scenario5/training_patches/training_indices.json
+    - data/post_fire_model_Scenario5_Test/training_patches/training_indices.json
   resnetunet:
     cmd: python run_training.py --seed=11 --gpu=1 --save-images=1 --baseline=1 --model-name=resnetunet
-      --group=resnetunet_Scenario5 --save-path=data/post_fire_model_Scenario5/
+      --group=resnetunet_Scenario5_Test --save-path=data/post_fire_model_Scenario5_Test/
     deps:
-    - data/post_fire_model_Scenario5/training_patches/annotations/
-    - data/post_fire_model_Scenario5/training_patches/patches/
-    - data/post_fire_model_Scenario5/training_patches/training_indices.json
+    - data/post_fire_model_Scenario5_Test/training_patches/annotations/
+    - data/post_fire_model_Scenario5_Test/training_patches/patches/
+    - data/post_fire_model_Scenario5_Test/training_patches/training_indices.json
     - run_training.py
     - segmentation/data/
     - segmentation/evaluation/
