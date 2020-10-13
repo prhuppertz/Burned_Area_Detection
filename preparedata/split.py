@@ -1,13 +1,15 @@
-"""Usage:
+"""
+Usage:
           split.py [--seed=<seed>] [--frac=<frac>] (--root=<root>)
 
-@ Jevgenij Gamper 2020
-Loads pipelines dataset and splits into pipelines and validation set, saves the indices into data/training_patches/indices.json
+@ Robert Huppertz, Jevgenij Gamper - Cervest, 2020
+Splits data in root directory into training, validation and test set 
+by storing the patch IDs in a json file
 
 Options:
   -h --help                                         Show help.
   --seed=<seed>                                     Seed selection for pipelines [default: 87]
-  --frac=<frac>                                     Fraction to be used for pipelines [default: 0.7]
+  --frac=<frac>                                     Fraction of the the total dataset that is used for training [default: 0.7]
   --root=<root>                                     Location where data is stored
 """
 import math
@@ -31,12 +33,15 @@ def split(root, frac):
 
     all_ids = list(range(dataset_len))
 
+    #splitting into training dataset and general testing data
     train_ids, test_ids = train_test_split(all_ids, train_size=frac, shuffle=True)
 
+    #splitting the general testing data into a validation dataset (fraction of train_size) and a testing dataset
     valid_ids, test_ids = train_test_split(test_ids, train_size=0.9)
 
     splits = {"train": train_ids, "valid": valid_ids, "test": test_ids}
 
+    #saving the splitted IDs in a json file
     with open(root + "training_indices.json", "w") as fp:
         json.dump(splits, fp)
 

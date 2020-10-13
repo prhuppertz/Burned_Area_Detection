@@ -1,6 +1,6 @@
 patch_scenes:
   cmd: python preparedata/extract_patches.py /home/robert/ds-wildfire/raw_data/wildfires-ground-truth/portugal/AArdida2016_ETRS89PTTM06_20190813.shp
-    /home/robert/ds-wildfire/data/post_fire_model_Scenario5/extracted DHFim /home/robert/ds-wildfire/data/scenes
+    /home/robert/ds-wildfire/data/burned_area_detection_final/extracted DHFim /home/robert/ds-wildfire/data/scenes
     -s 29/S/MC -s 29/S/MD -s 29/S/NB -s 29/S/NC -s 29/S/ND -s 29/S/PB -s 29/S/PC -s
     29/S/PD -s 29/T/ME -s 29/T/NE -s 29/T/NF -s 29/T/NG -s 29/T/PE -s 29/T/PF
   deps:
@@ -41,8 +41,8 @@ patch_scenes:
   - path: raw_data/wildfires-ground-truth/portugal/AArdida2016_ETRS89PTTM06_20190813.shp
     md5: a50b269c7ecb78b45f614451e93b17fc
   outs:
-  - path: data/post_fire_model_Scenario5/extracted/
-    md5: 12df66555dfe3dc0904ee586cef589f0.dir
+  - path: data/burned_area_detection_final/extracted/
+    md5: 8ad8f1dac3b865c4ae61cfd226950f92.dir
 merge_bands:
   cmd: python preparedata/merge_bands.py /home/robert/ds-wildfire/raw_data/s2_aws/tiles
     -s 29/S/MC -s 29/S/MD -s 29/S/NB -s 29/S/NC -s 29/S/ND -s 29/S/PB -s 29/S/PC -s
@@ -80,41 +80,41 @@ merge_bands:
   - path: data/scenes/29/T/PF
     md5: bd457339a9db42026aa96e6ab4c23ce7.dir
 sort_patches:
-  cmd: python preparedata/sort_patches.py /home/robert/ds-wildfire/data/post_fire_model_Scenario5/training_patches
-    /home/robert/ds-wildfire/excluded.txt /home/robert/ds-wildfire/data/post_fire_model_Scenario5/extracted/patches
-    /home/robert/ds-wildfire/data/post_fire_model_Scenario5/extracted/annotations
+  cmd: python preparedata/sort_patches.py /home/robert/ds-wildfire/data/burned_area_detection_final/training_patches
+    /home/robert/ds-wildfire/excluded.txt /home/robert/ds-wildfire/data/burned_area_detection_final/extracted/patches
+    /home/robert/ds-wildfire/data/burned_area_detection_final/extracted/annotations
   deps:
-  - path: data/post_fire_model_Scenario5/extracted/
-    md5: 12df66555dfe3dc0904ee586cef589f0.dir
+  - path: data/burned_area_detection_final/extracted/
+    md5: 8ad8f1dac3b865c4ae61cfd226950f92.dir
   - path: preparedata/sort_patches.py
     md5: 73f8b242adbae173d707a0c3db7079eb
   outs:
-  - path: data/post_fire_model_Scenario5/training_patches/annotations/
+  - path: data/burned_area_detection_final/training_patches/annotations/
     md5: 8cb7604bed60b293270a62cbc8b9b252.dir
-  - path: data/post_fire_model_Scenario5/training_patches/patches/
+  - path: data/burned_area_detection_final/training_patches/patches/
     md5: ca191db6db3b30733d6b9e1e54baabf6.dir
 split_data:
-  cmd: python preparedata/split.py --root=data/post_fire_model_Scenario5/training_patches/
+  cmd: python preparedata/split.py --root=data/burned_area_detection_final/training_patches/
   deps:
-  - path: data/post_fire_model_Scenario5/training_patches/annotations/
+  - path: data/burned_area_detection_final/training_patches/annotations/
     md5: 8cb7604bed60b293270a62cbc8b9b252.dir
-  - path: data/post_fire_model_Scenario5/training_patches/patches/
+  - path: data/burned_area_detection_final/training_patches/patches/
     md5: ca191db6db3b30733d6b9e1e54baabf6.dir
   - path: preparedata/split.py
-    md5: 91f995f5759245773f957130d9ccf2bb
+    md5: 483762090b589925bde947078fc1ea08
   outs:
-  - path: data/post_fire_model_Scenario5/training_patches/training_indices.json
-    md5: 8830cf4680217988cfddcdcf1f335a0a
+  - path: data/burned_area_detection_final/training_patches/training_indices.json
+    md5: b54eb405a87d4e0f1b50dd026ea16187
 resnetunet:
   cmd: python run_training.py --seed=11 --gpu=1 --save-images=1 --baseline=1 --model-name=resnetunet
-    --group=resnetunet_Scenario5 --save-path=data/post_fire_model_Scenario5/
+    --group=resnetunet_final --save-path=data/burned_area_detection_final/
   deps:
-  - path: data/post_fire_model_Scenario5/training_patches/annotations/
+  - path: data/burned_area_detection_final/training_patches/annotations/
     md5: 8cb7604bed60b293270a62cbc8b9b252.dir
-  - path: data/post_fire_model_Scenario5/training_patches/patches/
+  - path: data/burned_area_detection_final/training_patches/patches/
     md5: ca191db6db3b30733d6b9e1e54baabf6.dir
-  - path: data/post_fire_model_Scenario5/training_patches/training_indices.json
-    md5: 8830cf4680217988cfddcdcf1f335a0a
+  - path: data/burned_area_detection_final/training_patches/training_indices.json
+    md5: b54eb405a87d4e0f1b50dd026ea16187
   - path: run_training.py
     md5: 7d4dfdc1e79a82fcd1e55f15dffb2349
   - path: segmentation/data/
@@ -122,6 +122,6 @@ resnetunet:
   - path: segmentation/evaluation/
     md5: 4bfdf0ca2682c82e4660365feac39974.dir
   - path: segmentation/models/resnetunet/
-    md5: 606dd8a5e8dd4b0e3d5ab1b28e53fb9e.dir
+    md5: b60bbdad6ad8475b901102e82519fa9f.dir
   - path: segmentation/networks/resnetunet/
     md5: 7c056bdb576c802ad754b18350bfc9e4.dir

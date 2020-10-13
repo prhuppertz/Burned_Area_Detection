@@ -3,8 +3,9 @@ Usage:
           merge_bands.py <source_path> (-s <mgrs>)... <save_path>
 
 @ Robert Huppertz 2020, Cervest
-Loads Selected Bands from image source and produces a merged stack 
-of those bands in target folder
+Loads Selected Bands from source_path and produces a merged stack 
+of those bands in save_path, feed list of mgrs scenes in path format (e.g. 29/S/PB) that should be included
+
 """
 
 # adapted for use with S2 data on the NAS drive
@@ -28,14 +29,14 @@ def stack_bands(source_path, mgrs_coordinate, save_path):
     :param save_path: Directory where a stacked raster would be saved
     :return:
     """
-    path_to_scene = os.path.join(source_path, mgrs_coordinate)
+    #initialisation of lists
     list_of_paths = {}
     date = {}
-    # date_datetime={}
-    # date_string={}
     path_target = {}
     meta_source = {}
     BANDS = ""
+    
+    path_to_scene = os.path.join(source_path, mgrs_coordinate)
 
     for n in range(0, len(SELECTED_BANDS)):
         # create lists of paths to the processed images for all existing dates for each SELECTED_BAND
@@ -54,10 +55,6 @@ def stack_bands(source_path, mgrs_coordinate, save_path):
         date_index = list_of_paths[0][i].index("201")
         date_end_index = list_of_paths[0][i].index("/0")
         date[i] = list_of_paths[0][i][date_index:date_end_index]
-        # date_datetime[i] = datetime.strptime(date[i], '%Y/%m/%d')
-        # date_string[i]=date_datetime[i].strftime('%Y_%m_%d')
-        # create target files for every date
-        # create a directory for the target file
         os.makedirs(os.path.join(save_path, mgrs_coordinate, date[i]), exist_ok=True)
         path_target[i] = os.path.join(
             save_path, mgrs_coordinate, date[i], BANDS + ".tif"
@@ -78,6 +75,7 @@ def process_scenes(source_path, mgrs_coordinates, save_path):
     :param mgrs_coordinates: List of MGRS coordinates, for example ['31/U/FQ', '31/U/FO']
     :param save_path: Directory where a stacked raster would be saved
     """
+    
     for mgrs in mgrs_coordinates:
         stack_bands(source_path, mgrs, save_path)
 
