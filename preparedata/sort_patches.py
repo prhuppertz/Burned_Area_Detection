@@ -19,6 +19,7 @@ import numpy as np
 from patchutils import other
 import rasterio as rio
 
+
 def dump_polygons(annotation_dir_source, save_path, included):
     """
     Merge multiple MGRS annotation files into one pickle file 
@@ -91,10 +92,9 @@ def main(
     :return:
     """
 
-    # Read excluded files 
+    # Read excluded files
     excluded_patches = read_excluded(excluded_path) if excluded_path else []
     print(len(excluded_patches))
-
 
     all_patches = get_all(all_extracted_path)
     all_patches = [i for i in all_patches if i]
@@ -106,25 +106,24 @@ def main(
     os.makedirs(path_to_store_annotations, exist_ok=True)
 
     included = []
-    
+
     # Move patches if not excluded nor empty
     for patch in all_patches:
 
         if patch not in excluded_patches:
             source_patch_path = os.path.join(all_extracted_path, patch + ".jpg")
             target_patch_path = os.path.join(path_to_store_patches, patch + ".jpg")
-            
-            
+
             img = np.asarray(pilimage.open(source_patch_path))
-            #test if patch is empty
+            # test if patch is empty
             if np.unique(img).size > 2:
                 included.append(patch)
                 shutil.copy(source_patch_path, target_patch_path)
 
-    #print number of patches that are included
+    # print number of patches that are included
     print("Number of included patches {}".format(len(included)))
 
-    #Combine annotations to a pickle file
+    # Combine annotations to a pickle file
     save_annotations_file = os.path.join(path_to_store_annotations, "polygons.pkl")
     dump_polygons(path_to_annotations_source, save_annotations_file, included)
 

@@ -29,13 +29,13 @@ def stack_bands(source_path, mgrs_coordinate, save_path):
     :param save_path: Directory where a stacked raster would be saved
     :return:
     """
-    #initialisation of lists
+    # initialisation of lists
     list_of_paths = {}
     date = {}
     path_target = {}
     meta_source = {}
     BANDS = ""
-    
+
     path_to_scene = os.path.join(source_path, mgrs_coordinate)
 
     for n in range(0, len(SELECTED_BANDS)):
@@ -75,7 +75,7 @@ def process_scenes(source_path, mgrs_coordinates, save_path):
     :param mgrs_coordinates: List of MGRS coordinates, for example ['31/U/FQ', '31/U/FO']
     :param save_path: Directory where a stacked raster would be saved
     """
-    
+
     for mgrs in mgrs_coordinates:
         stack_bands(source_path, mgrs, save_path)
 

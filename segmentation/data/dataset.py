@@ -76,6 +76,7 @@ class SegmentationData(Dataset):
 
         return image, targets
 
+
 @typechecked
 def get_segmentation_dataset(
     root: str,

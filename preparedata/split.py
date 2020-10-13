@@ -33,15 +33,15 @@ def split(root, frac):
 
     all_ids = list(range(dataset_len))
 
-    #splitting into training dataset and general testing data
+    # splitting into training dataset and general testing data
     train_ids, test_ids = train_test_split(all_ids, train_size=frac, shuffle=True)
 
-    #splitting the general testing data into a validation dataset (fraction of train_size) and a testing dataset
+    # splitting the general testing data into a validation dataset (fraction of train_size) and a testing dataset
     valid_ids, test_ids = train_test_split(test_ids, train_size=0.9)
 
     splits = {"train": train_ids, "valid": valid_ids, "test": test_ids}
 
-    #saving the splitted IDs in a json file
+    # saving the splitted IDs in a json file
     with open(root + "training_indices.json", "w") as fp:
         json.dump(splits, fp)
 
