@@ -1,79 +1,78 @@
 stages:
   patch_scenes:
-    cmd: python preparedata/extract_patches.py /home/robert/ds-wildfire/raw_data/wildfires-ground-truth/portugal/AArdida2016_ETRS89PTTM06_20190813.shp
-      /home/robert/ds-wildfire/data/burned_area_detection_final/extracted DHFim /home/robert/ds-wildfire/data/scenes
+    cmd: python src/preparedata/extract_patches.py data/raw_data/wildfires-ground-truth/portugal/AArdida2016_ETRS89PTTM06_20190813.shp
+      data/processed_data/extracted DHFim data/processed_data/scenes
       -s 29/S/MC -s 29/S/MD -s 29/S/NB -s 29/S/NC -s 29/S/ND -s 29/S/PB -s 29/S/PC
       -s 29/S/PD -s 29/T/ME -s 29/T/NE -s 29/T/NF -s 29/T/NG -s 29/T/PE -s 29/T/PF
     deps:
-    - data/scenes/29/S/MC
-    - data/scenes/29/S/MD
-    - data/scenes/29/S/NB
-    - data/scenes/29/S/NC
-    - data/scenes/29/S/ND
-    - data/scenes/29/S/PB
-    - data/scenes/29/S/PC
-    - data/scenes/29/S/PD
-    - data/scenes/29/T/ME
-    - data/scenes/29/T/NE
-    - data/scenes/29/T/NF
-    - data/scenes/29/T/NG
-    - data/scenes/29/T/PE
-    - data/scenes/29/T/PF
-    - preparedata/extract_patches.py
-    - preparedata/patching.py
-    - preparedata/patchutils
-    - raw_data/wildfires-ground-truth/portugal/AArdida2016_ETRS89PTTM06_20190813.shp
+    - data/processed_data/scenes/29/S/MC
+    - data/processed_data/scenes/29/S/MD
+    - data/processed_data/scenes/29/S/NB
+    - data/processed_data/scenes/29/S/NC
+    - data/processed_data/scenes/29/S/ND
+    - data/processed_data/scenes/29/S/PB
+    - data/processed_data/scenes/29/S/PC
+    - data/processed_data/scenes/29/S/PD
+    - data/processed_data/scenes/29/T/ME
+    - data/processed_data/scenes/29/T/NE
+    - data/processed_data/scenes/29/T/NF
+    - data/processed_data/scenes/29/T/NG
+    - data/processed_data/scenes/29/T/PE
+    - data/processed_data/scenes/29/T/PF
+    - src/preparedata/extract_patches.py
+    - src/preparedata/patching.py
+    - src/preparedata/patchutils
+    - data/raw_data/wildfires-ground-truth/portugal/AArdida2016_ETRS89PTTM06_20190813.shp
     outs:
-    - data/burned_area_detection_final/extracted/
+    - data/processed_data/extracted/
   merge_bands:
-    cmd: python preparedata/merge_bands.py /home/robert/ds-wildfire/raw_data/s2_aws/tiles
+    cmd: python src/preparedata/merge_bands.py data/raw_data/tiles
       -s 29/S/MC -s 29/S/MD -s 29/S/NB -s 29/S/NC -s 29/S/ND -s 29/S/PB -s 29/S/PC
       -s 29/S/PD -s 29/T/ME -s 29/T/NE -s 29/T/NF -s 29/T/NG -s 29/T/PE -s 29/T/PF
-      /home/robert/ds-wildfire/data/scenes/
+      data/processed_data/scenes
     deps:
-    - preparedata/merge_bands.py
+    - src/preparedata/merge_bands.py
     outs:
-    - data/scenes/29/S/MC
-    - data/scenes/29/S/MD
-    - data/scenes/29/S/NB
-    - data/scenes/29/S/NC
-    - data/scenes/29/S/ND
-    - data/scenes/29/S/PB
-    - data/scenes/29/S/PC
-    - data/scenes/29/S/PD
-    - data/scenes/29/T/ME
-    - data/scenes/29/T/NE
-    - data/scenes/29/T/NF
-    - data/scenes/29/T/NG
-    - data/scenes/29/T/PE
-    - data/scenes/29/T/PF
+    - data/processed_data/scenes/29/S/MC
+    - data/processed_data/scenes/29/S/MD
+    - data/processed_data/scenes/29/S/NB
+    - data/processed_data/scenes/29/S/NC
+    - data/processed_data/scenes/29/S/ND
+    - data/processed_data/scenes/29/S/PB
+    - data/processed_data/scenes/29/S/PC
+    - data/processed_data/scenes/29/S/PD
+    - data/processed_data/scenes/29/T/ME
+    - data/processed_data/scenes/29/T/NE
+    - data/processed_data/scenes/29/T/NF
+    - data/processed_data/scenes/29/T/NG
+    - data/processed_data/scenes/29/T/PE
+    - data/processed_data/scenes/29/T/PF
   sort_patches:
-    cmd: python preparedata/sort_patches.py /home/robert/ds-wildfire/data/burned_area_detection_final/training_patches
-      /home/robert/ds-wildfire/excluded.txt /home/robert/ds-wildfire/data/burned_area_detection_final/extracted/patches
-      /home/robert/ds-wildfire/data/burned_area_detection_final/extracted/annotations
+    cmd: python src/preparedata/sort_patches.py data/processed_data/training_patches
+      data/processed_data/extracted/patches data/processed_data/extracted/annotations
     deps:
-    - data/burned_area_detection_final/extracted/
-    - preparedata/sort_patches.py
+    - data/processed_data/extracted/
+    - src/preparedata/sort_patches.py
     outs:
-    - data/burned_area_detection_final/training_patches/annotations/
-    - data/burned_area_detection_final/training_patches/patches/
+    - data/processed_data/training_patches/annotations/
+    - data/processed_data/training_patches/patches/
   split_data:
-    cmd: python preparedata/split.py --root=data/burned_area_detection_final/training_patches/
+    cmd: python src/preparedata/split.py --root=data/processed_data/training_patches/
     deps:
-    - data/burned_area_detection_final/training_patches/annotations/
-    - data/burned_area_detection_final/training_patches/patches/
-    - preparedata/split.py
+    - data/processed_data/training_patches/annotations/
+    - data/processed_data/training_patches/patches/
+    - src/preparedata/split.py
     outs:
-    - data/burned_area_detection_final/training_patches/training_indices.json
+    - data/processed_data/training_patches/training_indices.json
   resnetunet:
-    cmd: python run_training.py --seed=11 --gpu=1 --save-images=1 --baseline=1 --model-name=resnetunet
-      --group=resnetunet_final --save-path=data/burned_area_detection_final/
+    cmd: python src/run_scripts/run_training.py --seed=11 --gpu=1 --save-images=1 --baseline=1 --model-name=resnetunet
+      --group=resnetunet --save-path=data/results/
     deps:
-    - data/burned_area_detection_final/training_patches/annotations/
-    - data/burned_area_detection_final/training_patches/patches/
-    - data/burned_area_detection_final/training_patches/training_indices.json
-    - run_training.py
-    - segmentation/data/
-    - segmentation/evaluation/
-    - segmentation/models/resnetunet/
-    - segmentation/networks/resnetunet/
+    - data/processed_data/training_patches/annotations/
+    - data/processed_data/training_patches/patches/
+    - data/processed_data/training_patches/training_indices.json
+    - src/run_scripts/run_training.py
+    - src/segmentation/data/
+    - src/segmentation/evaluation/
+    - src/segmentation/models/resnetunet/
+    - src/segmentation/networks/resnetunet/

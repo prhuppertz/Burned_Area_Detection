@@ -162,6 +162,7 @@ __pycache__/
 *.pyc
 
 /data
+/data_old
 /data_exp
 /notebooks/Untitled*.ipynb
 /networks
