@@ -6,7 +6,7 @@ import cv2
 import pickle
 import glob
 from typing import Callable, Optional, Tuple
-from segmentation.data.preprocessing.mask_functions import make_instance_mask
+from src.segmentation.data.preprocessing.mask_functions import make_instance_mask
 
 
 @typechecked
