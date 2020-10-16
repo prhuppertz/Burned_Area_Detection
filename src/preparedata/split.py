@@ -20,7 +20,7 @@ import sys
 from os import path
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-from src.segmentation.data.dataset import get_segmentation_dataset
+from segmentation.data.dataset import get_segmentation_dataset
 
 
 def split(root, frac):
