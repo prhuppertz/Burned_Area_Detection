@@ -1,1 +1,1 @@
-from segmentation.networks.adversarial.model import CNN
+from src.segmentation.networks.adversarial.model import CNN

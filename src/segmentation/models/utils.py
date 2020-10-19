@@ -45,7 +45,7 @@ def get_params(task_name: str) -> Dict:
     :return:
     """
     path_to_params = os.path.join(
-        "segmentation/models/{}".format(task_name), "params.yml"
+        "src/segmentation/models/{}".format(task_name), "params.yml"
     )
     with open(path_to_params) as f:
         yaml_dict = yaml.safe_load(f)
@@ -61,7 +61,7 @@ def get_configuration(task_name: str, hparams: Dict) -> Dict:
     :return:
     """
     configure_module = importlib.import_module(
-        "segmentation.models.{}.configuration".format(task_name)
+        "src.segmentation.models.{}.configuration".format(task_name)
     )
     configuration = configure_module.configure(hparams)
     return configuration

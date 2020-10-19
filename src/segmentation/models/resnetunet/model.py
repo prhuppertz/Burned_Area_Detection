@@ -1,5 +1,5 @@
-from segmentation.networks.resnetunet.encoder import ResNet
-from segmentation.networks.resnetunet.decoders import UnetDecoder, PSPDecoder
+from src.segmentation.networks.resnetunet.encoder import ResNet
+from src.segmentation.networks.resnetunet.decoders import UnetDecoder, PSPDecoder
 import importlib
 from torch import optim
 from typeguard import typechecked
@@ -158,7 +158,7 @@ class Model(pl.LightningModule):
         encoder = ResNet(encoder_name, pretrained=pretrained)
         encoder = nn.Sequential(nn.BatchNorm2d(3), encoder)
 
-        decoders = importlib.import_module("segmentation.networks.resnetunet.decoders")
+        decoders = importlib.import_module("src.segmentation.networks.resnetunet.decoders")
 
         decoder = getattr(decoders, decoder_name)(**decoder_parameters)
 

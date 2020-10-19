@@ -93,34 +93,14 @@ sort_patches:
   - path: data/processed_data/training_patches/patches/
     md5: ca191db6db3b30733d6b9e1e54baabf6.dir
 split_data:
-  cmd: python src/preparedata/split.py --root=data/processed_data/training_patches/
+  cmd: python -m src.preparedata.split --root=data/processed_data/training_patches/
   deps:
   - path: data/processed_data/training_patches/annotations/
     md5: 8cb7604bed60b293270a62cbc8b9b252.dir
   - path: data/processed_data/training_patches/patches/
     md5: ca191db6db3b30733d6b9e1e54baabf6.dir
   - path: src/preparedata/split.py
-    md5: 38acb2d625cb0b263361a05d1280bbc6
+    md5: 4b2263776769202372f68b40c2d1be56
   outs:
   - path: data/processed_data/training_patches/training_indices.json
     md5: b54eb405a87d4e0f1b50dd026ea16187
-resnetunet:
-  cmd: python run_training.py --seed=11 --gpu=1 --save-images=1 --baseline=1 --model-name=resnetunet
-    --group=resnetunet_final --save-path=data/burned_area_detection_final/
-  deps:
-  - path: data/burned_area_detection_final/training_patches/annotations/
-    md5: 8cb7604bed60b293270a62cbc8b9b252.dir
-  - path: data/burned_area_detection_final/training_patches/patches/
-    md5: ca191db6db3b30733d6b9e1e54baabf6.dir
-  - path: data/burned_area_detection_final/training_patches/training_indices.json
-    md5: b54eb405a87d4e0f1b50dd026ea16187
-  - path: run_training.py
-    md5: 7d4dfdc1e79a82fcd1e55f15dffb2349
-  - path: segmentation/data/
-    md5: c26b71eaf11b1b4528c6e7e50c32aa6a.dir
-  - path: segmentation/evaluation/
-    md5: 4bfdf0ca2682c82e4660365feac39974.dir
-  - path: segmentation/models/resnetunet/
-    md5: b60bbdad6ad8475b901102e82519fa9f.dir
-  - path: segmentation/networks/resnetunet/
-    md5: 7c056bdb576c802ad754b18350bfc9e4.dir

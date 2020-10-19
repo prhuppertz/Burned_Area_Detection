@@ -9,7 +9,7 @@ from scipy.ndimage.morphology import (
     distance_transform_edt,
 )
 from typeguard import typechecked
-from segmentation.data.utils import batched
+from src.segmentation.data.utils import batched
 from typing import Optional
 
 

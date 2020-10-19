@@ -3,7 +3,7 @@ from scipy.special import expit
 from typeguard import typechecked
 from skimage.filters import threshold_otsu
 from scipy.ndimage.morphology import binary_fill_holes
-from segmentation.data.utils import batched
+from src.segmentation.data.utils import batched
 
 
 @typechecked

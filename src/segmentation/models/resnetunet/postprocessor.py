@@ -1,4 +1,4 @@
-from segmentation.data.postprocessing.classification import (
+from src.segmentation.data.postprocessing.classification import (
     sigmoid,
     batched_bg_to_segmentation,
     bg_to_segmentation,

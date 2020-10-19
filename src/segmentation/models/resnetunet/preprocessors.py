@@ -2,8 +2,8 @@ import torch
 import numpy as np
 from typeguard import typechecked
 from typing import List, Callable, Union, Tuple
-from segmentation.data.preprocessing.mask_functions import make_instance_mask
-from segmentation.data.preprocessing.distance_maps.unet import get_unet_map
+from src.segmentation.data.preprocessing.mask_functions import make_instance_mask
+from src.segmentation.data.preprocessing.distance_maps.unet import get_unet_map
 import torch
 
 

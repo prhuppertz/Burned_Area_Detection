@@ -1,9 +1,9 @@
-from segmentation.data.dataset import get_segmentation_dataset
-from segmentation.data.augmentation import Augmentor, sequences
-from segmentation.models.resnetunet.preprocessors import Preprocessor
-from segmentation.models.resnetunet.postprocessor import Postprocessor
-from segmentation.models.resnetunet.loss import loss
-from segmentation.evaluation.metric import SegmentationMetric
+from src.segmentation.data.dataset import get_segmentation_dataset
+from src.segmentation.data.augmentation import Augmentor, sequences
+from src.segmentation.models.resnetunet.preprocessors import Preprocessor
+from src.segmentation.models.resnetunet.postprocessor import Postprocessor
+from src.segmentation.models.resnetunet.loss import loss
+from src.segmentation.evaluation.metric import SegmentationMetric
 
 
 def configure(hparams):

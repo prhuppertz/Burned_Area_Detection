@@ -1,4 +1,4 @@
-from segmentation.networks.unet.unet_layers import (
+from src.segmentation.networks.unet.unet_layers import (
     InputConv,
     DownScale,
     UpScale,

@@ -6,7 +6,7 @@ from skimage.filters import threshold_otsu
 from scipy.ndimage import measurements
 from scipy.ndimage.morphology import binary_fill_holes
 from skimage.morphology import remove_small_objects, watershed
-from segmentation.data.utils import batched
+from src.segmentation.data.utils import batched
 
 
 @typechecked

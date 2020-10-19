@@ -151,7 +151,7 @@ def main(model_name, seed, group, save_path, save_images, baseline):
     train, valid, test = get_loaders(hparams, configuration_dict)
 
     model_module = importlib.import_module(
-        "segmentation.models.{}.model".format(model_name)
+        "src.segmentation.models.{}.model".format(model_name)
     )
 
     model = model_module.Model(hparams)
