@@ -49,7 +49,7 @@ merge_bands:
     29/T/NE -s 29/T/NF -s 29/T/NG -s 29/T/PE -s 29/T/PF data/processed_data/scenes
   deps:
   - path: src/preparedata/merge_bands.py
-    md5: ee965842e7215513eda83d920ab1e5cc
+    md5: c94d111f4bcd93b73f4f05302154a8a0
   outs:
   - path: data/processed_data/scenes/29/S/MC
     md5: 60c2a02a95e18fb060b889f1a06e203d.dir
@@ -104,3 +104,23 @@ split_data:
   outs:
   - path: data/processed_data/training_patches/training_indices.json
     md5: b54eb405a87d4e0f1b50dd026ea16187
+resnetunet:
+  cmd: python -m src.run_scripts.run_training --seed=11 --gpu=1 --save-images=1 --baseline=1
+    --model-name=resnetunet --group=resnetunet --save-path=data/results/
+  deps:
+  - path: data/processed_data/training_patches/annotations/
+    md5: 8cb7604bed60b293270a62cbc8b9b252.dir
+  - path: data/processed_data/training_patches/patches/
+    md5: ca191db6db3b30733d6b9e1e54baabf6.dir
+  - path: data/processed_data/training_patches/training_indices.json
+    md5: b54eb405a87d4e0f1b50dd026ea16187
+  - path: src/run_scripts/run_training.py
+    md5: 9e99bc141ce3eb1b5b4765c1f99bf2b2
+  - path: src/segmentation/data/
+    md5: ce3da6dc9107e4b17d2a9205ed4a2d83.dir
+  - path: src/segmentation/evaluation/
+    md5: 8308ef0bc5641bdeaa4eea37863f98f2.dir
+  - path: src/segmentation/models/resnetunet/
+    md5: 54e989eeb7a7e914843f96a7fe71955f.dir
+  - path: src/segmentation/networks/resnetunet/
+    md5: bf65fcd80843d7c807f7d8a9bd07f341.dir

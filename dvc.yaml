@@ -64,3 +64,15 @@ stages:
     - src/preparedata/split.py
     outs:
     - data/processed_data/training_patches/training_indices.json
+  resnetunet:
+    cmd: python -m src.run_scripts.run_training --seed=11 --gpu=1 --save-images=1
+      --baseline=1 --model-name=resnetunet --group=resnetunet --save-path=data/results/
+    deps:
+    - data/processed_data/training_patches/annotations/
+    - data/processed_data/training_patches/patches/
+    - data/processed_data/training_patches/training_indices.json
+    - src/run_scripts/run_training.py
+    - src/segmentation/data/
+    - src/segmentation/evaluation/
+    - src/segmentation/models/resnetunet/
+    - src/segmentation/networks/resnetunet/
