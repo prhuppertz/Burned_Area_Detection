@@ -51,6 +51,7 @@ def dump_polygons(annotation_dir_source, save_path, included):
     with open(save_path, "wb") as f:
         pickle.dump(included_annotations, f, pickle.HIGHEST_PROTOCOL)
 
+
 def get_all(path):
     """
     Returns all files in path 
@@ -63,10 +64,7 @@ def get_all(path):
 
 
 def main(
-    save_path,
-    all_extracted_path,
-    path_to_annotations_source,
-    delete=False,
+    save_path, all_extracted_path, path_to_annotations_source, delete=False,
 ):
     """
     :param save_path: path where newly sorted patches and their annotations will be stored

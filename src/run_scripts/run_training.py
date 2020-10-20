@@ -208,7 +208,11 @@ if __name__ == "__main__":
     torch.backends.cudnn.benchmark = False
 
     # Other imports
-    from src.segmentation.models.utils import get_params, get_configuration, plot_results
+    from src.segmentation.models.utils import (
+        get_params,
+        get_configuration,
+        plot_results,
+    )
     from src.segmentation.data.utils import get_loaders
 
     from pytorch_lightning import Trainer

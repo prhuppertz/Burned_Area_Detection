@@ -158,7 +158,9 @@ class Model(pl.LightningModule):
         encoder = ResNet(encoder_name, pretrained=pretrained)
         encoder = nn.Sequential(nn.BatchNorm2d(3), encoder)
 
-        decoders = importlib.import_module("src.segmentation.networks.resnetunet.decoders")
+        decoders = importlib.import_module(
+            "src.segmentation.networks.resnetunet.decoders"
+        )
 
         decoder = getattr(decoders, decoder_name)(**decoder_parameters)
 

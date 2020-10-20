@@ -25,7 +25,7 @@ def create_source_paths(list_of_bands, path_to_scene):
     :param list_of_bands: List of bands
     :param path_to_scene: path to the mgrs scene
     """
-    bands_string=""
+    bands_string = ""
     dict_source_paths = {}
     meta_source = {}
     for band in list_of_bands:
@@ -35,16 +35,19 @@ def create_source_paths(list_of_bands, path_to_scene):
         )
         # store the metadata of one image of each band
         with rasterio.open(dict_source_paths[band][0]) as opened_band:
-            #store the meta data of the opened band in the dictionary
+            # store the meta data of the opened band in the dictionary
             meta_source[band] = opened_band.meta
-            #update the count to the number of bands
+            # update the count to the number of bands
             meta_source[band].update(count=len(list_of_bands))
-        bands_string+=band
-        
+        bands_string += band
+
     return dict_source_paths, bands_string, meta_source
-        
-def create_target_paths(dict_source_paths, save_path, mgrs_coordinate, bands_string, list_of_bands):
-    
+
+
+def create_target_paths(
+    dict_source_paths, save_path, mgrs_coordinate, bands_string, list_of_bands
+):
+
     """
     Creates a dict of target paths by date and bands
     :param list_of_bands: List of bands
@@ -54,21 +57,24 @@ def create_target_paths(dict_source_paths, save_path, mgrs_coordinate, bands_str
     """
     dict_target_paths = {}
     date = {}
-    dict_of_dates={}
+    dict_of_dates = {}
     # create date list for the selected scene, create target files for stacking images
-    
+
     for path in dict_source_paths[list_of_bands[0]]:
         date_index = path.index("201")
         date_end_index = path.index("/0")
-        #create dict with source paths and dates
+        # create dict with source paths and dates
         dict_of_dates[path] = path[date_index:date_end_index]
-        #create target path with date and bands_string
-        os.makedirs(os.path.join(save_path, mgrs_coordinate, dict_of_dates[path]), exist_ok=True)
-        #create dict with dates and target paths
+        # create target path with date and bands_string
+        os.makedirs(
+            os.path.join(save_path, mgrs_coordinate, dict_of_dates[path]), exist_ok=True
+        )
+        # create dict with dates and target paths
         dict_target_paths[dict_of_dates[path]] = os.path.join(
             save_path, mgrs_coordinate, dict_of_dates[path], bands_string + ".tif"
         )
     return dict_target_paths
+
 
 def write_bands(dict_source_paths, meta_source, dict_target_paths, list_of_bands):
     """
@@ -77,13 +83,17 @@ def write_bands(dict_source_paths, meta_source, dict_target_paths, list_of_bands
     :param list_of_paths: List of all paths that belong to a certain band
     :param paths_target: path to the mgrs scene
     """
-    list_target_paths=list(dict_target_paths.values())
+    list_target_paths = list(dict_target_paths.values())
     for x in list_target_paths:
         with rasterio.open(x, "w", **meta_source[list_of_bands[0]]) as target_file:
             for band in list_of_bands:
-                with rasterio.open(dict_source_paths[band][list_target_paths.index(x)]) as source_file:
-                    #write the source file into the target file's band in the order of the 
-                    target_file.write_band((list_of_bands.index(band) + 1), source_file.read(1))
+                with rasterio.open(
+                    dict_source_paths[band][list_target_paths.index(x)]
+                ) as source_file:
+                    # write the source file into the target file's band in the order of the
+                    target_file.write_band(
+                        (list_of_bands.index(band) + 1), source_file.read(1)
+                    )
 
 
 def stack_bands(source_path, mgrs_coordinate, save_path):
@@ -94,18 +104,22 @@ def stack_bands(source_path, mgrs_coordinate, save_path):
     :param save_path: Directory where a stacked raster would be saved
     """
 
-    #selecting the SWIR, NIR and Green band names from the remote sensing dataset
-    dict_of_bands = {"SWIR-band":"B12","NIR-band":"B8A","Green-band":"B03"}
+    # selecting the SWIR, NIR and Green band names from the remote sensing dataset
+    dict_of_bands = {"SWIR-band": "B12", "NIR-band": "B8A", "Green-band": "B03"}
     list_of_bands = list(dict_of_bands.values())
 
     path_to_scene = os.path.join(source_path, mgrs_coordinate)
 
-    dict_source_paths, bands_string, meta_source = create_source_paths(list_of_bands, path_to_scene)
+    dict_source_paths, bands_string, meta_source = create_source_paths(
+        list_of_bands, path_to_scene
+    )
 
-    dict_target_paths = create_target_paths(dict_source_paths, save_path, mgrs_coordinate, bands_string, list_of_bands)
-    
+    dict_target_paths = create_target_paths(
+        dict_source_paths, save_path, mgrs_coordinate, bands_string, list_of_bands
+    )
+
     write_bands(dict_source_paths, meta_source, dict_target_paths, list_of_bands)
-    
+
 
 def process_scenes(source_path, mgrs_coordinates, save_path):
     """
