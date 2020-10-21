@@ -1,6 +1,6 @@
 from pathlib import Path
 import pickle
-
+import os
 import json
 
 
@@ -24,7 +24,7 @@ def new_json(outpath: Path, data):
     """
     (Over)write data to new json file.
     """
-    # outpath.parent.mkdir(parents=True, exist_ok=True)
+    #outpath.parent.mkdir(parents=True, exist_ok=True)
     with open(outpath, "w") as f:
         json.dump(data, f, indent=4)
     print(f"Writing new json file... {outpath}")

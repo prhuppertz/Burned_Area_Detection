@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from matplotlib.collections import PatchCollection
 from descartes import PolygonPatch
 from PIL import Image as pilimage
-from patchutils import other
+from src.preparedata.patchutils import other
 
 
 def format_coco(chip_dfs: Dict, patch_size: int, row_name: str):

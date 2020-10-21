@@ -10,7 +10,7 @@ import rasterio.crs
 import geopandas as gpd
 from tqdm import tqdm
 
-from patchutils import img
+from src.preparedata.patchutils import img
 
 
 @typechecked

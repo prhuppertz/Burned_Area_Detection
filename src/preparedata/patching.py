@@ -6,8 +6,8 @@ Define functions for the other preparedata scripts
 import rasterio
 import geopandas as gpd
 import shapely
-from patchutils import geo, img
-from patchutils import other, coco
+from src.preparedata.patchutils import geo, img
+from src.preparedata.patchutils import other, coco
 from typeguard import typechecked
 
 

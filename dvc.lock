@@ -1,48 +1,3 @@
-patch_scenes:
-  cmd: python src/preparedata/extract_patches.py data/raw_data/wildfires-ground-truth/portugal/AArdida2016_ETRS89PTTM06_20190813.shp
-    data/processed_data/extracted DHFim data/processed_data/scenes -s 29/S/MC -s 29/S/MD
-    -s 29/S/NB -s 29/S/NC -s 29/S/ND -s 29/S/PB -s 29/S/PC -s 29/S/PD -s 29/T/ME -s
-    29/T/NE -s 29/T/NF -s 29/T/NG -s 29/T/PE -s 29/T/PF
-  deps:
-  - path: data/processed_data/scenes/29/S/MC
-    md5: 60c2a02a95e18fb060b889f1a06e203d.dir
-  - path: data/processed_data/scenes/29/S/MD
-    md5: 6382618d7549588f74c3b62ca5b61719.dir
-  - path: data/processed_data/scenes/29/S/NB
-    md5: c0f783cacbca0d3e82dd2efc75f93ed7.dir
-  - path: data/processed_data/scenes/29/S/NC
-    md5: d0f7925601da8969238d4829021505ed.dir
-  - path: data/processed_data/scenes/29/S/ND
-    md5: 4f60a627fcb7bd2f3a85374457ea042f.dir
-  - path: data/processed_data/scenes/29/S/PB
-    md5: 0fdb2bb714b379d9cc485384ad7ad2a3.dir
-  - path: data/processed_data/scenes/29/S/PC
-    md5: 9ab7a1b32add7657e080ae17c0b2c1b5.dir
-  - path: data/processed_data/scenes/29/S/PD
-    md5: 090e36bab0a1e122ed998e8be4f8c5a2.dir
-  - path: data/processed_data/scenes/29/T/ME
-    md5: 7681b57d4251bb4979c9aa899e079cc3.dir
-  - path: data/processed_data/scenes/29/T/NE
-    md5: a50c17bb1989c22e1a866a72c80b9f59.dir
-  - path: data/processed_data/scenes/29/T/NF
-    md5: f3a23dab777730a2f91faed32c949ed8.dir
-  - path: data/processed_data/scenes/29/T/NG
-    md5: 0e1120ba2bce3619ce5df017aeb87c5f.dir
-  - path: data/processed_data/scenes/29/T/PE
-    md5: b4469177df231465b8ec63f800b17efb.dir
-  - path: data/processed_data/scenes/29/T/PF
-    md5: bd457339a9db42026aa96e6ab4c23ce7.dir
-  - path: data/raw_data/wildfires-ground-truth/portugal/AArdida2016_ETRS89PTTM06_20190813.shp
-    md5: a50b269c7ecb78b45f614451e93b17fc
-  - path: src/preparedata/extract_patches.py
-    md5: c2851b6e07d55e5aa5d0d56598257faa
-  - path: src/preparedata/patching.py
-    md5: c919ca992607248e931d68c51ef48ec3
-  - path: src/preparedata/patchutils
-    md5: 99b226af70883cccba8a867196c666e7.dir
-  outs:
-  - path: data/processed_data/extracted/
-    md5: 8ad8f1dac3b865c4ae61cfd226950f92.dir
 merge_bands:
   cmd: python src/preparedata/merge_bands.py data/raw_data/tiles -s 29/S/MC -s 29/S/MD
     -s 29/S/NB -s 29/S/NC -s 29/S/ND -s 29/S/PB -s 29/S/PC -s 29/S/PD -s 29/T/ME -s
@@ -124,3 +79,48 @@ resnetunet:
     md5: 54e989eeb7a7e914843f96a7fe71955f.dir
   - path: src/segmentation/networks/resnetunet/
     md5: bf65fcd80843d7c807f7d8a9bd07f341.dir
+extract_patches:
+  cmd: python -m src.preparedata.extract_patches data/raw_data/wildfires-ground-truth/portugal/AArdida2016_ETRS89PTTM06_20190813.shp
+    data/processed_data/extracted DHFim data/processed_data/scenes -s 29/S/MC -s 29/S/MD
+    -s 29/S/NB -s 29/S/NC -s 29/S/ND -s 29/S/PB -s 29/S/PC -s 29/S/PD -s 29/T/ME -s
+    29/T/NE -s 29/T/NF -s 29/T/NG -s 29/T/PE -s 29/T/PF
+  deps:
+  - path: data/processed_data/scenes/29/S/MC
+    md5: 60c2a02a95e18fb060b889f1a06e203d.dir
+  - path: data/processed_data/scenes/29/S/MD
+    md5: 6382618d7549588f74c3b62ca5b61719.dir
+  - path: data/processed_data/scenes/29/S/NB
+    md5: c0f783cacbca0d3e82dd2efc75f93ed7.dir
+  - path: data/processed_data/scenes/29/S/NC
+    md5: d0f7925601da8969238d4829021505ed.dir
+  - path: data/processed_data/scenes/29/S/ND
+    md5: 4f60a627fcb7bd2f3a85374457ea042f.dir
+  - path: data/processed_data/scenes/29/S/PB
+    md5: 0fdb2bb714b379d9cc485384ad7ad2a3.dir
+  - path: data/processed_data/scenes/29/S/PC
+    md5: 9ab7a1b32add7657e080ae17c0b2c1b5.dir
+  - path: data/processed_data/scenes/29/S/PD
+    md5: 090e36bab0a1e122ed998e8be4f8c5a2.dir
+  - path: data/processed_data/scenes/29/T/ME
+    md5: 7681b57d4251bb4979c9aa899e079cc3.dir
+  - path: data/processed_data/scenes/29/T/NE
+    md5: a50c17bb1989c22e1a866a72c80b9f59.dir
+  - path: data/processed_data/scenes/29/T/NF
+    md5: f3a23dab777730a2f91faed32c949ed8.dir
+  - path: data/processed_data/scenes/29/T/NG
+    md5: 0e1120ba2bce3619ce5df017aeb87c5f.dir
+  - path: data/processed_data/scenes/29/T/PE
+    md5: b4469177df231465b8ec63f800b17efb.dir
+  - path: data/processed_data/scenes/29/T/PF
+    md5: bd457339a9db42026aa96e6ab4c23ce7.dir
+  - path: data/raw_data/wildfires-ground-truth/portugal/AArdida2016_ETRS89PTTM06_20190813.shp
+    md5: a50b269c7ecb78b45f614451e93b17fc
+  - path: src/preparedata/extract_patches.py
+    md5: 657a68eab6513e360c219edacc90432d
+  - path: src/preparedata/patching.py
+    md5: 7536cb9caad4a2b2870c292880079d2d
+  - path: src/preparedata/patchutils
+    md5: 481e7912b7b462d6eff9b182340123a8.dir
+  outs:
+  - path: data/processed_data/extracted/
+    md5: fc23e8ebd8d7724589f94a84720a579d.dir
