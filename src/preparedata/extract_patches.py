@@ -27,6 +27,7 @@ import geopandas as gpd
 import pandas as pd
 from pathlib import Path
 
+
 def create_scene_string(scene):
     # create list of scene strings with "_" instead of "/" (e.g. _29_S_PB_ instead of /29/S/PB/)
     scene_list = list(scene)
@@ -39,6 +40,7 @@ def create_scene_string(scene):
 
     return scene_string
 
+
 def create_date_series(list_of_paths):
 
     dates_dict = {}
@@ -49,38 +51,35 @@ def create_date_series(list_of_paths):
         # looking for the index in the filepath string where the Band name starts (e.g. B12)
         date_end_index = path.find("/B", date_start_index)
         # append the date to the list dates
-        dates_dict[path]=path[date_start_index:date_end_index]
+        dates_dict[path] = path[date_start_index:date_end_index]
     # convert the date into datetime format
     for path in dates_dict:
-        dates_dict[path]=datetime.strptime(dates_dict[path], "%Y/%m/%d")
-    #create a pandas series sorted by dates
-    dates_series=pd.Series(dates_dict).sort_values()
+        dates_dict[path] = datetime.strptime(dates_dict[path], "%Y/%m/%d")
+    # create a pandas series sorted by dates
+    dates_series = pd.Series(dates_dict).sort_values()
 
-    #return strings of dates
+    # return strings of dates
     return dates_series
 
+
 def filter_shapefile(gdf, dates_series, path, time_filter):
-    #transform to datetime
-    #gdf["DHFim"]= pd.to_datetime(gdf["DHFim"], errors="coerce")
+    # transform to datetime
+    # gdf["DHFim"]= pd.to_datetime(gdf["DHFim"], errors="coerce")
 
     # filter the ground truth dataframe for the ground truth
     shapefile_filtered = gdf[
         # finish date of the fire (DHFim) should be before the capture date of the image
-        (
-            pd.to_datetime(gdf["DHFim"], errors="coerce")
-            < dates_series[path]
-        )
+        (pd.to_datetime(gdf["DHFim"], errors="coerce") < dates_series[path])
         # finish date of the fire (DHFim) should be within a timeframe before the capture date of the image
         & (
             pd.to_datetime(gdf["DHFim"], errors="coerce")
-            > (
-                dates_series[path] - timedelta(days=time_filter)
-            )
+            > (dates_series[path] - timedelta(days=time_filter))
         )
         # burned area ground truth (AREA_HA) should be larger than 5 ha to filter very small burned areas
         & (gdf["AREA_HA"] > 5.0)
     ]
     return shapefile_filtered
+
 
 def import_raster(path):
     # import images as raster
@@ -89,7 +88,15 @@ def import_raster(path):
 
     return raster, raster_meta
 
-def save_burn_vis(scene_string, dates_series, path, path_store_patches, path_store_burn_vis, path_store_annotations):
+
+def save_burn_vis(
+    scene_string,
+    dates_series,
+    path,
+    path_store_patches,
+    path_store_burn_vis,
+    path_store_annotations,
+):
     # create images that overlay patch and ground truth
     try:
         save_gt_overlaid(
@@ -110,15 +117,27 @@ def save_burn_vis(scene_string, dates_series, path, path_store_patches, path_sto
             )
         )
 
-def extract_patches(path, dates_series, shapefile, patch_size, num_patches, scene_string, time_filter, path_store_patches,path_store_annotations, path_store_burn_vis):
-    #open image as raster
+
+def extract_patches(
+    path,
+    dates_series,
+    shapefile,
+    patch_size,
+    num_patches,
+    scene_string,
+    time_filter,
+    path_store_patches,
+    path_store_annotations,
+    path_store_burn_vis,
+):
+    # open image as raster
     raster, raster_meta = import_raster(path)
 
     # load the ground truth (shapefile format) as a dataframe
     gdf = gpd.read_file(shapefile)
-            
-    #filter the shapefile with timedelta
-    shapefile_filtered=filter_shapefile(gdf, dates_series, path, time_filter)
+
+    # filter the shapefile with timedelta
+    shapefile_filtered = filter_shapefile(gdf, dates_series, path, time_filter)
 
     # create small patch_windows where ground truth and images overlap
     patch_dfs, patch_windows = import_shapefile_for_patches(
@@ -128,7 +147,7 @@ def extract_patches(path, dates_series, shapefile, patch_size, num_patches, scen
         patch_size,
         num_patches,
         scene_string + dates_series[path].strftime("%Y-%m-%d"),
-        )
+    )
 
     # cut out the windows to create patches
     do_the_patching(
@@ -147,11 +166,19 @@ def extract_patches(path, dates_series, shapefile, patch_size, num_patches, scen
         class_name,
         scene_string + dates_series[path].strftime("%Y-%m-%d"),
     )
-            
-    #save example images 
-    save_burn_vis(scene_string, dates_series, path, path_store_patches, path_store_burn_vis, path_store_annotations)
+
+    # save example images
+    save_burn_vis(
+        scene_string,
+        dates_series,
+        path,
+        path_store_patches,
+        path_store_burn_vis,
+        path_store_annotations,
+    )
 
     raster.close()
+
 
 def main(
     shapefile,
@@ -163,7 +190,7 @@ def main(
     num_patches=1000,
     time_filter=30,
 ):
-    
+
     # Make paths
     path_store_patches = os.path.join(save_path, "patches")
     os.makedirs(path_store_patches, exist_ok=True)
@@ -179,15 +206,25 @@ def main(
 
         # get a list of all file paths for the MGRS scene
         list_of_paths = glob.glob(path_scene + "/*/*/*/" + "*.tif")
-        
-        #change format of scene name to e.g. _29_S_PB_ from 29/S/PB
+
+        # change format of scene name to e.g. _29_S_PB_ from 29/S/PB
         scene_string = create_scene_string(scene)
 
-        dates_series=create_date_series(list_of_paths)
-        
+        dates_series = create_date_series(list_of_paths)
+
         for path in dates_series.index:
-            extract_patches(path, dates_series, shapefile, patch_size, num_patches, scene_string, time_filter, path_store_patches,path_store_annotations, path_store_burn_vis)
-        
+            extract_patches(
+                path,
+                dates_series,
+                shapefile,
+                patch_size,
+                num_patches,
+                scene_string,
+                time_filter,
+                path_store_patches,
+                path_store_annotations,
+                path_store_burn_vis,
+            )
 
 
 if __name__ == "__main__":
