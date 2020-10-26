@@ -161,18 +161,11 @@ __pycache__/
 .pytest_cache/
 *.pyc
 
-/data
-/data_old
-/data_exp
-/notebooks/Untitled*.ipynb
-/networks
-/models
-/evaluation
-/raw_data
-/prepare_data/.ipynb_checkpoints
-/prepare_data/*.ipynb
-/checkpoint
-Scenario 2b_Overfit.ipynb
-Scenario2_Overfit.ipynb
-notebooks/data_experiments-2016_2015.ipynb
-wandb/
+data/processed_data
+data/raw_data
+data/results
+notebooks/*
+wandb
+checkpoint/*
+checkpoint/resnetunet/epoch=23.ckpt
+
