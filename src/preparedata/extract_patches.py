@@ -1,5 +1,5 @@
 """Usage:
-          extract_patches.py <shapefile> <save_path> <class_name> <scenes_path> (-s <mgrs>)...
+          extract_patches.py <shapefile> <save_path> <class_name> <scenes_path> (-s <mgrs>)... [options]
 
 @ Robert Huppertz, Jevgenij Gamper 2020, Cervest
 Extract image patches from selected scences and store the produced images along with their ground truth.
@@ -7,9 +7,9 @@ Extract image patches from selected scences and store the produced images along 
 Add list of mgrs scenes in path format (e.g. 29/S/PB)
 
 Options:
-    --patch_size=<ps>  Size of patches, stands for both width and height [default: 128].
-    --num_patches=<ns> Maximum number of patches to extract from a scene[default: 2000].
-    --time_filter: Timeframe (number of days) for matching ground truth to data [default: 30].
+    --patch_size=<ps>  Size of patches, stands for both width and height [default: 128]
+    --num_patches=<ns> Maximum number of patches to extract from a scene[default: 2000]
+    --time_filter=<tf> Timeframe (number of days) for matching ground truth to data [default: 30]
 """
 
 from src.preparedata.patching import (
@@ -229,12 +229,14 @@ def main(
 
 if __name__ == "__main__":
     arguments = docopt(__doc__)
-
     shapefile = arguments["<shapefile>"]
     save_path = arguments["<save_path>"]
     class_name = arguments["<class_name>"]
     scenes_path = arguments["<scenes_path>"]
     scenes = arguments["<mgrs>"]
+    patch_size=arguments["<patch_size>"]
+    num_patches=arguments["<num_patches>"]
+    time_filter=arguments["<time_filter>"]
 
     main(
         shapefile,

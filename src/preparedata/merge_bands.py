@@ -56,7 +56,6 @@ def create_target_paths(
     :param paths_target: path to the mgrs scene
     """
     dict_target_paths = {}
-    date = {}
     dict_of_dates = {}
     # create date list for the selected scene, create target files for stacking images
 
