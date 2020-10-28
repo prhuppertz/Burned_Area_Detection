@@ -234,9 +234,6 @@ if __name__ == "__main__":
     class_name = arguments["<class_name>"]
     scenes_path = arguments["<scenes_path>"]
     scenes = arguments["<mgrs>"]
-    patch_size=arguments["<patch_size>"]
-    num_patches=arguments["<num_patches>"]
-    time_filter=arguments["<time_filter>"]
 
     main(
         shapefile,
