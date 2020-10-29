@@ -6,20 +6,20 @@ stages:
     deps:
     - src/preparedata/merge_bands.py
     outs:
-    - data/processed_data/scenes/29/S/MC
-    - data/processed_data/scenes/29/S/MD
-    - data/processed_data/scenes/29/S/NB
-    - data/processed_data/scenes/29/S/NC
-    - data/processed_data/scenes/29/S/ND
-    - data/processed_data/scenes/29/S/PB
-    - data/processed_data/scenes/29/S/PC
-    - data/processed_data/scenes/29/S/PD
-    - data/processed_data/scenes/29/T/ME
-    - data/processed_data/scenes/29/T/NE
-    - data/processed_data/scenes/29/T/NF
-    - data/processed_data/scenes/29/T/NG
-    - data/processed_data/scenes/29/T/PE
-    - data/processed_data/scenes/29/T/PF
+    - data/processed_data/scenes/29/S/MC/
+    - data/processed_data/scenes/29/S/MD/
+    - data/processed_data/scenes/29/S/NB/
+    - data/processed_data/scenes/29/S/NC/
+    - data/processed_data/scenes/29/S/ND/
+    - data/processed_data/scenes/29/S/PB/
+    - data/processed_data/scenes/29/S/PC/
+    - data/processed_data/scenes/29/S/PD/
+    - data/processed_data/scenes/29/T/ME/
+    - data/processed_data/scenes/29/T/NE/
+    - data/processed_data/scenes/29/T/NF/
+    - data/processed_data/scenes/29/T/NG/
+    - data/processed_data/scenes/29/T/PE/
+    - data/processed_data/scenes/29/T/PF/
   extract_patches:
     cmd: python -m src.preparedata.extract_patches data/raw_data/wildfires-ground-truth/portugal/AArdida2016_ETRS89PTTM06_20190813.shp
       data/processed_data/extracted DHFim data/processed_data/scenes -s 29/S/MC -s

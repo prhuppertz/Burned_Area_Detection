@@ -1,4 +1,6 @@
 [core]
-    remote = robert-ds-wildfire
+    remote = upstream
 ['remote "robert-ds-wildfire"']
     url = s3://cervest-data-version-control/ds-wildfire/
+['remote "upstream"']
+    url = s3://cervest-data-version-control/ds-wildfire
