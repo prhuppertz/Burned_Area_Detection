@@ -162,7 +162,7 @@ __pycache__/
 *.pyc
 
 data/processed_data
-data/raw_data
+data/raw_data/tom*
 data/results
 notebooks/*
 wandb
