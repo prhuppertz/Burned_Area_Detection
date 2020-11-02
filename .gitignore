@@ -166,6 +166,5 @@ data/raw_data/tom*
 data/results
 notebooks/*
 wandb
-checkpoint/*
-checkpoint/resnetunet/epoch=23.ckpt
+checkpoint/resnetunet
 
