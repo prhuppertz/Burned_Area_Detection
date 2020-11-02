@@ -1,7 +1,7 @@
 """Usage:
           train.py [--seed=<seed>] [--gpu=<id>] [--save-images=<images>] [--baseline=<boolean>] (--model-name=<model-name>) (--group=<group) (--save-path=<save-path>)
 
-@ Jevgenij Gamper 2020
+@ Robert Huppertz, Cervest 2020
 Trains either selected model, and saves model checkpoints under `data/models/task-name/..
 
 Options:

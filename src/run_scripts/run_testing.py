@@ -1,7 +1,7 @@
 """Usage:
           run_testing.py (--model-name=<model-name>) (--group=<group) (--image=<path_to_image>) (--shp=<shp_name>) [--b_size=<batch_size>]
 
-@ Jevgenij Gamper 2020, Cervest
+@ Robert Huppertz 2020, Cervest
 Applies trained neural network to mgrs scene, and saves the shapefile
 
 Options:

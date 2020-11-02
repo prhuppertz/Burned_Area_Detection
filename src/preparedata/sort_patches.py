@@ -2,7 +2,7 @@
 Usage:
         sort_patches.py <save_path> <all_extracted_path>  <path_to_annotations_source>
 
-@ Robert Huppertz, Jevgenij Gamper - Cervest, 2020
+@ Robert Huppertz, Jevgenij Gamper,  Cervest 2020
 Sort patches from all_extracted_path and annotations from path_to_annotations_source 
 to save_path if they are not empty.
 

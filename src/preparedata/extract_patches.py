@@ -1,7 +1,7 @@
 """Usage:
           extract_patches.py <shapefile> <save_path> <class_name> <scenes_path> (-s <mgrs>)... [options]
 
-@ Robert Huppertz, Jevgenij Gamper 2020, Cervest
+@ Robert Huppertz, Jevgenij Gamper,  Cervest 2020
 Extract image patches from selected scences and store the produced images along with their ground truth.
 <class_name>: Category of the shapefile data that should be tracked in the annotation json file 
 Add list of mgrs scenes in path format (e.g. 29/S/PB)

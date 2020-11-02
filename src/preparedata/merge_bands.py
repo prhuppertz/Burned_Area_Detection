@@ -2,7 +2,7 @@
 Usage:
           merge_bands.py <source_path> (-s <mgrs>)... <save_path>
 
-@ Robert Huppertz 2020, Cervest
+@ Robert Huppertz, Jevgenij Gamper,  Cervest 2020
 Loads Selected Bands from source_path and produces a merged stack 
 of those bands in save_path, feed list of mgrs scenes in path format (e.g. 29/S/PB) that should be included
 

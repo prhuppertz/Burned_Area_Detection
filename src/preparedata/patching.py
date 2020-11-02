@@ -1,5 +1,6 @@
 """
 Define functions for the other preparedata scripts
+@ Robert Huppertz, Jevgenij Gamper,  Cervest 2020
 """
 
 
