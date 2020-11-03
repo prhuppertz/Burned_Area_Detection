@@ -161,9 +161,9 @@ __pycache__/
 .pytest_cache/
 *.pyc
 
-data/processed_data/extracted/*
+data/processed_data/extracted/
 data/processed_data/scenes/*
-data/processed_data/training_patches/*
+data/processed_data/training_patches/
 data/raw_data/tom*
 data/results
 notebooks/*
