@@ -4,4 +4,7 @@ merge_bands:
     29/T/NE -s 29/T/NF -s 29/T/NG -s 29/T/PE -s 29/T/PF data/processed_data/scenes
   deps:
   - path: src/preparedata/merge_bands.py
-    md5: 35bea01cfabbb447146f8b1d69a8e0d5
+    md5: afbc28a223944413a2bbd89bda9d94f2
+  outs:
+  - path: data/processed_data/scenes
+    md5: 990836ce3023101779774467c689b9ae.dir

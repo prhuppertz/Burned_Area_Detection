@@ -5,3 +5,5 @@ stages:
       -s 29/T/NE -s 29/T/NF -s 29/T/NG -s 29/T/PE -s 29/T/PF data/processed_data/scenes
     deps:
     - src/preparedata/merge_bands.py
+    outs:
+    - data/processed_data/scenes
