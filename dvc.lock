@@ -6,5 +6,49 @@ merge_bands:
   - path: src/preparedata/merge_bands.py
     md5: afbc28a223944413a2bbd89bda9d94f2
   outs:
-  - path: data/processed_data/scenes
+  - path: data/processed_data/scenes/
     md5: 990836ce3023101779774467c689b9ae.dir
+extract_patches:
+  cmd: python -m src.preparedata.extract_patches data/raw_data/wildfires-ground-truth/portugal/AArdida2016_ETRS89PTTM06_20190813.shp
+    data/processed_data/extracted DHFim data/processed_data/scenes -s 29/S/MC -s 29/S/MD
+    -s 29/S/NB -s 29/S/NC -s 29/S/ND -s 29/S/PB -s 29/S/PC -s 29/S/PD -s 29/T/ME -s
+    29/T/NE -s 29/T/NF -s 29/T/NG -s 29/T/PE -s 29/T/PF
+  deps:
+  - path: data/processed_data/scenes/
+    md5: 990836ce3023101779774467c689b9ae.dir
+  - path: data/raw_data/wildfires-ground-truth/portugal/AArdida2016_ETRS89PTTM06_20190813.shp
+    md5: a50b269c7ecb78b45f614451e93b17fc
+  - path: src/preparedata/extract_patches.py
+    md5: 34f36a631e9e9b4f34f1cd2117a4c5cc
+  - path: src/preparedata/patching.py
+    md5: 5e32fb22974753bb54923faf694bdaa1
+  - path: src/preparedata/patchutils
+    md5: bd5bc96c3f814ba9795a2e91526afb46.dir
+  outs:
+  - path: data/processed_data/extracted/
+    md5: 385f8bc464b059de6bffbb2c5117d2ac.dir
+sort_patches:
+  cmd: python -m src.preparedata.sort_patches data/processed_data/training_patches
+    data/processed_data/extracted/patches data/processed_data/extracted/annotations
+  deps:
+  - path: data/processed_data/extracted/
+    md5: 385f8bc464b059de6bffbb2c5117d2ac.dir
+  - path: src/preparedata/sort_patches.py
+    md5: cc207250af6f0250f7cc35803a615b65
+  outs:
+  - path: data/processed_data/training_patches/annotations/
+    md5: 8762a3af38807848bf841f9e33428eee.dir
+  - path: data/processed_data/training_patches/patches/
+    md5: ca191db6db3b30733d6b9e1e54baabf6.dir
+split_data:
+  cmd: python -m src.preparedata.split --root=data/processed_data/training_patches/
+  deps:
+  - path: data/processed_data/training_patches/annotations/
+    md5: 8762a3af38807848bf841f9e33428eee.dir
+  - path: data/processed_data/training_patches/patches/
+    md5: ca191db6db3b30733d6b9e1e54baabf6.dir
+  - path: src/preparedata/split.py
+    md5: 313ab7372234d427037ecad8857f97c9
+  outs:
+  - path: data/processed_data/training_patches/training_indices.json
+    md5: b54eb405a87d4e0f1b50dd026ea16187

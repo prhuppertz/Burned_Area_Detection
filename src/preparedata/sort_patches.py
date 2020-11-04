@@ -13,10 +13,10 @@ import pickle
 import shutil
 from pathlib import Path
 from docopt import docopt
-from patchutils.coco import coco_to_shapely
+from src.preparedata.patchutils.coco import coco_to_shapely
 from PIL import Image as pilimage
 import numpy as np
-from patchutils import other
+from src.preparedata.patchutils import other
 import rasterio as rio
 
 

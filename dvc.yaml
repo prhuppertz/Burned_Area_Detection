@@ -21,7 +21,7 @@ stages:
     outs:
     - data/processed_data/extracted/
   sort_patches:
-    cmd: python src/preparedata/sort_patches.py data/processed_data/training_patches
+    cmd: python -m src.preparedata.sort_patches data/processed_data/training_patches
       data/processed_data/extracted/patches data/processed_data/extracted/annotations
     deps:
     - data/processed_data/extracted/
