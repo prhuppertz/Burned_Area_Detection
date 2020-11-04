@@ -62,34 +62,17 @@ $ (ds-wildfire)
 ```
 
 Install dependencies
+
 ```bash
 $ (ds-wildfire) pip install -r requirements.txt
 ```
-
-#### Setting up dvc
-
-From the environment and root project directory, you first need to build
-symlinks to data directories as:
-```bash
-$ (ds-wildfire) dvc init -q
-$ (ds-wildfire) python src/run_scripts/repro/dvc.py --link=where/data/stored --cache=where/dvc_cache/stored
-
-```
-if no `--link` specified, data will be stored by default into `data/` directory and default cache is `.dvc/cache`.
-
-To reproduce a pipeline stage, execute:
-```bash
-$ (ds-wildfire) dvc repro -s stage_name
-```
-In case pipeline is broken, hidden bash files are provided under `repro` directory
-
-## Obtain Data
+### Obtain Data
 First, obtain an atmospherically corrected version of the Sentinel-2 remote sensing data. You can do this either by downloading the Sentinel-1 Level 1C data product and atmospherically correct it yourself (e.g. with the SIAC algorithm) or download the atmospherically corrected Sentinel-2 Level-2 data product (that is corrected with the sen2cor algorithm).
 All Sentinel-2 data is available at: https://scihub.copernicus.eu
 
 For the pipeline to function properly, you'll have to make sure that the Level-2 Sentinel-2 tiles are structured in folders that show their MGRS coordinates and capture date.
 
-### Example for raw data folder structure
+#### Example for raw data folder structure
 For spectral bands B03, B8A, B11 of Sentinel-2 at the 26/11/2016 at MGRS scene 29/S/MC :
 ```
 raw_data
@@ -106,29 +89,62 @@ raw_data
 │                               └──B11.tif                                                   
 ```
 
+
+### Setting up Data Version Control (DVC)
+
+We use DVC to execute and reproduce the constructed pipeline. See https://dvc.org/doc for more information!
+
+From the environment and root project directory, you first need to build
+symlinks to data directories as:
+```bash
+$ (ds-wildfire) dvc init -q
+$ (ds-wildfire) python src/run_scripts/repro/dvc.py --cache=where/dvc_cache/is/stored --link=where/raw_data/is/stored
+
+```
+if no `--link` specified, data will be stored by default into `data/` directory and default cache is `.dvc/cache`.
+
+### Setting up Weights & Biases (wandb)
+We use Weights&Biases to track the model performance during training and for various experiments. See https://docs.wandb.com/quickstart for an overview on how to setup wandb on your machine.
+
 ## Run the experiments
-To run the pipeline you can either use the pre-constructed dvc pipeline or manually run the five pipeline steps.
+To run the pipeline you can either use the pre-constructed dvc pipeline or manually run the five pipeline stages.
 
 ### DVC (recommended)
-To use DVC, simply run:
-$dvc repro
-and the pipeline should go through all six stages automatically and create the desired results for you 
+The __DVC.yaml__ files specifies the single stages, the respective python commands and dependencies and outputs. 
 
-### Run manually 
-To create the correct symlinks to the raw remote sensing data, follow these steps:
-1. $ln -s /path/to/where the  /path/to/link
-
-### Running experiments
-
-Setup YAML configuration files specifying experiment : dataset, model, optimizer, experiment. See [here](https://github.com/Cervest/ds-generative-reflectance-ds-wildfire/tree/master/src/deep_reflectance_ds-wildfire/config) for examples.
-
-Execute __training__ on, say GPU 0, as:
+To reproduce the full pipeline, execute:
 ```bash
-$ python run_training.py --cfg=path/to/config.yaml --o=output/directory --device=0
+$ (ds-wildfire) dvc repro
 ```
 
-Once training completed, specify model checkpoint to evaluate in previously defined YAML configuration file and run __evaluation__ as:
-
+To reproduce a pipeline stage, execute:
 ```bash
-$ python run_testing.py --cfg=path/to/config.yaml --o=output/directory --device=0
+$ (ds-wildfire) dvc repro -s stage_name
 ```
+
+### Manually
+
+Execute __merge_bands__ (e.g. for all MGRS scenes that cover Portugal):
+```bash
+$ python src/preparedata/merge_bands.py data/raw_data/tiles -s 29/S/MC -s 29/S/MD -s 29/S/NB -s 29/S/NC -s 29/S/ND -s 29/S/PB -s 29/S/PC -s 29/S/PD -s 29/T/ME -s 29/T/NE -s 29/T/NF -s 29/T/NG -s 29/T/PE -s 29/T/PF data/processed_data/scenes
+```
+Execute __extract_patches__ (e.g. for all MGRS scenes that cover Portugal and the burned area ground truth shapefile for 2016):
+```bash
+$ python -m src.preparedata.extract_patches data/raw_data/wildfires-ground-truth/portugal/AArdida2016_ETRS89PTTM06_20190813.shp data/processed_data/extracted DHFim data/processed_data/scenes -s 29/S/MC -s 29/S/MD -s 29/S/NB -s 29/S/NC -s 29/S/ND -s 29/S/PB -s 29/S/PC -s 29/S/PD -s 29/T/ME -s 29/T/NE -s 29/T/NF -s 29/T/NG -s 29/T/PE -s 29/T/PF
+```
+Execute __sort_patches__:
+```bash
+$ python -m src.preparedata.sort_patches data/processed_data/training_patches data/processed_data/extracted/patches data/processed_data/extracted/annotations
+```
+Execute __split__:
+```bash
+$ python -m src.preparedata.split --root=data/processed_data/training_patches/
+```
+Execute __run_training__ (e.g with a ResNet in U-Net structure, a seed of 11, on gpu 1, and save the results along with baseline model results):
+```bash
+$ python -m src.run_scripts.run_training --seed=11 --gpu=1 --save-images=1 --baseline=1 --model-name=resnetunet --group=resnetunet --save-path=data/results/
+```
+
+## Results
+The validation results will be available in data/results/
+The models best-performing epoch and its parameters will be available in checkpoints/
