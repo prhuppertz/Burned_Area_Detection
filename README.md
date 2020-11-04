@@ -1,5 +1,9 @@
 # Burned Area Detection with Deep Learning and Sentinel-2
 A pipeline to process Sentinel-2 remote sensing data and train a neural network for burned area detection.
+
+A full summary of the project, its methods, results and findings can be found here:
+https://www.notion.so/Burned-Area-Detection-with-Deep-Learning-and-Sentinel-2-2b5913e4c79c4d8fa8a8c6dc7b1b4ac4
+
 ## Pipeline Description
 The pipeline is divided into four processing stages (1.-4.) and one training and validation stage (5.):
 1. Merge bands: Merge the Green, NIR and SWIR bands of the atmospherically corrected Sentinel-2 data and create false-color images that emphasise burned area by transferring the spectral bands to RGB-channels and normalise the values to the 0-255 color scale.
@@ -97,9 +101,9 @@ raw_data
 │                   └───11
 │                       └───26
 │                           └───0
-                                |   B03.tif
-                                |   B8A.tif
-                                |   B11.tif                                                   
+│                               └──B03.tif
+│                               └──B8A.tif
+│                               └──B11.tif                                                   
 ```
 
 ## Run the experiments
