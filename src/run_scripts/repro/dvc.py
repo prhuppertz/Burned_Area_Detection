@@ -8,8 +8,7 @@ Options:
   -h --help             Show help.
   --version             Show version.
   --cache=<cache_path>  Inference mode. 'roi' or 'wsi'. [default: data/]
-  --link=<link>         Path to for symlink to points towards, if using remote storage
-  --link2=<link>        2nd Path for raw_data for symlink to points towards, if using remote storage
+  --link=<link>         Source path for symlink to points towards, if using remote storage
 """
 
 import os
@@ -18,10 +17,11 @@ from docopt import docopt
 
 
 def set_cache(cache_dir):
-    
+    """
     Sets dvc cache given config file
     :param cache_dir: path to cache directory
     :return:
+    """
     p = subprocess.Popen("dvc cache dir {} --local".format(cache_dir), shell=True)
     p.communicate()
 
@@ -32,12 +32,12 @@ def set_symlink():
     p = subprocess.Popen("dvc config cache.protected true --local", shell=True)
     p.communicate()
 
-def main(cache_path, link_path, link2_path):
-"""
-Sets up dvc for large data
-:return:
-"""
-
+def main(cache_path, link_path):
+    """
+    Sets up dvc for large data
+    :return:
+    """
+    
     set_symlink()
     if cache_path:
         os.makedirs(cache_path, exist_ok=True)
@@ -47,7 +47,7 @@ Sets up dvc for large data
 
     # Make a path where raw_data is stored, if data is stored externally
     if link_path:
-        to_folder = os.path.join(cur_project_dir, "data")
+        to_folder = os.path.join(cur_project_dir, "data/raw_data/tiles")
         from_folder = link_path
         os.makedirs(from_folder, exist_ok=True)
         os.makedirs(to_folder, exist_ok=True)
