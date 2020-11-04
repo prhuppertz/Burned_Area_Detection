@@ -9,41 +9,33 @@ The pipeline is divided into four processing stages (1.-4.) and one training and
 5. run training: Take a neural network from the pytorch library (we used a Resnet-18 with a PSPNet in U-Net architecture) and train it on the processed patches and burned area ground truth. The best-performing epoch will be validated along a baseline model (see full doc) and the performance will be measured with a IoU and Dice coefficient. The training can be tracked with Weights and Biases (wandb.com).
 
 ## Directory Structure
-
 ```
-raw_data
-└───tiles
-│   └───29
-│       └───S
-│           └───MC
-│               └───2016
-│                   └───11
-|                       └───...
-│                       └───26
-│                           └───0
-                                |   B01.tif
-                                |   ...
-                                |   B8A.tif
-                                |   ...
-                                |   B11.tif
-                                |   ...                                                    
-│                       └───29
-│                           └───...   
-└───wildfires-ground-truth
-    │   file021.shp
-    │   file022.shp
+├── .dvc/
+├── data/
+│   ├── raw_data/
+│       ├── tiles/
+│       ├── wildfires-ground-truth/
+├── src/
+│   ├── preparedata/
+│       ├── merge_bands.py
+│       ├── extract_patches.py
+│       ├── sort_patches.py
+│       ├── split.py
+│       └── ...
+│   ├── run_scripts/
+│       ├── run_training.py
+│       ├── repro/
+│       └── ...
+│   └── segmentation/
+├── dvc.yaml
+└── ...
 ```
-
 __Directories :__
-- `data/` : Landsat-MODIS reflectance time series dataset and experiments outputs
-- `repro/`: bash scripts to run data version control pipelines
-- `src/`: modules to run reflectance patches extraction and deep reflectance ds-wildfire experiments
-- `tests/`: unit testing
-- `utils/`: miscellaneous utilities
-
-
-
-
+- `data` : raw data, processed data and validation results
+- `src/preparedata`: modules to run processing stages of pipeline
+- `src/run_scripts`: scripts to run training/validation and testing stages of pipeline
+- `src/run_scripts/repro`: bash scripts to run data version control (dvc) pipelines
+- `src/segmentation`: networks, miscellaneous utilities, models
 
 ## Installation
 
@@ -91,7 +83,24 @@ In case pipeline is broken, hidden bash files are provided under `repro` directo
 First, obtain an atmospherically corrected version of the Sentinel-2 remote sensing data. You can do this either by downloading the Sentinel-1 Level 1C data product and atmospherically correct it yourself (e.g. with the SIAC algorithm) or download the atmospherically corrected Sentinel-2 Level-2 data product (that is corrected with the sen2cor algorithm).
 All Sentinel-2 data is available at: https://scihub.copernicus.eu
 
-For the pipeline to function properly, you'll have to make sure that the Level-2 Sentinel-2 tiles are structured in folders that show their MGRS coordinates and capture date, similar to the project structure above.
+For the pipeline to function properly, you'll have to make sure that the Level-2 Sentinel-2 tiles are structured in folders that show their MGRS coordinates and capture date.
+
+###Example for raw data folder structure
+For spectral bands B03, B8A, B11 of Sentinel-2 at the 26/11/2016 at MGRS scene 29/S/MC :
+```
+raw_data
+└───tiles
+│   └───29
+│       └───S
+│           └───MC
+│               └───2016
+│                   └───11
+│                       └───26
+│                           └───0
+                                |   B03.tif
+                                |   B8A.tif
+                                |   B11.tif                                                   
+```
 
 ## Run the experiments
 To run the pipeline you can either use the pre-constructed dvc pipeline or manually run the five pipeline steps.
