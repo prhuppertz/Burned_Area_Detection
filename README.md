@@ -126,7 +126,7 @@ $ (ds-wildfire) dvc repro -s stage_name
 
 Execute __merge_bands__ (e.g. for all MGRS scenes that cover Portugal):
 ```bash
-$ python src/preparedata/merge_bands.py data/raw_data/tiles -s 29/S/MC -s 29/S/MD -s 29/S/NB -s 29/S/NC -s 29/S/ND -s 29/S/PB -s 29/S/PC -s 29/S/PD -s 29/T/ME -s 29/T/NE -s 29/T/NF -s 29/T/NG -s 29/T/PE -s 29/T/PF data/processed_data/scenes
+$ python -m src.preparedata.merge_bands data/raw_data/tiles -s 29/S/MC -s 29/S/MD -s 29/S/NB -s 29/S/NC -s 29/S/ND -s 29/S/PB -s 29/S/PC -s 29/S/PD -s 29/T/ME -s 29/T/NE -s 29/T/NF -s 29/T/NG -s 29/T/PE -s 29/T/PF data/processed_data/scenes
 ```
 Execute __extract_patches__ (e.g. for all MGRS scenes that cover Portugal and the burned area ground truth shapefile for 2016):
 ```bash
