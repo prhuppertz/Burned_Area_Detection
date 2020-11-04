@@ -52,3 +52,28 @@ split_data:
   outs:
   - path: data/processed_data/training_patches/training_indices.json
     md5: b54eb405a87d4e0f1b50dd026ea16187
+resnetunet:
+  cmd: python -m src.run_scripts.run_training --seed=11 --gpu=1 --save-images=1 --baseline=1
+    --model-name=resnetunet --group=resnetunet --save-path=data/results/
+  deps:
+  - path: data/processed_data/training_patches/annotations/
+    md5: 8762a3af38807848bf841f9e33428eee.dir
+  - path: data/processed_data/training_patches/patches/
+    md5: ca191db6db3b30733d6b9e1e54baabf6.dir
+  - path: data/processed_data/training_patches/training_indices.json
+    md5: b54eb405a87d4e0f1b50dd026ea16187
+  - path: src/run_scripts/run_training.py
+    md5: 1c2c2ff8f4082141fd809e332bd84e30
+  - path: src/segmentation/data/
+    md5: a4c70208cb1546c190542424b300fae3.dir
+  - path: src/segmentation/evaluation/
+    md5: af68d5aba08f17d7cae92cf1fbec07fd.dir
+  - path: src/segmentation/models/resnetunet/
+    md5: 6e0e2dbf9e68a72c3dfc776f95af72f3.dir
+  - path: src/segmentation/networks/resnetunet/
+    md5: b399adac0a5735e849063e1e096b6991.dir
+  outs:
+  - path: checkpoint/resnetunet/
+    md5: 23421320039a71ca387fb7fab89bfb18.dir
+  - path: data/results/
+    md5: 8a3a93b166491b66936c408f1a50d99d.dir
