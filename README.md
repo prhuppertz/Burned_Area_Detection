@@ -89,7 +89,7 @@ All Sentinel-2 data is available at: https://scihub.copernicus.eu
 
 For the pipeline to function properly, you'll have to make sure that the Level-2 Sentinel-2 tiles are structured in folders that show their MGRS coordinates and capture date.
 
-###Example for raw data folder structure
+### Example for raw data folder structure
 For spectral bands B03, B8A, B11 of Sentinel-2 at the 26/11/2016 at MGRS scene 29/S/MC :
 ```
 raw_data
